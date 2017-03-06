@@ -1,13 +1,17 @@
 <template lang="html">
     <div class="app-container">
+        <div class="video-container">
+            <vue-video></vue-video>
+        </div>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
-
+import VueVideo from './VueVideo.vue';
 export default {
     components: {
+        VueVideo,
     },
 };
 </script>
@@ -30,5 +34,11 @@ html,body {
     width: 100%;
     height: 100%;
 
+}
+
+.video-container {
+    position: relative;
+    width: 600px;
+    margin: 0 auto;
 }
 </style>
