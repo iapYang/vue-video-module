@@ -1,16 +1,13 @@
 <template lang="html">
     <div class="app-container">
-        <swiper-box></swiper-box>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
-import SwiperBox from './SwiperBox.vue';
 
 export default {
     components: {
-        SwiperBox,
     },
 };
 </script>
