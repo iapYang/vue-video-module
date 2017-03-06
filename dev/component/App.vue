@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="app-container">
         <div class="video-container">
-            <vue-video ref="video1"></vue-video>
+            <vue-video ref="video1" :options="videoOptions"></vue-video>
         </div>
         <router-view></router-view>
     </div>
@@ -10,6 +10,13 @@
 <script>
 import VueVideo from './VueVideo.vue';
 export default {
+    data() {
+        return {
+            videoOptions: {
+                src: 'video/1.mp4',
+            },
+        };
+    },
     mounted() {
         const self = this;
         this.video1 = this.$refs.video1;

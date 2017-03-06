@@ -6,7 +6,7 @@
          >
             <div class="video-placeholder"></div>
             <video
-             src="video/1.mp4"
+             :src="videoOptions.src"
              class="main-component"
              ref="video"
              @timeupdate="timeupdateHandler"
@@ -132,6 +132,14 @@ export default {
 
             // if the video is buffering at the first frame
             is_video_BFF: true,
+
+            // video options
+            videoOptions: {
+                // source of video (required)
+                src: this.options.src,
+
+                
+            },
         };
     },
     mounted() {
@@ -257,6 +265,7 @@ export default {
             cancelAnimationFrame(this.requestId);
         },
     },
+    props: ['options'],
     components: {
         VueLoading,
     },
