@@ -93,7 +93,7 @@ import Platform from '../script/plugin/platform.js';
 import VueLoading from 'vue-simple-loading';
 
 function floatToPercent(number) {
-    return `$(number.toFixed(4) * 100)%`;
+    return `${number.toFixed(4) * 100}%`;
 }
 
 export default {
@@ -344,7 +344,7 @@ export default {
             transform: translateX(-50%);
             top: 100%;
             z-index: 2;
-            height: 100px;
+            height: 50px;
 
             .button-container {
                 position: absolute;
