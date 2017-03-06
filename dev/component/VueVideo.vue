@@ -15,16 +15,16 @@
             </video>
             <transition name="fade">
                 <div class="video-poster main-component"
-                 v-show="if_video_BFF && !if_video_played">
+                 v-show="is_video_BFF && !is_video_played">
                     <transition name="fade">
-                        <img src="image/1.jpg" v-show="if_poster_loaded" alt="">
+                        <img src="image/1.jpg" v-show="is_poster_loaded" alt="">
                     </transition>
                 </div>
             </transition>
             <div class="video-main-controller main-component">
                 <div
                 class="play-container rollover-container"
-                v-show="!showReplay && !if_video_play" v-if="!ifIphone">
+                v-show="!showReplay && !is_video_play" v-if="!ifIphone">
                     <div class="hover">
                         <img src="image/play_rollover_op2.png" alt="">
                     </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div
                 class="replay-container rollover-container"
-                v-show="showReplay && !if_video_play" v-if="!ifIphone">
+                v-show="showReplay && !is_video_play" v-if="!ifIphone">
                     <div class="hover">
                         <img src="image/replay_rollover_op2.png" alt="">
                     </div>
@@ -44,14 +44,14 @@
                 </div>
                 <div
                  class="video-loading rollover-container"
-                 v-show="if_video_play && if_video_buffering"
+                 v-show="is_video_play && is_video_buffering"
                  v-if="false"
                  >
                     <img src="image/video-loading.gif" alt="">
                 </div>
                 <div
                  class="video-loading rollover-container vue-loading-container"
-                 v-show="if_video_play && if_video_buffering"
+                 v-show="is_video_play && is_video_buffering"
                  >
                     <vue-loading spinner="circles"></vue-loading>
                 </div>
@@ -61,13 +61,13 @@
             <div class="button-container" @click="videoClickHandler">
                 <div
                  class="button preload play"
-                 v-show="!showReplay && !if_video_play"
+                 v-show="!showReplay && !is_video_play"
                  >
                      <img src="image/play.png" alt="">
                  </div>
                 <div
                  class="button preload pause"
-                 v-show="!showReplay && if_video_play"
+                 v-show="!showReplay && is_video_play"
                  >
                      <img src="image/pause.png" alt="">
                  </div>
@@ -89,6 +89,7 @@
 
 <script>
 import Platform from '../script/plugin/platform.js';
+import PictureLoader from '../script/plugin/pictureLoader.js';
 
 import VueLoading from 'vue-simple-loading';
 
@@ -100,16 +101,16 @@ export default {
     data() {
         return {
             // if video played to control first frame
-            if_video_played: false,
+            is_video_played: false,
 
             // if the video is playing
-            if_video_play: false,
+            is_video_play: false,
 
             // should show the replay btn
             showReplay: false,
 
             // if the poster of loaded
-            if_poster_loaded: false,
+            is_poster_loaded: false,
 
             // control bar progress
             progress: '0%',
@@ -124,13 +125,13 @@ export default {
             ifIphone: Platform.isiPhone,
 
             // if the video is buffering
-            if_video_buffering: false,
+            is_video_buffering: false,
 
             // requestAnimation id
             requestId: 0,
 
             // if the video is buffering at the first frame
-            if_video_BFF: true,
+            is_video_BFF: true,
         };
     },
     mounted() {
@@ -138,19 +139,39 @@ export default {
         this.video = this.$refs.video;
     },
     methods: {
+        // check in function
+        checkInHandler() {
+            this.resetHandler();
+
+            // to auto play
+            // setTimeout(this.videoClickHandler, 500);
+
+            const self = this;
+
+            new PictureLoader({
+                sourceQueue: ['image/1.jpg'],
+            }).load({
+                end: () => {
+                    if (self.ifVideoShow) {
+                        self.is_poster_loaded = true;
+                    }
+                },
+            });
+        },
+
         // reset the video state before next show
         resetHandler() {
             this.video.currentTime = 0;
             this.progress = '0%';
             this.ifRotate = false;
-            this.if_video_play = true;
+            this.is_video_play = true;
         },
 
         // check if video is finished
         checkVideoFinished() {
             if (this.video.ended) {
                 this.showReplay = true;
-                this.if_video_play = false;
+                this.is_video_play = false;
                 this.cancelRequest();
             } else {
                 this.showReplay = false;
@@ -164,7 +185,7 @@ export default {
                 setTimeout(() => {
                     this.startRequest();
                 }, 100);
-                this.if_video_play = true;
+                this.is_video_play = true;
             } else {
                 this.videoPauseHandler();
             }
@@ -174,16 +195,16 @@ export default {
         videoPauseHandler() {
             this.video.pause();
             this.cancelRequest();
-            this.if_video_play = false;
+            this.is_video_play = false;
         },
 
         // when close button clicked
         videoCloseHandler() {
             this.video.pause();
-            this.if_video_play = false;
-            this.if_video_played = false;
-            this.if_poster_loaded = false;
-            this.if_video_BFF = true;
+            this.is_video_play = false;
+            this.is_video_played = false;
+            this.is_poster_loaded = false;
+            this.is_video_BFF = true;
         },
 
         // when video is playing
@@ -208,12 +229,12 @@ export default {
             const self = this;
 
             function ifVideoBuffered() {
-                self.if_video_buffering = lastTime === self.video.currentTime;
+                self.is_video_buffering = lastTime === self.video.currentTime;
                 lastTime = self.video.currentTime;
-                self.if_video_BFF = self.video.currentTime === 0;
+                self.is_video_BFF = self.video.currentTime === 0;
 
                 if (self.video.currentTime !== 0) {
-                    self.if_video_played = true;
+                    self.is_video_played = true;
                 }
 
                 let delayTime = 0;
@@ -287,6 +308,18 @@ export default {
                 height: 100%;
                 left: 0;
                 top: 0;
+            }
+
+            .video-poster {
+                background-color: black;
+
+                img {
+                    position: absolute;
+                    width: 50%;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                }
             }
 
             .video-main-controller {
