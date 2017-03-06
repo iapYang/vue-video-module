@@ -106,7 +106,7 @@ export default {
     },
     mounted() {
         const self = this;
-        this.video = this.video = this.$refs.video;
+        this.video = this.$refs.video;
     },
     methods: {
         // reset the video state before next show
@@ -119,7 +119,8 @@ export default {
 
         // check if video is finished
         checkVideoFinished() {
-            if (this.video.currentTime === this.video.duration) {
+            if (this.video.ended) {
+                console.log('video-ended');
                 this.showReplay = true;
                 this.if_video_play = false;
                 this.cancelRequest();
