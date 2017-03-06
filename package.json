@@ -1,0 +1,49 @@
+{
+  "name": "template",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --progress --config ./conf/webpack.dev.config.js",
+    "build": "webpack --progress --config ./conf/webpack.prod.config.js",
+    "check": "ncu",
+    "update-json": "ncu -a",
+    "update-package": "npm update"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-3": "^6.22.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.26.2",
+    "eslint": "^3.16.1",
+    "eslint-loader": "^1.6.3",
+    "eslint-plugin-html": "^2.0.1",
+    "file-loader": "^0.10.1",
+    "html-webpack-plugin": "^2.28.0",
+    "node-sass": "^4.5.0",
+    "postcss-cssnext": "^2.9.0",
+    "postcss-loader": "^1.3.2",
+    "sass-loader": "^6.0.2",
+    "style-loader": "^0.13.2",
+    "url-loader": "^0.5.8",
+    "vue-awesome-swiper": "^2.3.2",
+    "vue-loader": "^11.1.3",
+    "vue-simple-loading": "^1.1.1",
+    "vue-template-compiler": "^2.2.1",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1",
+    "webpack-merge": "^3.0.0"
+  },
+  "dependencies": {
+    "vue": "^2.2.1",
+    "vue-router": "^2.3.0",
+    "vuex": "^2.2.1"
+  }
+}
