@@ -57,15 +57,38 @@
                 </div>
             </div>
         </div>
-        <div class="part">
-
+        <div class="part video-sub-controller">
+            <div class="button-container" @click="videoClickHandler">
+                <div
+                 class="button preload play"
+                 v-show="!showReplay && !if_video_play"
+                 >
+                     <img src="image/play.png" alt="">
+                 </div>
+                <div
+                 class="button preload pause"
+                 v-show="!showReplay && if_video_play"
+                 >
+                     <img src="image/pause.png" alt="">
+                 </div>
+                <div
+                 class="button preload"
+                 v-show="showReplay"
+                 >
+                     <img src="image/replay.png" alt="">
+                 </div>
+            </div>
+            <div class="progress-bar" @click="barClickHandler">
+                <div class="seek-bar">
+                    <div class="play-bar" :style="{width: progress}"></div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import Platform from '../script/plugin/platform.js';
-import tellerUtils from '../script/plugin/tellerUtils.js';
 
 import VueLoading from 'vue-simple-loading';
 
@@ -80,7 +103,7 @@ export default {
             if_video_played: false,
 
             // if the video is playing
-            if_video_play: true,
+            if_video_play: false,
 
             // should show the replay btn
             showReplay: false,
@@ -156,7 +179,6 @@ export default {
 
         // when close button clicked
         videoCloseHandler() {
-            this.if_video_show = false;
             this.video.pause();
             this.if_video_play = false;
             this.if_video_played = false;
@@ -311,6 +333,56 @@ export default {
                         visibility: hidden;
                         transition: all ease 0.5s;
                     }
+                }
+            }
+        }
+
+        .video-sub-controller {
+            position: absolute;
+            width: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 100%;
+            z-index: 2;
+            height: 100px;
+
+            .button-container {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                left: 0;
+                top: 0;
+
+                .button {
+                    position: absolute;
+                    left: 0px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 20px;
+                    height: 20px;
+                    cursor: pointer;
+                }
+            }
+
+            .progress-bar {
+                position: relative;
+                margin-left: 50px;
+                height: 50px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                cursor: pointer;
+            }
+
+            .seek-bar {
+                width: 100%;
+                height: 3px;
+                background-color: #48391b;
+
+                .play-bar{
+                    height: 100%;
+                    background-color: #d5a83d;
                 }
             }
         }
