@@ -9,6 +9,8 @@
              src="video/1.mp4"
              class="main-component"
              ref="video"
+             @timeupdate="timeupdateHandler"
+             @webkitendfullscreen="videoPauseHandler"
              >
             </video>
             <transition name="fade">
@@ -120,7 +122,6 @@ export default {
         // check if video is finished
         checkVideoFinished() {
             if (this.video.ended) {
-                console.log('video-ended');
                 this.showReplay = true;
                 this.if_video_play = false;
                 this.cancelRequest();
@@ -152,9 +153,6 @@ export default {
         // when close button clicked
         videoCloseHandler() {
             this.if_video_show = false;
-            this.changeVideoShow({
-                ifVideoShow: false,
-            });
             this.video.pause();
             this.if_video_play = false;
             this.if_video_played = false;
@@ -222,8 +220,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    $time: 0.3s;
-
     .vue-video {
         position: relative;
         width: 100%;
@@ -276,15 +272,9 @@ export default {
                     top: 50%;
                     transform: translate(-50%, -50%);
 
+                    // fix ie height issue
                     img {
-                        position: relative;
-                        display: block;
-                        width: 100%;
                         height: auto !important;
-                    }
-
-                    div {
-                        transition: all ease $time;
                     }
 
                     .hover {
