@@ -69,6 +69,10 @@ import tellerUtils from '../script/plugin/tellerUtils.js';
 
 import VueLoading from 'vue-simple-loading';
 
+function floatToPercent(number) {
+    return `$(number.toFixed(4) * 100)%`;
+}
+
 export default {
     data() {
         return {
@@ -163,13 +167,13 @@ export default {
         // when video is playing
         timeupdateHandler(e) {
             this.checkVideoFinished();
-            this.progress = tellerUtils.floatToPercent(e.target.currentTime / e.target.duration);
+            this.progress = floatToPercent(e.target.currentTime / e.target.duration);
         },
 
         // when progress bar is clicked
         barClickHandler(e) {
             const rate = e.offsetX / e.target.clientWidth;
-            this.progress = tellerUtils.floatToPercent(rate);
+            this.progress = floatToPercent(rate);
             this.video.currentTime = this.video.duration * rate;
             this.checkVideoFinished();
         },
