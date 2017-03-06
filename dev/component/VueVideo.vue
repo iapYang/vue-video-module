@@ -152,9 +152,7 @@ export default {
                 sourceQueue: ['image/1.jpg'],
             }).load({
                 end: () => {
-                    if (self.ifVideoShow) {
-                        self.is_poster_loaded = true;
-                    }
+                    self.is_poster_loaded = true;
                 },
             });
         },
@@ -163,8 +161,7 @@ export default {
         resetHandler() {
             this.video.currentTime = 0;
             this.progress = '0%';
-            this.ifRotate = false;
-            this.is_video_play = true;
+            this.is_video_play = false;
         },
 
         // check if video is finished

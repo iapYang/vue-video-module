@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="app-container">
         <div class="video-container">
-            <vue-video></vue-video>
+            <vue-video ref="video1"></vue-video>
         </div>
         <router-view></router-view>
     </div>
@@ -10,6 +10,11 @@
 <script>
 import VueVideo from './VueVideo.vue';
 export default {
+    mounted() {
+        const self = this;
+        this.video1 = this.$refs.video1;
+        this.video1.checkInHandler();
+    },
     components: {
         VueVideo,
     },
