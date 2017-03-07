@@ -30,7 +30,7 @@
                  class="play-container video-main-controller-part"
                  :class="{'rollover-container': videoOptions.playMain && videoOptions.playMainRollover}"
                  v-show="!showReplay && !is_video_play"
-                 v-if="!ifIphone && videoOptions.playMain"
+                 v-if="!isiPhone && videoOptions.playMain"
                  >
                     <div class="normal">
                         <img :src="videoOptions.playMain" alt="">
@@ -43,7 +43,7 @@
                  class="replay-container video-main-controller-part"
                  :class="{'rollover-container': videoOptions.replayMain && videoOptions.replayMainRollover}"
                  v-show="showReplay && !is_video_play"
-                 v-if="!ifIphone && videoOptions.replayMain"
+                 v-if="!isiPhone && videoOptions.replayMain"
                  >
                     <div class="normal">
                         <img :src="videoOptions.replayMain" alt="">
@@ -123,13 +123,13 @@ export default {
             progress: '0%',
 
             // check the platform if mobile
-            ifMobile: Platform.isMobile,
+            isMobile: Platform.isMobile,
 
             // if the mobile rotate
-            ifRotate: false,
+            isRotate: false,
 
             // if platform is iphone
-            ifIphone: Platform.isiPhone,
+            isiPhone: Platform.isiPhone,
 
             // if the video is buffering
             is_video_buffering: false,
@@ -176,10 +176,11 @@ export default {
                 // loading
                 spinner: 'circles',
 
-                // init function
-                checkIn() {
+                // checkIn cb
+                checkInCb() {},
 
-                },
+                // checkOut cb
+                checkOutCb() {},
             }, this.options),
         };
     },
@@ -215,6 +216,9 @@ export default {
                     },
                 });
             }
+
+            // user choice when video is checkedIn
+            this.videoOptions.checkInCb(this.video);
         },
 
         // reset the video state before next show
@@ -258,6 +262,12 @@ export default {
             this.video.pause();
             this.cancelRequest();
             this.is_video_play = false;
+        },
+
+        // check
+        checkOutHandler() {
+            this.endResetHandler();
+            this.videoOptions.checkOutCb(this.video);
         },
 
         // when close button clicked
