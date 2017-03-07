@@ -87,7 +87,6 @@
 </template>
 
 <script>
-import config from '../data/config.json';
 import Platform from '../script/plugin/platform.js';
 import PictureLoader from '../script/plugin/pictureLoader.js';
 
