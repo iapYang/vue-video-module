@@ -15,6 +15,8 @@ export default {
             videoOptions: {
                 src: 'video/1.mp4',
                 poster: 'image/1.jpg',
+                playMain: 'image/play_op2.png',
+                playMainRollover: 'image/play_rollover_op2.png',
             },
         };
     },

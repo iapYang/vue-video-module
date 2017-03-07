@@ -25,31 +25,28 @@
             </transition>
             <div class="video-main-controller main-component">
                 <div
-                class="play-container rollover-container"
-                v-show="!showReplay && !is_video_play" v-if="!ifIphone">
+                 class="play-container rollover-container"
+                 v-show="!showReplay && !is_video_play"
+                 v-if="!ifIphone && videoOptions.playMain"
+                 >
                     <div class="hover">
-                        <img src="image/play_rollover_op2.png" alt="">
+                        <img :src="videoOptions.playMainRollover" alt="">
                     </div>
                     <div class="normal">
-                        <img src="image/play_op2.png" alt="">
+                        <img :src="videoOptions.playMain" alt="">
                     </div>
                 </div>
                 <div
-                class="replay-container rollover-container"
-                v-show="showReplay && !is_video_play" v-if="!ifIphone">
+                 class="replay-container rollover-container"
+                 v-show="showReplay && !is_video_play"
+                 v-if="!ifIphone"
+                 >
                     <div class="hover">
                         <img src="image/replay_rollover_op2.png" alt="">
                     </div>
                     <div class="normal">
                         <img src="image/replay_op2.png" alt="">
                     </div>
-                </div>
-                <div
-                 class="video-loading rollover-container"
-                 v-show="is_video_play && is_video_buffering"
-                 v-if="false"
-                 >
-                    <img src="image/video-loading.gif" alt="">
                 </div>
                 <div
                  class="video-loading rollover-container vue-loading-container"
@@ -90,6 +87,7 @@
 </template>
 
 <script>
+import config from '../data/config.json';
 import Platform from '../script/plugin/platform.js';
 import PictureLoader from '../script/plugin/pictureLoader.js';
 
@@ -143,7 +141,19 @@ export default {
                 // poster
                 poster: this.options.poster,
 
+                // main play button
+                playMain: this.options.playMain,
+                playMainRollover: this.options.playMainRollover || this.options.playMain,
 
+                // main replay button
+                replayMain: this.options.replayMain,
+                replayMainRollover: this.options.replayMainRollover || this.options.replayMain,
+
+                // sub play button
+                playSub: this.options.playSub,
+
+                // sub replay button
+                replaySub: this.options.replaySub,
             },
         };
     },
