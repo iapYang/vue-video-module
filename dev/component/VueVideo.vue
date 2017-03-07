@@ -106,10 +106,6 @@ function floatToPercent(number) {
 
 export default {
     data() {
-        const tmp_options = {
-
-        };
-
         return {
             // if video played to control first frame
             is_video_played: false,
@@ -179,6 +175,11 @@ export default {
 
                 // loading
                 spinner: 'circles',
+
+                // init function
+                checkIn() {
+                    
+                },
             }, this.options),
         };
     },
@@ -187,17 +188,19 @@ export default {
 
         this.checkInHandler();
 
-        if (this.videoOptions.autoPlay) {
-            this.videoPlayHandler();
-        }
+        this.$on('video:checkIn', () => {
+            this.checkInHandler();
+        });
     },
     methods: {
         // check in function
         checkInHandler() {
-            this.resetHandler();
+            this.startResetHandler();
 
             // to auto play
-            // setTimeout(this.videoClickHandler, 500);
+            if (this.videoOptions.autoPlay) {
+                setTimeout(this.videoClickHandler, 500);
+            }
 
             const self = this;
 
@@ -211,10 +214,10 @@ export default {
         },
 
         // reset the video state before next show
-        resetHandler() {
+        startResetHandler() {
             this.video.currentTime = 0;
             this.progress = '0%';
-            this.is_video_play = false;
+            this.is_video_play = this.videoOptions.autoPlay;
         },
 
         // check if video is finished
@@ -254,7 +257,7 @@ export default {
         },
 
         // when close button clicked
-        videoCloseHandler() {
+        endResetHandler() {
             this.video.pause();
             this.is_video_play = false;
             this.is_video_played = false;
