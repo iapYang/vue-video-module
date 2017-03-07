@@ -14,6 +14,7 @@ export default {
         return {
             videoOptions: {
                 src: 'video/1.mp4',
+                poster: 'image/1.jpg',
             },
         };
     },

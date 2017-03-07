@@ -14,10 +14,12 @@
              >
             </video>
             <transition name="fade">
-                <div class="video-poster main-component"
+                <div
+                 class="video-poster main-component"
+                 v-if="videoOptions.poster"
                  v-show="is_video_BFF && !is_video_played">
                     <transition name="fade">
-                        <img src="image/1.jpg" v-show="is_poster_loaded" alt="">
+                        <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
                     </transition>
                 </div>
             </transition>
@@ -138,7 +140,10 @@ export default {
                 // source of video (required)
                 src: this.options.src,
 
-                
+                // poster
+                poster: this.options.poster,
+
+
             },
         };
     },
