@@ -178,7 +178,7 @@ export default {
 
                 // init function
                 checkIn() {
-                    
+
                 },
             }, this.options),
         };
@@ -204,13 +204,17 @@ export default {
 
             const self = this;
 
-            new PictureLoader({
-                sourceQueue: ['image/1.jpg'],
-            }).load({
-                end: () => {
-                    self.is_poster_loaded = true;
-                },
-            });
+            // after the poster is loaded, it'll show
+            const poster = this.videoOptions.poster;
+            if (poster) {
+                new PictureLoader({
+                    sourceQueue: [poster],
+                }).load({
+                    end: () => {
+                        self.is_poster_loaded = true;
+                    },
+                });
+            }
         },
 
         // reset the video state before next show
