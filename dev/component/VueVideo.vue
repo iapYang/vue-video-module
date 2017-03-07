@@ -39,13 +39,13 @@
                 <div
                  class="replay-container rollover-container"
                  v-show="showReplay && !is_video_play"
-                 v-if="!ifIphone"
+                 v-if="!ifIphone && videoOptions.replayMain"
                  >
                     <div class="hover">
-                        <img src="image/replay_rollover_op2.png" alt="">
+                        <img :src="videoOptions.replayMainRollover" alt="">
                     </div>
                     <div class="normal">
-                        <img src="image/replay_op2.png" alt="">
+                        <img :src="videoOptions.replayMain" alt="">
                     </div>
                 </div>
                 <div

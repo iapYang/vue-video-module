@@ -17,6 +17,8 @@ export default {
                 poster: 'image/1.jpg',
                 playMain: 'image/play_op2.png',
                 playMainRollover: 'image/play_rollover_op2.png',
+                replayMain: 'image/replay_op2.png',
+                replayMainRollover: 'image/replay_rollover_op2.png',
             },
         };
     },
