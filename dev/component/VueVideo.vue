@@ -27,34 +27,38 @@
             </transition>
             <div class="video-main-controller main-component">
                 <div
-                 class="play-container rollover-container"
+                 class="play-container video-main-controller-part"
+                 :class="{'rollover-container': videoOptions.playMain && videoOptions.playMainRollover}"
                  v-show="!showReplay && !is_video_play"
                  v-if="!ifIphone && videoOptions.playMain"
                  >
-                    <div class="hover">
-                        <img :src="videoOptions.playMainRollover" alt="">
-                    </div>
                     <div class="normal">
                         <img :src="videoOptions.playMain" alt="">
                     </div>
+                    <div class="hover">
+                        <img :src="videoOptions.playMainRollover" alt="">
+                    </div>
                 </div>
                 <div
-                 class="replay-container rollover-container"
+                 class="replay-container video-main-controller-part"
+                 :class="{'rollover-container': videoOptions.replayMain && videoOptions.replayMainRollover}"
                  v-show="showReplay && !is_video_play"
                  v-if="!ifIphone && videoOptions.replayMain"
                  >
-                    <div class="hover">
-                        <img :src="videoOptions.replayMainRollover" alt="">
-                    </div>
                     <div class="normal">
                         <img :src="videoOptions.replayMain" alt="">
                     </div>
+                    <div class="hover">
+                        <img :src="videoOptions.replayMainRollover" alt="">
+                    </div>
                 </div>
                 <div
-                 class="video-loading rollover-container vue-loading-container"
+                 class="video-main-controller-part"
                  v-show="is_video_play && is_video_buffering"
                  >
-                    <vue-loading spinner="circles"></vue-loading>
+                    <vue-loading
+                     v-if="videoOptions.spinner"
+                     :spinner="videoOptions.spinner"></vue-loading>
                 </div>
             </div>
         </div>
@@ -150,11 +154,11 @@ export default {
 
                 // main play button
                 playMain: false,
-                playMainRollover: this.options.playMainRollover || this.options.playMain,
+                playMainRollover: false,
 
                 // main replay button
                 replayMain: false,
-                replayMainRollover: this.options.replayMainRollover || this.options.replayMain,
+                replayMainRollover: false,
 
                 // sub control button
                 playSub: CONFIG.play,
@@ -172,6 +176,9 @@ export default {
 
                 // control bar
                 controlBar: true,
+
+                // loading
+                spinner: 'circles',
             }, this.options),
         };
     },
@@ -372,7 +379,7 @@ export default {
             }
 
             .video-main-controller {
-                .rollover-container {
+                .video-main-controller-part {
                     position: absolute;
                     display: inline-block;
                     width: 60px;

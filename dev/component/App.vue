@@ -20,6 +20,7 @@ export default {
                 replayMain: 'image/replay_op2.png',
                 replayMainRollover: 'image/replay_rollover_op2.png',
                 controlBar: true,
+                spinner: 'circles',
             },
         };
     },
