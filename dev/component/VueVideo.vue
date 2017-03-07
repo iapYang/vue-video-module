@@ -162,12 +162,20 @@ export default {
 
                 // if the video muted
                 muted: this.options.muted || false,
+
+                // autoPlay
+                autoPlay: this.options.autoPlay || false,
             },
         };
     },
     mounted() {
-        const self = this;
         this.video = this.$refs.video;
+
+        this.checkInHandler();
+
+        if (this.videoOptions.autoPlay) {
+            this.videoPlayHandler();
+        }
     },
     methods: {
         // check in function
@@ -209,14 +217,19 @@ export default {
         // when click the buttons or video itself
         videoClickHandler() {
             if (this.video.paused) {
-                this.video.play();
-                setTimeout(() => {
-                    this.startRequest();
-                }, 100);
-                this.is_video_play = true;
+                this.videoPlayHandler();
             } else {
                 this.videoPauseHandler();
             }
+        },
+
+        // video pause to play action
+        videoPlayHandler() {
+            this.video.play();
+            setTimeout(() => {
+                this.startRequest();
+            }, 100);
+            this.is_video_play = true;
         },
 
         // video play to pause action

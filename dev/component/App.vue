@@ -19,13 +19,13 @@ export default {
                 playMainRollover: 'image/play_rollover_op2.png',
                 replayMain: 'image/replay_op2.png',
                 replayMainRollover: 'image/replay_rollover_op2.png',
+                autoPlay: true,
             },
         };
     },
     mounted() {
         const self = this;
         this.video1 = this.$refs.video1;
-        this.video1.checkInHandler();
     },
     components: {
         VueVideo,
