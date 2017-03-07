@@ -1,0 +1,13 @@
+{
+    "vsicons.presets.angular": false,
+    "eslint.run": "onType",
+    "eslint.enable": true,
+    "eslint.options": { 
+        "configFile": "./.eslintrc"
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "vue"
+    ]
+}
