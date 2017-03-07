@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="part video-sub-controller">
+        <div class="part video-sub-controller" v-if="videoOptions.controlBar">
             <div class="button-container" @click="videoClickHandler">
                 <div
                  class="button preload play"
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import config from '../data/config.json';
+import CONFIG from '../data/config.json';
 
 import Platform from '../script/plugin/platform.js';
 import PictureLoader from '../script/plugin/pictureLoader.js';
@@ -102,6 +102,10 @@ function floatToPercent(number) {
 
 export default {
     data() {
+        const tmp_options = {
+
+        };
+
         return {
             // if video played to control first frame
             is_video_played: false,
@@ -137,35 +141,38 @@ export default {
             is_video_BFF: true,
 
             // video options
-            videoOptions: {
+            videoOptions: Object.assign({
                 // source of video (required)
-                src: this.options.src,
+                // src: this.options.src,
 
                 // poster
-                poster: this.options.poster,
+                poster: false,
 
                 // main play button
-                playMain: this.options.playMain,
+                playMain: false,
                 playMainRollover: this.options.playMainRollover || this.options.playMain,
 
                 // main replay button
-                replayMain: this.options.replayMain,
+                replayMain: false,
                 replayMainRollover: this.options.replayMainRollover || this.options.replayMain,
 
                 // sub control button
-                playSub: this.options.play || config.play,
-                pauseSub: this.options.pause || config.pause,
-                replaySub: this.options.replay || config.replay,
+                playSub: CONFIG.play,
+                pauseSub: CONFIG.pause,
+                replaySub: CONFIG.replay,
 
                 // if the video loop
-                loop: this.options.loop || false,
+                loop: false,
 
                 // if the video muted
-                muted: this.options.muted || false,
+                muted: false,
 
                 // autoPlay
-                autoPlay: this.options.autoPlay || false,
-            },
+                autoPlay: false,
+
+                // control bar
+                controlBar: true,
+            }, this.options),
         };
     },
     mounted() {
