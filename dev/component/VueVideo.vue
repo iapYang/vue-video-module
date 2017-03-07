@@ -6,7 +6,9 @@
          >
             <div class="video-placeholder"></div>
             <video
+             :loop="videoOptions.loop"
              :src="videoOptions.src"
+             :muted="videoOptions.muted"
              class="main-component"
              ref="video"
              @timeupdate="timeupdateHandler"
@@ -62,19 +64,19 @@
                  class="button preload play"
                  v-show="!showReplay && !is_video_play"
                  >
-                     <img :src="videoOptions.play" alt="">
+                     <img :src="videoOptions.playSub" alt="">
                  </div>
                 <div
                  class="button preload pause"
                  v-show="!showReplay && is_video_play"
                  >
-                     <img :src="videoOptions.pause" alt="">
+                     <img :src="videoOptions.pauseSub" alt="">
                  </div>
                 <div
                  class="button preload"
                  v-show="showReplay"
                  >
-                     <img :src="videoOptions.replay" alt="">
+                     <img :src="videoOptions.replaySub" alt="">
                  </div>
             </div>
             <div class="progress-bar" @click="barClickHandler">
@@ -150,15 +152,16 @@ export default {
                 replayMain: this.options.replayMain,
                 replayMainRollover: this.options.replayMainRollover || this.options.replayMain,
 
-                // sub play button
-                playSub: this.options.playSub,
+                // sub control button
+                playSub: this.options.play || config.play,
+                pauseSub: this.options.pause || config.pause,
+                replaySub: this.options.replay || config.replay,
 
-                // sub replay button
-                replaySub: this.options.replaySub,
+                // if the video loop
+                loop: this.options.loop || false,
 
-                play: this.options.play || config.play,
-                pause: this.options.pause || config.pause,
-                replay: this.options.replay || config.replay,
+                // if the video muted
+                muted: this.options.muted || false,
             },
         };
     },
