@@ -62,19 +62,19 @@
                  class="button preload play"
                  v-show="!showReplay && !is_video_play"
                  >
-                     <img src="image/play.png" alt="">
+                     <img :src="videoOptions.play" alt="">
                  </div>
                 <div
                  class="button preload pause"
                  v-show="!showReplay && is_video_play"
                  >
-                     <img src="image/pause.png" alt="">
+                     <img :src="videoOptions.pause" alt="">
                  </div>
                 <div
                  class="button preload"
                  v-show="showReplay"
                  >
-                     <img src="image/replay.png" alt="">
+                     <img :src="videoOptions.replay" alt="">
                  </div>
             </div>
             <div class="progress-bar" @click="barClickHandler">
@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import config from '../data/config.json';
+
 import Platform from '../script/plugin/platform.js';
 import PictureLoader from '../script/plugin/pictureLoader.js';
 
@@ -153,6 +155,10 @@ export default {
 
                 // sub replay button
                 replaySub: this.options.replaySub,
+
+                play: this.options.play || config.play,
+                pause: this.options.pause || config.pause,
+                replay: this.options.replay || config.replay,
             },
         };
     },
