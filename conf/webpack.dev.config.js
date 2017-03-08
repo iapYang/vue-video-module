@@ -7,7 +7,7 @@ module.exports = merge(baseWebpackConfig, {
     devtool: 'eval-source-map',
     devServer: {
         contentBase: './dev',
-        host: 'localhost',
+        host: '0.0.0.0',
         open: true,
         hot: true,
     },
