@@ -331,6 +331,8 @@ export default {
                 this.video.mozRequestFullScreen();
             } else if (this.video.webkitRequestFullscreen) {
                 this.video.webkitRequestFullscreen();
+            } else if (this.video.msRequestFullscreen) {
+                this.video.msRequestFullscreen();
             }
         },
 
