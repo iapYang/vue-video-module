@@ -13,7 +13,7 @@ jsFiles.forEach((file, i) => {
 module.exports = {
     entry,
     output: {
-        path: path.join(process.cwd(), 'dist'),
+        path: path.join(process.cwd(), 'docs'),
         filename: '[name].js',
     },
     module: {
