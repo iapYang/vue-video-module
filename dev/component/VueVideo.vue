@@ -201,7 +201,7 @@ export default {
     methods: {
         // check in function
         checkInHandler() {
-            this.startResetHandler();
+            this.startPointResetHandler();
 
             // to auto play
             if (this.videoOptions.autoPlay) {
@@ -223,7 +223,7 @@ export default {
         },
 
         // reset the video state before next show
-        startResetHandler() {
+        startPointResetHandler() {
             this.video.currentTime = 0;
             this.progress = '0%';
             this.is_video_play = this.videoOptions.autoPlay;
@@ -267,12 +267,12 @@ export default {
 
         // check
         checkOutHandler() {
-            this.endResetHandler();
+            this.endPointResetHandler();
             this.videoOptions.checkOutCb(this.video);
         },
 
         // when close button clicked
-        endResetHandler() {
+        endPointResetHandler() {
             this.video.pause();
             this.is_video_play = false;
             this.is_video_played = false;
