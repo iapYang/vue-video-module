@@ -4,12 +4,10 @@
          class="main-part part"
          @click="videoClickHandler"
          >
-            <div class="video-placeholder"></div>
             <video
              :loop="videoOptions.loop"
              :src="videoOptions.src"
              :muted="videoOptions.muted"
-             class="main-component"
              ref="video"
              @timeupdate="timeupdateHandler"
              @webkitendfullscreen="videoPauseHandler"
@@ -96,12 +94,19 @@
 import CONFIG from '../data/config.json';
 
 import Platform from '../script/plugin/platform.js';
-import PictureLoader from '../script/plugin/pictureLoader.js';
 
 import VueLoading from 'vue-simple-loading';
 
 function floatToPercent(number) {
     return `${number.toFixed(4) * 100}%`;
+}
+
+function loadSinglePicture(src, cb) {
+    const downloadingImage = new Image();
+    downloadingImage.onload = () => {
+        cb();
+    };
+    downloadingImage.src = src;
 }
 
 export default {
@@ -208,12 +213,8 @@ export default {
             // after the poster is loaded, it'll show
             const poster = this.videoOptions.poster;
             if (poster) {
-                new PictureLoader({
-                    sourceQueue: [poster],
-                }).load({
-                    end: () => {
-                        self.is_poster_loaded = true;
-                    },
+                loadSinglePicture(poster, () => {
+                    self.is_poster_loaded = true;
                 });
             }
 
@@ -369,10 +370,10 @@ export default {
         }
 
         .main-part {
-            .video-placeholder {
-                display: block;
+            video {
                 position: relative;
-                padding-bottom: 56.25%;
+                display: block;
+                width: 100%;
             }
 
             .main-component {
