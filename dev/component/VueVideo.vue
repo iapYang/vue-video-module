@@ -315,6 +315,16 @@ export default {
 
         // when click the fullscreen button
         fullscreenClickHandler() {
+            if (this.isFullscreen) {
+                this.exitFullscreenHandler();
+            } else {
+                this.requestFullscreenHandler();
+            }
+            this.isFullscreen = !this.isFullscreen;
+        },
+
+        // into fullscreen
+        requestFullscreenHandler() {
             if (this.video.requestFullscreen) {
                 this.video.requestFullscreen();
             } else if (this.video.mozRequestFullScreen) {
@@ -322,18 +332,19 @@ export default {
             } else if (this.video.webkitRequestFullscreen) {
                 this.video.webkitRequestFullscreen();
             }
-
-            this.isFullscreen = !this.isFullscreen;
-        },
-
-        // into fullscreen
-        requestFullscreenHandler() {
-
         },
 
         // exit fullscreen
         exitFullscreenHandler() {
-
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen()();
+            }
         },
 
         // the request function is to check if the video is buffering, timeupdate is too slow
