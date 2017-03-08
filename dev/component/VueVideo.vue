@@ -1,7 +1,8 @@
 <template lang="html">
     <div
      class="vue-video"
-     :class="{fullscreenOption: videoOptions.fullscreen, isFullscreen}">
+     :class="{screen: videoOptions.fullscreen, fullscreen: checkIsFullscreen()}"
+     >
         <div
          class="main-part part"
          @click="videoClickHandler"
@@ -89,7 +90,7 @@
                 </div>
             </div>
             <div
-             class="fullscreen-button button-container"
+             class="screen-button button-container"
              @click="fullscreenClickHandler"
              >
                 <div
@@ -157,11 +158,11 @@ export default {
             // if the video is buffering at the first frame
             is_video_BFF: true,
 
-            // check if the fullscreen button is clicked
-            isFullscreen: false,
-
             // the whole document
             document,
+
+            // video
+            video: false,
 
             // video options
             videoOptions: Object.assign({
@@ -318,17 +319,15 @@ export default {
 
         // when click the fullscreen button
         fullscreenClickHandler() {
-            if (this.isFullscreen) {
+            if (this.checkIsFullscreen()) {
                 this.exitFullscreenHandler();
             } else {
                 this.requestFullscreenHandler();
             }
-            this.changeIsFullscreen();
         },
 
-        // change the fullscreen status
-        changeIsFullscreen() {
-            this.isFullscreen = !this.isFullscreen;
+        checkIsFullscreen() {
+            return document.webkitFullscreenElement === this.video;
         },
 
         // into fullscreen
@@ -342,8 +341,6 @@ export default {
             } else if (this.video.msRequestFullscreen) {
                 this.video.msRequestFullscreen();
             }
-
-            console.log(document.webkitFullscreenElement === this.video);
         },
 
         // exit fullscreen
@@ -565,7 +562,7 @@ export default {
                 }
             }
 
-            .fullscreen-button {
+            .screen-button {
                 display: none;
 
                 .fullscreen & {
@@ -574,12 +571,12 @@ export default {
             }
         }
 
-        &.fullscreenOption .video-sub-controller {
+        &.screen .video-sub-controller {
             .progress-bar {
                 margin-right: 50px;
             }
 
-            .fullscreen-button {
+            .screen-button {
                 position: absolute;
                 display: block;
                 right: 10px;
@@ -592,7 +589,7 @@ export default {
             }
         }
 
-        &.isFullscreen .video-sub-controller {
+        &.fullscreen .video-sub-controller {
             position: absolute;
             top: auto;
             bottom: 0;
