@@ -21,6 +21,7 @@ export default {
                 replayMainRollover: 'image/replay_rollover_op2.png',
                 controlBar: true,
                 spinner: 'circles',
+                fullscreen: true,
                 checkInHandler(video) {
 
                 },

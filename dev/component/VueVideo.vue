@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="vue-video">
+    <div class="vue-video" :class="{fullscreen: videoOptions.fullscreen}">
         <div
          class="main-part part"
          @click="videoClickHandler"
@@ -63,27 +63,37 @@
         <div class="part video-sub-controller" v-if="videoOptions.controlBar">
             <div class="button-container" @click="videoClickHandler">
                 <div
-                 class="button preload play"
+                 class="button play"
                  v-show="!showReplay && !is_video_play"
                  >
                      <img :src="videoOptions.playSub" alt="">
-                 </div>
+                </div>
                 <div
-                 class="button preload pause"
+                 class="button pause"
                  v-show="!showReplay && is_video_play"
                  >
                      <img :src="videoOptions.pauseSub" alt="">
-                 </div>
+                </div>
                 <div
                  class="button preload"
                  v-show="showReplay"
                  >
                      <img :src="videoOptions.replaySub" alt="">
-                 </div>
+                </div>
             </div>
             <div class="progress-bar" @click="barClickHandler">
                 <div class="seek-bar">
                     <div class="play-bar" :style="{width: progress}"></div>
+                </div>
+            </div>
+            <div
+             class="fullscreen-button button-container"
+             @click="fullscreenClickHandler"
+             >
+                <div
+                 class="button"
+                 >
+                     <img :src="videoOptions.fullscreenSub" alt="">
                 </div>
             </div>
         </div>
@@ -165,6 +175,7 @@ export default {
                 playSub: CONFIG.play,
                 pauseSub: CONFIG.pause,
                 replaySub: CONFIG.replay,
+                fullscreenSub: CONFIG.fullscreen,
 
                 // if the video loop
                 loop: false,
@@ -180,6 +191,9 @@ export default {
 
                 // loading
                 spinner: 'circles',
+
+                // fullscreen
+                fullscreen: false,
 
                 // checkIn cb
                 checkInCb() {},
@@ -292,6 +306,17 @@ export default {
             this.progress = floatToPercent(rate);
             this.video.currentTime = this.video.duration * rate;
             this.checkVideoFinished();
+        },
+
+        // when click the fullscreen button
+        fullscreenClickHandler() {
+            if (this.video.requestFullscreen) {
+                this.video.requestFullscreen();
+            } else if (this.video.mozRequestFullScreen) {
+                this.video.mozRequestFullScreen();
+            } else if (this.video.webkitRequestFullscreen) {
+                this.video.webkitRequestFullscreen();
+            }
         },
 
         // the request function is to check if the video is buffering, timeupdate is too slow
@@ -490,6 +515,32 @@ export default {
                 .play-bar{
                     height: 100%;
                     background-color: #d5a83d;
+                }
+            }
+
+            .fullscreen-button {
+                display: none;
+
+                .fullscreen & {
+                    display: block;
+                }
+            }
+        }
+
+        &.fullscreen .video-sub-controller {
+            .progress-bar {
+                margin-right: 50px;
+            }
+
+            .fullscreen-button {
+                position: absolute;
+                display: block;
+                right: 10px;
+                left: auto;
+
+                .button {
+                    left: auto;
+                    right: 0;
                 }
             }
         }
