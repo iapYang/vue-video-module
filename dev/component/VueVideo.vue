@@ -1,5 +1,7 @@
 <template lang="html">
-    <div class="vue-video" :class="{fullscreen: videoOptions.fullscreen}">
+    <div
+     class="vue-video"
+     :class="{fullscreen: videoOptions.fullscreen, isFullscreen}">
         <div
          class="main-part part"
          @click="videoClickHandler"
@@ -154,6 +156,9 @@ export default {
 
             // if the video is buffering at the first frame
             is_video_BFF: true,
+
+            // check if the fullscreen button is clicked
+            isFullscreen: false,
 
             // video options
             videoOptions: Object.assign({
@@ -317,6 +322,18 @@ export default {
             } else if (this.video.webkitRequestFullscreen) {
                 this.video.webkitRequestFullscreen();
             }
+
+            this.isFullscreen = !this.isFullscreen;
+        },
+
+        // into fullscreen
+        requestFullscreenHandler() {
+
+        },
+
+        // exit fullscreen
+        exitFullscreenHandler() {
+
         },
 
         // the request function is to check if the video is buffering, timeupdate is too slow
@@ -399,6 +416,10 @@ export default {
                 position: relative;
                 display: block;
                 width: 100%;
+
+                &::-webkit-media-controls {
+                    display: none !important;
+                }
             }
 
             .main-component {
@@ -543,6 +564,13 @@ export default {
                     right: 0;
                 }
             }
+        }
+
+        &.isFullscreen .video-sub-controller {
+            position: absolute;
+            top: auto;
+            bottom: 0;
+            z-index: 2147483648;
         }
     }
 </style>
