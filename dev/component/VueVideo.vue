@@ -1,7 +1,7 @@
 <template lang="html">
     <div
      class="vue-video"
-     :class="{fullscreen: videoOptions.fullscreen, isFullscreen}">
+     :class="{fullscreenOption: videoOptions.fullscreen, isFullscreen}">
         <div
          class="main-part part"
          @click="videoClickHandler"
@@ -159,6 +159,9 @@ export default {
 
             // check if the fullscreen button is clicked
             isFullscreen: false,
+
+            // the whole document
+            document,
 
             // video options
             videoOptions: Object.assign({
@@ -320,6 +323,11 @@ export default {
             } else {
                 this.requestFullscreenHandler();
             }
+            this.changeIsFullscreen();
+        },
+
+        // change the fullscreen status
+        changeIsFullscreen() {
             this.isFullscreen = !this.isFullscreen;
         },
 
@@ -334,6 +342,8 @@ export default {
             } else if (this.video.msRequestFullscreen) {
                 this.video.msRequestFullscreen();
             }
+
+            console.log(document.webkitFullscreenElement === this.video);
         },
 
         // exit fullscreen
@@ -391,6 +401,9 @@ export default {
     props: ['options'],
     components: {
         VueLoading,
+    },
+    watch: {
+
     },
 };
 </script>
@@ -561,7 +574,7 @@ export default {
             }
         }
 
-        &.fullscreen .video-sub-controller {
+        &.fullscreenOption .video-sub-controller {
             .progress-bar {
                 margin-right: 50px;
             }
