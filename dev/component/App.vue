@@ -13,8 +13,10 @@ export default {
     data() {
         return {
             videoOptions: {
-                src: 'http://vjs.zencdn.net/v/oceans.mp4',
-                poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
+                // src: 'http://vjs.zencdn.net/v/oceans.mp4',
+                // poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
+                src: 'video/1.mp4',
+                poster: 'image/1.jpg',
                 playMain: 'image/play_op2.png',
                 playMainRollover: 'image/play_rollover_op2.png',
                 replayMain: 'image/replay_op2.png',
