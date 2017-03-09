@@ -63,41 +63,41 @@
                      :spinner="videoOptions.spinner"></vue-loading>
                 </div>
             </div>
-        </div>
-        <div class="part video-sub-controller" v-if="videoOptions.controlBar">
-            <div class="button-container" @click="videoClickHandler">
-                <div
-                 class="button play"
-                 v-show="!showReplay && !is_video_play"
-                 >
-                     <img :src="videoOptions.playSub" alt="">
+            <div class="part video-sub-controller" v-if="videoOptions.controlBar">
+                <div class="button-container" @click="videoClickHandler">
+                    <div
+                     class="button play"
+                     v-show="!showReplay && !is_video_play"
+                     >
+                         <img :src="videoOptions.playSub" alt="">
+                    </div>
+                    <div
+                     class="button pause"
+                     v-show="!showReplay && is_video_play"
+                     >
+                         <img :src="videoOptions.pauseSub" alt="">
+                    </div>
+                    <div
+                     class="button preload"
+                     v-show="showReplay"
+                     >
+                         <img :src="videoOptions.replaySub" alt="">
+                    </div>
+                </div>
+                <div class="progress-bar" @click="barClickHandler">
+                    <div class="seek-bar">
+                        <div class="play-bar" :style="{width: progress}"></div>
+                    </div>
                 </div>
                 <div
-                 class="button pause"
-                 v-show="!showReplay && is_video_play"
+                 class="screen-button button-container"
+                 @click="fullscreenClickHandler"
                  >
-                     <img :src="videoOptions.pauseSub" alt="">
-                </div>
-                <div
-                 class="button preload"
-                 v-show="showReplay"
-                 >
-                     <img :src="videoOptions.replaySub" alt="">
-                </div>
-            </div>
-            <div class="progress-bar" @click="barClickHandler">
-                <div class="seek-bar">
-                    <div class="play-bar" :style="{width: progress}"></div>
-                </div>
-            </div>
-            <div
-             class="screen-button button-container"
-             @click="fullscreenClickHandler"
-             >
-                <div
-                 class="button"
-                 >
-                     <img :src="videoOptions.fullscreenSub" alt="">
+                    <div
+                     class="button"
+                     >
+                         <img :src="videoOptions.fullscreenSub" alt="">
+                    </div>
                 </div>
             </div>
         </div>
@@ -530,67 +530,67 @@ export default {
                 }
             }
         }
-    }
 
-    .video-sub-controller {
-        position: absolute;
-        width: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        top: 100%;
-        z-index: 2;
-        height: 50px;
-
-        .button-container {
+        .video-sub-controller {
             position: absolute;
-            width: 50px;
+            width: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 100%;
+            z-index: 2;
             height: 50px;
-            left: 0;
-            top: 0;
 
-            .button {
+            .button-container {
                 position: absolute;
+                width: 50px;
+                height: 50px;
                 left: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 20px;
-                height: 20px;
+                top: 0;
+
+                .button {
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 20px;
+                    height: 20px;
+                    cursor: pointer;
+                }
+            }
+
+            .progress-bar {
+                position: relative;
+                margin-left: 50px;
+                height: 50px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
                 cursor: pointer;
             }
-        }
 
-        .progress-bar {
-            position: relative;
-            margin-left: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            cursor: pointer;
-        }
+            .seek-bar {
+                width: 100%;
+                height: 3px;
+                background-color: #48391b;
 
-        .seek-bar {
-            width: 100%;
-            height: 3px;
-            background-color: #48391b;
-
-            .play-bar {
-                height: 100%;
-                background-color: #d5a83d;
+                .play-bar {
+                    height: 100%;
+                    background-color: #d5a83d;
+                }
             }
-        }
 
-        .screen-button {
-            display: none;
+            .screen-button {
+                display: none;
 
-            .fullscreen & {
-                display: block;
+                .fullscreen & {
+                    display: block;
+                }
             }
         }
     }
 
-    &.screen .video-sub-controller {
+    &.screen .main-part .video-sub-controller {
         .progress-bar {
             margin-right: 50px;
         }
@@ -608,7 +608,7 @@ export default {
         }
     }
 
-    &.fullscreen {
+    &.fullscreen .main-part {
         .video-sub-controller {
             position: absolute;
             top: auto;
@@ -626,14 +626,13 @@ export default {
             opacity: 1;
             visibility: visible;
         }
+    }
 
-        .firefox & {
-            display: -webkit-flex;
-            display: -ms-flex;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-        }
+    .firefox & {
+        display: -webkit-flex;
+        display: -ms-flex;
+        display: flex;
+        align-items: center;
     }
 }
 </style>
