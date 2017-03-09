@@ -626,6 +626,13 @@ export default {
                opacity: 1;
                visibility: visible;
            }
+
+           .firefox & {
+               display: -webkit-flex;
+               display: -ms-flex;
+               display: flex;
+               align-items: center;
+               flex-direction: column;
         }
     }
 </style>
