@@ -3,6 +3,7 @@
      class="vue-video"
      :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
      ref="vue-video"
+     v-show="videoCanplay"
      >
         <div
          class="main-part part"
@@ -13,6 +14,7 @@
              :src="videoOptions.src"
              :muted="videoOptions.muted"
              ref="video"
+             @canplay="canplayHandler"
              @timeupdate="timeupdateHandler"
              @webkitendfullscreen="videoPauseHandler"
              >
@@ -63,7 +65,7 @@
                      :spinner="videoOptions.spinner"></vue-loading>
                 </div>
             </div>
-            <div class="part video-sub-controller" v-if="videoOptions.controlBar">
+            <div class="part video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
                 <div class="button-container" @click="videoClickHandler">
                     <div
                      class="button play"
@@ -165,6 +167,9 @@ export default {
             // video
             video: false,
 
+            // check if the current video is ready for play
+            videoCanplay: false,
+
             // video options
             videoOptions: Object.assign({
                 // source of video (required)
@@ -238,6 +243,11 @@ export default {
         });
     },
     methods: {
+        // if the video is ready for play
+        canplayHandler() {
+            this.videoCanplay = true;
+        },
+
         // check in function
         checkInHandler() {
             this.startPointResetHandler();
@@ -629,6 +639,13 @@ export default {
     }
 
     .firefox & {
+        display: -webkit-flex;
+        display: -ms-flex;
+        display: flex;
+        align-items: center;
+    }
+
+    .ie & {
         display: -webkit-flex;
         display: -ms-flex;
         display: flex;
