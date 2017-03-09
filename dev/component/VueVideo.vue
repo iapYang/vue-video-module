@@ -1,7 +1,7 @@
 <template lang="html">
     <div
      class="vue-video"
-     :class="{screen: videoOptions.fullscreen, fullscreen: checkIsFullscreen()}"
+     :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
      >
         <div
          class="main-part part"
@@ -158,8 +158,8 @@ export default {
             // if the video is buffering at the first frame
             is_video_BFF: true,
 
-            // the whole document
-            document,
+            // check if is fullscreen
+            isFullscreen: false,
 
             // video
             video: false,
@@ -219,6 +219,20 @@ export default {
 
         this.$on('video:checkIn', () => {
             this.checkInHandler();
+        });
+
+        // register events when screen came to whole screen
+        document.addEventListener('fullscreenchange', () => {
+            this.checkIsFullscreen();
+        });
+        document.addEventListener('webkitfullscreenchange', () => {
+            this.checkIsFullscreen();
+        });
+        document.addEventListener('mozfullscreenchange', () => {
+            this.checkIsFullscreen();
+        });
+        document.addEventListener('msfullscreenchange', () => {
+            this.checkIsFullscreen();
         });
     },
     methods: {
@@ -319,7 +333,7 @@ export default {
 
         // when click the fullscreen button
         fullscreenClickHandler() {
-            if (this.checkIsFullscreen()) {
+            if (this.isFullscreen) {
                 this.exitFullscreenHandler();
             } else {
                 this.requestFullscreenHandler();
@@ -327,7 +341,7 @@ export default {
         },
 
         checkIsFullscreen() {
-            return document.webkitFullscreenElement === this.video;
+            this.isFullscreen = document.webkitFullscreenElement === this.video;
         },
 
         // into fullscreen
