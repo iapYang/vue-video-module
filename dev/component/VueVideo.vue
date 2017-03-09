@@ -1,7 +1,7 @@
 <template lang="html">
     <div
      class="vue-video"
-     :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
+     :class="{screen: videoOptions.fullscreen && isDesktop, fullscreen: isFullscreen}"
      ref="vue-video"
      v-show="videoCanplay"
      >
@@ -146,6 +146,9 @@ export default {
             // check the platform if mobile
             isMobile: Platform.isMobile,
 
+            // check the platform if touch
+            isDesktop: Platform.isDesktop,
+
             // if the mobile rotate
             isRotate: false,
 
@@ -246,6 +249,7 @@ export default {
         // if the video is ready for play
         canplayHandler() {
             this.videoCanplay = true;
+            console.log('78888888');
         },
 
         // check in function
@@ -638,14 +642,7 @@ export default {
         }
     }
 
-    .firefox & {
-        display: -webkit-flex;
-        display: -ms-flex;
-        display: flex;
-        align-items: center;
-    }
-
-    .ie & {
+    .firefox &, .ie & {
         display: -webkit-flex;
         display: -ms-flex;
         display: flex;
