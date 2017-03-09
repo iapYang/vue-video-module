@@ -2,6 +2,7 @@
     <div
      class="vue-video"
      :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
+     ref="vue-video"
      >
         <div
          class="main-part part"
@@ -214,6 +215,7 @@ export default {
     },
     mounted() {
         this.video = this.$refs.video;
+        this.fullscreenElement = this.$refs['vue-video'];
 
         this.checkInHandler();
 
@@ -344,19 +346,19 @@ export default {
             const fullscreenElement = document.fullscreenElement ||
             document.webkitFullscreenElement ||
             document.mozFullScreenElement || document.msFullscreenElement;
-            this.isFullscreen = fullscreenElement === this.video;
+            this.isFullscreen = fullscreenElement === this.fullscreenElement;
         },
 
         // into fullscreen
         requestFullscreenHandler() {
-            if (this.video.requestFullscreen) {
-                this.video.requestFullscreen();
-            } else if (this.video.mozRequestFullScreen) {
-                this.video.mozRequestFullScreen();
-            } else if (this.video.webkitRequestFullscreen) {
-                this.video.webkitRequestFullscreen();
-            } else if (this.video.msRequestFullscreen) {
-                this.video.msRequestFullscreen();
+            if (this.fullscreenElement.requestFullscreen) {
+                this.fullscreenElement.requestFullscreen();
+            } else if (this.fullscreenElement.mozRequestFullScreen) {
+                this.fullscreenElement.mozRequestFullScreen();
+            } else if (this.fullscreenElement.webkitRequestFullscreen) {
+                this.fullscreenElement.webkitRequestFullscreen();
+            } else if (this.fullscreenElement.msRequestFullscreen) {
+                this.fullscreenElement.msRequestFullscreen();
             }
         },
 
@@ -593,7 +595,7 @@ export default {
                 margin-right: 50px;
             }
 
-            .screen-button {
+            .screen-button.button-container {
                 position: absolute;
                 display: block;
                 right: 10px;
@@ -606,11 +608,24 @@ export default {
             }
         }
 
-        &.fullscreen .video-sub-controller {
-            position: absolute;
-            top: auto;
-            bottom: 0;
-            z-index: 2147483648;
+        &.fullscreen {
+            .video-sub-controller {
+               position: absolute;
+               top: auto;
+               bottom: 0;
+               opacity: 0;
+               visibility: hidden;
+               transition: all ease 0.3s;
+
+               .button-container .button {
+                   left: 5px;
+               }
+           }
+
+           .desktop &:hover .video-sub-controller {
+               opacity: 1;
+               visibility: visible;
+           }
         }
     }
 </style>
