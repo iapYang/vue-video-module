@@ -425,214 +425,215 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .vue-video {
+.vue-video {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+
+    .fade-enter-active {
+        transition: opacity 0.4s;
+    }
+
+    .fade-leave-active {
+        transition: opacity 0.6s;
+    }
+    /* .fade-leave-active in <2.1.8 */
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
+    }
+
+    img {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+    .part {
         position: relative;
         width: 100%;
-        cursor: pointer;
+    }
 
-        .fade-enter-active {
-            transition: opacity 0.4s
-        }
-
-        .fade-leave-active {
-            transition: opacity 0.6s
-        }
-
-        .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-            opacity: 0
-        }
-
-        img {
+    .main-part {
+        video {
             position: relative;
             display: block;
             width: 100%;
-        }
 
-        .part {
-            position: relative;
-            width: 100%;
-        }
-
-        .main-part {
-            video {
-                position: relative;
-                display: block;
-                width: 100%;
-
-                &::-webkit-media-controls {
-                    display: none !important;
-                }
-            }
-
-            .main-component {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-            }
-
-            .video-poster {
-                background-color: black;
-
-                img {
-                    position: absolute;
-                    width: 50%;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
-                }
-            }
-
-            .video-main-controller {
-                .video-main-controller-part {
-                    position: absolute;
-                    display: inline-block;
-                    width: 60px;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
-
-                    // fix ie height issue
-                    img {
-                        height: auto !important;
-                    }
-
-                    .hover {
-                        position: absolute;
-                        width: 100%;
-                        left: 0;
-                        top: 0;
-                        opacity: 0;
-                        visibility: hidden;
-                        transition: all ease 0.5s;
-                    }
-
-                    .normal {
-                        position: relative;
-                        opacity: 1;
-                        visibility: visible;
-                        transition: all ease 0.3s;
-                    }
-                }
-
-                .desktop &:hover .rollover-container {
-                    .hover {
-                        opacity: 1;
-                        visibility: visible;
-                        transition: all ease 0.3s;
-                    }
-
-                    .normal {
-                        opacity: 0;
-                        visibility: hidden;
-                        transition: all ease 0.5s;
-                    }
-                }
+            &::-webkit-media-controls {
+                display: none !important;
             }
         }
 
-        .video-sub-controller {
+        .main-component {
             position: absolute;
             width: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 100%;
-            z-index: 2;
-            height: 50px;
+            height: 100%;
+            left: 0;
+            top: 0;
+        }
 
-            .button-container {
+        .video-poster {
+            background-color: black;
+
+            img {
                 position: absolute;
-                width: 50px;
-                height: 50px;
-                left: 0;
-                top: 0;
+                width: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
 
-                .button {
+        .video-main-controller {
+            .video-main-controller-part {
+                position: absolute;
+                display: inline-block;
+                width: 60px;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                // fix ie height issue
+                img {
+                    height: auto !important;
+                }
+
+                .hover {
                     position: absolute;
-                    left: 0px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    width: 20px;
-                    height: 20px;
-                    cursor: pointer;
+                    width: 100%;
+                    left: 0;
+                    top: 0;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all ease 0.5s;
+                }
+
+                .normal {
+                    position: relative;
+                    opacity: 1;
+                    visibility: visible;
+                    transition: all ease 0.3s;
                 }
             }
 
-            .progress-bar {
-                position: relative;
-                margin-left: 50px;
-                height: 50px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                cursor: pointer;
-            }
+            .desktop &:hover .rollover-container {
+                .hover {
+                    opacity: 1;
+                    visibility: visible;
+                    transition: all ease 0.3s;
+                }
 
-            .seek-bar {
-                width: 100%;
-                height: 3px;
-                background-color: #48391b;
-
-                .play-bar{
-                    height: 100%;
-                    background-color: #d5a83d;
+                .normal {
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all ease 0.5s;
                 }
             }
-
-            .screen-button {
-                display: none;
-
-                .fullscreen & {
-                    display: block;
-                }
-            }
-        }
-
-        &.screen .video-sub-controller {
-            .progress-bar {
-                margin-right: 50px;
-            }
-
-            .screen-button.button-container {
-                position: absolute;
-                display: block;
-                right: 10px;
-                left: auto;
-
-                .button {
-                    left: auto;
-                    right: 0;
-                }
-            }
-        }
-
-        &.fullscreen {
-            .video-sub-controller {
-               position: absolute;
-               top: auto;
-               bottom: 0;
-               opacity: 0;
-               visibility: hidden;
-               transition: all ease 0.3s;
-
-               .button-container .button {
-                   left: 5px;
-               }
-           }
-
-           .desktop &:hover .video-sub-controller {
-               opacity: 1;
-               visibility: visible;
-           }
-
-           .firefox & {
-               display: -webkit-flex;
-               display: -ms-flex;
-               display: flex;
-               align-items: center;
-               flex-direction: column;
         }
     }
+
+    .video-sub-controller {
+        position: absolute;
+        width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 100%;
+        z-index: 2;
+        height: 50px;
+
+        .button-container {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            left: 0;
+            top: 0;
+
+            .button {
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+            }
+        }
+
+        .progress-bar {
+            position: relative;
+            margin-left: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .seek-bar {
+            width: 100%;
+            height: 3px;
+            background-color: #48391b;
+
+            .play-bar {
+                height: 100%;
+                background-color: #d5a83d;
+            }
+        }
+
+        .screen-button {
+            display: none;
+
+            .fullscreen & {
+                display: block;
+            }
+        }
+    }
+
+    &.screen .video-sub-controller {
+        .progress-bar {
+            margin-right: 50px;
+        }
+
+        .screen-button.button-container {
+            position: absolute;
+            display: block;
+            right: 10px;
+            left: auto;
+
+            .button {
+                left: auto;
+                right: 0;
+            }
+        }
+    }
+
+    &.fullscreen {
+        .video-sub-controller {
+            position: absolute;
+            top: auto;
+            bottom: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all ease 0.3s;
+
+            .button-container .button {
+                left: 5px;
+            }
+        }
+
+        .desktop &:hover .video-sub-controller {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .firefox & {
+            display: -webkit-flex;
+            display: -ms-flex;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+    }
+}
 </style>
