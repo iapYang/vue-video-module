@@ -341,7 +341,10 @@ export default {
         },
 
         checkIsFullscreen() {
-            this.isFullscreen = document.webkitFullscreenElement === this.video;
+            const fullscreenElement = document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement || document.msFullscreenElement;
+            this.isFullscreen = fullscreenElement === this.video;
         },
 
         // into fullscreen
