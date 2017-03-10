@@ -232,7 +232,12 @@ export default {
         });
 
         // register events when screen came to whole screen
-        const fullscreenEvents = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'msfullscreenchange'];
+        const fullscreenEvents = [
+            'fullscreenchange',
+            'webkitfullscreenchange',
+            'mozfullscreenchange',
+            'msfullscreenchange',
+        ];
 
         fullscreenEvents.forEach(fullscreenEvent => {
             document.addEventListener(fullscreenEvent, () => {
