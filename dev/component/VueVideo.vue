@@ -1,9 +1,9 @@
 <template lang="html">
     <div
      class="vue-video"
-     :class="{screen: videoOptions.fullscreen && isDesktop, fullscreen: isFullscreen}"
+     :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
      ref="vue-video"
-     v-show="videoCanplay"
+     v-show="true"
      >
         <div
          class="main-part part"
@@ -146,9 +146,6 @@ export default {
             // check the platform if mobile
             isMobile: Platform.isMobile,
 
-            // check the platform if touch
-            isDesktop: Platform.isDesktop,
-
             // if the mobile rotate
             isRotate: false,
 
@@ -223,7 +220,7 @@ export default {
     },
     mounted() {
         this.video = this.$refs.video;
-        this.fullscreenElement = this.$refs['vue-video'];
+        this.fullscreenElement = Platform.isDesktop ? this.$refs['vue-video'] : this.video;
 
         this.checkInHandler();
 
@@ -318,7 +315,7 @@ export default {
             this.is_video_play = false;
         },
 
-        // check
+        // check out function
         checkOutHandler() {
             this.endPointResetHandler();
             this.videoOptions.checkOutCb(this.video);
@@ -373,6 +370,8 @@ export default {
                 this.fullscreenElement.webkitRequestFullscreen();
             } else if (this.fullscreenElement.msRequestFullscreen) {
                 this.fullscreenElement.msRequestFullscreen();
+            } else if (this.fullscreenElement.webkitEnterFullscreen) {
+                this.fullscreenElement.webkitEnterFullscreen();
             }
         },
 
@@ -385,7 +384,7 @@ export default {
             } else if (document.mozCancelFullScreen) {
                 document.mozCancelFullScreen();
             } else if (document.msExitFullscreen) {
-                document.msExitFullscreen()();
+                document.msExitFullscreen();
             }
         },
 
@@ -612,12 +611,12 @@ export default {
         .screen-button.button-container {
             position: absolute;
             display: block;
-            right: 10px;
+            right: 0;
             left: auto;
 
             .button {
                 left: auto;
-                right: 0;
+                right: 10px;
             }
         }
     }
