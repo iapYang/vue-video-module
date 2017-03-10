@@ -578,13 +578,16 @@ export default {
             top: 100%;
             z-index: 2;
             height: 50px;
+            display: -webkit-flex;
+            display: -ms-flex;
+            display: flex;
+            justify-content: space-between;
 
             .button-container {
-                position: absolute;
+                position: relative;
                 width: 50px;
                 height: 50px;
-                left: 0;
-                top: 0;
+                flex-grow: 0;
 
                 .button {
                     position: absolute;
@@ -599,13 +602,13 @@ export default {
 
             .progress-bar {
                 position: relative;
-                margin-left: 50px;
                 height: 50px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
                 cursor: pointer;
+                flex-grow: 1;
             }
 
             .seek-bar {
@@ -630,15 +633,9 @@ export default {
     }
 
     &.screen .main-part .video-sub-controller {
-        .progress-bar {
-            margin-right: 50px;
-        }
-
         .screen-button.button-container {
-            position: absolute;
+            position: relative;
             display: block;
-            right: 0;
-            left: auto;
 
             .button {
                 left: auto;
