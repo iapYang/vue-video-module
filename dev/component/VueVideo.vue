@@ -494,6 +494,9 @@ export default {
     }
 
     .main-part {
+        position: relative;
+        width: 100%;
+
         video {
             position: relative;
             display: block;
@@ -680,7 +683,7 @@ export default {
         }
     }
 
-    .firefox &, .ie & {
+    .firefox &, .ie &, .edge & {
         display: -webkit-flex;
         display: -ms-flex;
         display: flex;
