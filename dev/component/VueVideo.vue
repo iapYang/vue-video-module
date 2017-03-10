@@ -94,6 +94,14 @@
                         </div>
                     </div>
                     <div
+                     class="button-container volume-button"
+                     v-if="videoOptions.volume"
+                     >
+                        <div class="volume button">
+                            <img src="image/volume.png" alt="">
+                        </div>
+                    </div>
+                    <div
                      class="screen-button button-container"
                      v-if="videoOptions.fullscreen"
                      @click="fullscreenClickHandler"
@@ -224,6 +232,9 @@ export default {
 
                 // play inline on isiPhone
                 playsinline: true,
+
+                // volumes
+                volume: true,
 
                 // checkIn cb
                 checkInCb() {},
@@ -627,7 +638,7 @@ export default {
             }
 
             .screen-button {
-                position: relative;
+                width: 40px;
 
                 .button {
                     left: auto;
@@ -640,6 +651,17 @@ export default {
                     &.full {
                         display: block;
                     }
+                }
+            }
+
+            .volume-button {
+                width: 40px;
+
+                .button {
+                    width: 30px;
+                    height: auto;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
                 }
             }
         }
