@@ -246,7 +246,6 @@ export default {
         // if the video is ready for play
         canplayHandler() {
             this.videoCanplay = true;
-            console.log('78888888');
         },
 
         // check in function
