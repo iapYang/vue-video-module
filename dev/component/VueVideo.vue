@@ -1,109 +1,111 @@
 <template lang="html">
-    <div
-     class="vue-video"
-     :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
-     ref="vue-video"
-     v-show="videoCanplay"
-     >
+    <transition name="video">
         <div
-         class="main-part part"
-         @click="videoClickHandler"
+         class="vue-video"
+         :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
+         ref="vue-video"
+         v-show="videoCanplay"
          >
-            <video
-             :loop="videoOptions.loop"
-             :src="videoOptions.src"
-             :muted="videoOptions.muted"
-             ref="video"
-             @timeupdate="timeupdateHandler"
-             @loadedmetadata="canplayHandler"
-             @webkitendfullscreen="videoPauseHandler"
+            <div
+             class="main-part part"
+             @click="videoClickHandler"
              >
-            </video>
-            <transition name="fade">
-                <div
-                 class="video-poster main-component"
-                 v-if="videoOptions.poster"
-                 v-show="is_video_BFF && !is_video_played">
-                    <transition name="fade">
-                        <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
-                    </transition>
-                </div>
-            </transition>
-            <div class="video-main-controller main-component">
-                <div
-                 class="play-container video-main-controller-part"
-                 :class="{'rollover-container': videoOptions.playMain && videoOptions.playMainRollover}"
-                 v-show="!showReplay && !is_video_play"
-                 v-if="!isiPhone && videoOptions.playMain"
+                <video
+                 :loop="videoOptions.loop"
+                 :src="videoOptions.src"
+                 :muted="videoOptions.muted"
+                 ref="video"
+                 @timeupdate="timeupdateHandler"
+                 @loadedmetadata="canplayHandler"
+                 @webkitendfullscreen="videoPauseHandler"
                  >
-                    <div class="normal">
-                        <img :src="videoOptions.playMain" alt="">
-                    </div>
-                    <div class="hover">
-                        <img :src="videoOptions.playMainRollover" alt="">
-                    </div>
-                </div>
-                <div
-                 class="replay-container video-main-controller-part"
-                 :class="{'rollover-container': videoOptions.replayMain && videoOptions.replayMainRollover}"
-                 v-show="showReplay && !is_video_play"
-                 v-if="!isiPhone && videoOptions.replayMain"
-                 >
-                    <div class="normal">
-                        <img :src="videoOptions.replayMain" alt="">
-                    </div>
-                    <div class="hover">
-                        <img :src="videoOptions.replayMainRollover" alt="">
-                    </div>
-                </div>
-                <div
-                 class="video-main-controller-part"
-                 v-show="is_video_play && is_video_buffering"
-                 >
-                    <vue-loading
-                     v-if="videoOptions.spinner"
-                     :spinner="videoOptions.spinner"></vue-loading>
-                </div>
-            </div>
-            <div class="part video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
-                <div class="button-container" @click="videoClickHandler">
+                </video>
+                <transition name="fade">
                     <div
-                     class="button play"
+                     class="video-poster main-component"
+                     v-if="videoOptions.poster"
+                     v-show="is_video_BFF && !is_video_played">
+                        <transition name="fade">
+                            <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
+                        </transition>
+                    </div>
+                </transition>
+                <div class="video-main-controller main-component">
+                    <div
+                     class="play-container video-main-controller-part"
+                     :class="{'rollover-container': videoOptions.playMain && videoOptions.playMainRollover}"
                      v-show="!showReplay && !is_video_play"
+                     v-if="!isiPhone && videoOptions.playMain"
                      >
-                         <img :src="videoOptions.playSub" alt="">
+                        <div class="normal">
+                            <img :src="videoOptions.playMain" alt="">
+                        </div>
+                        <div class="hover">
+                            <img :src="videoOptions.playMainRollover" alt="">
+                        </div>
                     </div>
                     <div
-                     class="button pause"
-                     v-show="!showReplay && is_video_play"
+                     class="replay-container video-main-controller-part"
+                     :class="{'rollover-container': videoOptions.replayMain && videoOptions.replayMainRollover}"
+                     v-show="showReplay && !is_video_play"
+                     v-if="!isiPhone && videoOptions.replayMain"
                      >
-                         <img :src="videoOptions.pauseSub" alt="">
+                        <div class="normal">
+                            <img :src="videoOptions.replayMain" alt="">
+                        </div>
+                        <div class="hover">
+                            <img :src="videoOptions.replayMainRollover" alt="">
+                        </div>
                     </div>
                     <div
-                     class="button preload"
-                     v-show="showReplay"
+                     class="video-main-controller-part"
+                     v-show="is_video_play && is_video_buffering"
                      >
-                         <img :src="videoOptions.replaySub" alt="">
+                        <vue-loading
+                         v-if="videoOptions.spinner"
+                         :spinner="videoOptions.spinner"></vue-loading>
                     </div>
                 </div>
-                <div class="progress-bar" @click="barClickHandler">
-                    <div class="seek-bar">
-                        <div class="play-bar" :style="{width: progress}"></div>
+                <div class="part video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
+                    <div class="button-container" @click="videoClickHandler">
+                        <div
+                         class="button play"
+                         v-show="!showReplay && !is_video_play"
+                         >
+                             <img :src="videoOptions.playSub" alt="">
+                        </div>
+                        <div
+                         class="button pause"
+                         v-show="!showReplay && is_video_play"
+                         >
+                             <img :src="videoOptions.pauseSub" alt="">
+                        </div>
+                        <div
+                         class="button preload"
+                         v-show="showReplay"
+                         >
+                             <img :src="videoOptions.replaySub" alt="">
+                        </div>
                     </div>
-                </div>
-                <div
-                 class="screen-button button-container"
-                 @click="fullscreenClickHandler"
-                 >
+                    <div class="progress-bar" @click="barClickHandler">
+                        <div class="seek-bar">
+                            <div class="play-bar" :style="{width: progress}"></div>
+                        </div>
+                    </div>
                     <div
-                     class="button"
+                     class="screen-button button-container"
+                     @click="fullscreenClickHandler"
                      >
-                         <img :src="videoOptions.fullscreenSub" alt="">
+                        <div
+                         class="button"
+                         >
+                             <img :src="videoOptions.fullscreenSub" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -432,6 +434,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.video-enter-active {
+    transition: opacity 0.4s;
+}
+
+.video-leave-active {
+    transition: opacity 0.6s;
+}
+/* .video-leave-active in <2.1.8 */
+.video-enter,
+.video-leave-to {
+    opacity: 0;
+}
+
 .vue-video {
     position: relative;
     width: 100%;
