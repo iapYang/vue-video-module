@@ -98,9 +98,14 @@
                      @click="fullscreenClickHandler"
                      >
                         <div
-                         class="button"
+                         class="button full"
                          >
                              <img :src="videoOptions.fullscreenSub" alt="">
+                        </div>
+                        <div
+                         class="button shrink"
+                         >
+                             <img :src="videoOptions.shrinkscreenSub" alt="">
                         </div>
                     </div>
                 </div>
@@ -642,6 +647,14 @@ export default {
             .button {
                 left: auto;
                 right: 10px;
+
+                &.shrink {
+                    display: none;
+                }
+
+                &.full {
+                    display: block;
+                }
             }
         }
     }
@@ -655,6 +668,16 @@ export default {
 
             .button-container .button {
                 left: 5px;
+            }
+
+            .screen-button.button-container .button {
+                &.shrink {
+                    display: block;
+                }
+
+                &.full {
+                    display: none;
+                }
             }
         }
 
