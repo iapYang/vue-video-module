@@ -633,8 +633,6 @@ export default {
     &.fullscreen .main-part {
         .video-sub-controller {
             position: absolute;
-            top: auto;
-            bottom: 0;
             opacity: 0;
             visibility: hidden;
             transition: all ease 0.3s;
