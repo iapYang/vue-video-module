@@ -2,7 +2,7 @@
     <transition name="video">
         <div
          class="vue-video"
-         :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
+         :class="{fullscreen: isFullscreen}"
          ref="vue-video"
          v-show="videoCanplay"
          >
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
-                    <div class="button-container" @click="videoClickHandler">
+                    <div class="button-container play-button" @click="videoClickHandler">
                         <div
                          class="button play"
                          v-show="!showReplay && !is_video_play"
@@ -95,6 +95,7 @@
                     </div>
                     <div
                      class="screen-button button-container"
+                     v-if="videoOptions.fullscreen"
                      @click="fullscreenClickHandler"
                      >
                         <div
@@ -626,30 +627,19 @@ export default {
             }
 
             .screen-button {
-                display: none;
+                position: relative;
 
-                .fullscreen & {
-                    display: block;
-                }
-            }
-        }
-    }
+                .button {
+                    left: auto;
+                    right: 10px;
 
-    &.screen .main-part .video-sub-controller {
-        .screen-button.button-container {
-            position: relative;
-            display: block;
+                    &.shrink {
+                        display: none;
+                    }
 
-            .button {
-                left: auto;
-                right: 10px;
-
-                &.shrink {
-                    display: none;
-                }
-
-                &.full {
-                    display: block;
+                    &.full {
+                        display: block;
+                    }
                 }
             }
         }
@@ -662,11 +652,11 @@ export default {
             visibility: hidden;
             transition: all ease 0.3s;
 
-            .button-container .button {
+            .play-button .button {
                 left: 5px;
             }
 
-            .screen-button.button-container .button {
+            .screen-button .button {
                 &.shrink {
                     display: block;
                 }
