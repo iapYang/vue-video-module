@@ -3,7 +3,7 @@
      class="vue-video"
      :class="{screen: videoOptions.fullscreen, fullscreen: isFullscreen}"
      ref="vue-video"
-     v-show="true"
+     v-show="videoCanplay"
      >
         <div
          class="main-part part"
@@ -14,8 +14,8 @@
              :src="videoOptions.src"
              :muted="videoOptions.muted"
              ref="video"
-             @canplay="canplayHandler"
              @timeupdate="timeupdateHandler"
+             @loadedmetadata="canplayHandler"
              @webkitendfullscreen="videoPauseHandler"
              >
             </video>
