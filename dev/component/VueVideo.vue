@@ -246,24 +246,22 @@ export default {
         // if the video is ready for play
         canplayHandler() {
             this.videoCanplay = true;
+
+            // to auto play
+            if (this.videoOptions.autoPlay) {
+                setTimeout(this.videoClickHandler, 500);
+            }
         },
 
         // check in function
         checkInHandler() {
             this.startPointResetHandler();
 
-            // to auto play
-            if (this.videoOptions.autoPlay) {
-                setTimeout(this.videoClickHandler, 500);
-            }
-
-            const self = this;
-
             // after the poster is loaded, it'll show
             const poster = this.videoOptions.poster;
             if (poster) {
                 loadSinglePicture(poster, () => {
-                    self.is_poster_loaded = true;
+                    this.is_poster_loaded = true;
                 });
             }
 
@@ -429,9 +427,6 @@ export default {
     props: ['options'],
     components: {
         VueLoading,
-    },
-    watch: {
-
     },
 };
 </script>
