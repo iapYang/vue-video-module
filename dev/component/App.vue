@@ -24,12 +24,6 @@ export default {
                 controlBar: true,
                 spinner: 'circles',
                 fullscreen: true,
-                checkInHandler(video) {
-
-                },
-                checkOutHandler(video) {
-
-                },
             },
         };
     },

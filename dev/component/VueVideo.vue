@@ -15,6 +15,7 @@
                  :src="videoOptions.src"
                  :muted="videoOptions.muted"
                  ref="video"
+                 :playsinline="videoOptions.playsinline"
                  @timeupdate="timeupdateHandler"
                  @loadedmetadata="canplayHandler"
                  @webkitendfullscreen="videoPauseHandler"
@@ -35,7 +36,7 @@
                      class="play-container video-main-controller-part"
                      :class="{'rollover-container': videoOptions.playMain && videoOptions.playMainRollover}"
                      v-show="!showReplay && !is_video_play"
-                     v-if="!isiPhone && videoOptions.playMain"
+                     v-if="videoOptions.playsinline && videoOptions.playMain"
                      >
                         <div class="normal">
                             <img :src="videoOptions.playMain" alt="">
@@ -48,7 +49,7 @@
                      class="replay-container video-main-controller-part"
                      :class="{'rollover-container': videoOptions.replayMain && videoOptions.replayMainRollover}"
                      v-show="showReplay && !is_video_play"
-                     v-if="!isiPhone && videoOptions.replayMain"
+                     v-if="videoOptions.playsinline && videoOptions.replayMain"
                      >
                         <div class="normal">
                             <img :src="videoOptions.replayMain" alt="">
@@ -114,6 +115,8 @@ import CONFIG from '../data/config.json';
 import Platform from '../script/plugin/platform.js';
 
 import VueLoading from 'vue-simple-loading';
+
+import enableInlineVideo from 'iphone-inline-video';
 
 function floatToPercent(number) {
     return `${number.toFixed(4) * 100}%`;
@@ -212,6 +215,9 @@ export default {
                 // fullscreen
                 fullscreen: false,
 
+                // play inline on isiPhone
+                playsinline: true,
+
                 // checkIn cb
                 checkInCb() {},
 
@@ -243,6 +249,9 @@ export default {
                 this.checkIsFullscreen();
             });
         });
+
+        // enable inline play
+        enableInlineVideo(this.video);
     },
     methods: {
         // if the video is ready for play
@@ -434,6 +443,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.IIV::-webkit-media-controls-play-button,
+.IIV::-webkit-media-controls-start-playback-button {
+    opacity: 0;
+    pointer-events: none;
+    width: 5px;
+}
+
 .video-enter-active {
     transition: opacity 0.4s;
 }
