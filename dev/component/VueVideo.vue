@@ -232,17 +232,12 @@ export default {
         });
 
         // register events when screen came to whole screen
-        document.addEventListener('fullscreenchange', () => {
-            this.checkIsFullscreen();
-        });
-        document.addEventListener('webkitfullscreenchange', () => {
-            this.checkIsFullscreen();
-        });
-        document.addEventListener('mozfullscreenchange', () => {
-            this.checkIsFullscreen();
-        });
-        document.addEventListener('msfullscreenchange', () => {
-            this.checkIsFullscreen();
+        const fullscreenEvents = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'msfullscreenchange'];
+
+        fullscreenEvents.forEach(fullscreenEvent => {
+            document.addEventListener(fullscreenEvent, () => {
+                this.checkIsFullscreen();
+            });
         });
     },
     methods: {
