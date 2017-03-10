@@ -67,7 +67,7 @@
                          :spinner="videoOptions.spinner"></vue-loading>
                     </div>
                 </div>
-                <div class="part video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
+                <div class="video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
                     <div class="button-container" @click="videoClickHandler">
                         <div
                          class="button play"
@@ -201,6 +201,7 @@ export default {
                 pauseSub: CONFIG.pause,
                 replaySub: CONFIG.replay,
                 fullscreenSub: CONFIG.fullscreen,
+                shrinkscreenSub: CONFIG.shrinkscreen,
 
                 // if the video loop
                 loop: false,
@@ -489,11 +490,6 @@ export default {
     img {
         position: relative;
         display: block;
-        width: 100%;
-    }
-
-    .part {
-        position: relative;
         width: 100%;
     }
 

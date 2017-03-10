@@ -21,8 +21,6 @@ export default {
                 playMainRollover: 'image/play_rollover_op2.png',
                 replayMain: 'image/replay_op2.png',
                 replayMainRollover: 'image/replay_rollover_op2.png',
-                fullscreenSub: 'image/screen.svg',
-                shrinkscreenSub: 'image/screen-shrink.svg',
                 controlBar: true,
                 spinner: 'circles',
                 fullscreen: true,
