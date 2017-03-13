@@ -212,8 +212,8 @@ export default {
                 playSub: require('../image/play.png'),
                 pauseSub: require('../image/pause.png'),
                 replaySub: require('../image/replay.png'),
-                fullscreenSub: 'image/screen.svg',
-                shrinkscreenSub: 'image/screen_shrink.svg',
+                fullscreenSub: require('../image/screen.svg'),
+                shrinkscreenSub: require('../image/screen_shrink.svg'),
                 volumeSub: require('../image/volume.png'),
 
                 // if the video loop

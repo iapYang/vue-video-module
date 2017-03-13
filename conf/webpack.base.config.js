@@ -89,6 +89,7 @@ module.exports = {
                     loader: 'svg-url-loader',
                     options: {
                         limit: 10240,
+                        noquotes: true,
                     },
                 }],
                 include: [
