@@ -25,7 +25,8 @@
                     <div
                      class="video-poster main-component"
                      v-if="videoOptions.poster"
-                     v-show="is_video_BFF && !is_video_played">
+                     v-show="is_video_BFF && !is_video_played"
+                     >
                         <transition name="fade">
                             <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
                         </transition>
@@ -34,7 +35,7 @@
                 <div class="video-main-controller main-component">
                     <div
                      class="play-container video-main-controller-part"
-                     :class="{'rollover-container': videoOptions.playMain && videoOptions.playMainRollover}"
+                     :class="{'rollover-container': isPlayContainer}"
                      v-show="!showReplay && !is_video_play"
                      v-if="videoOptions.playsinline && videoOptions.playMain"
                      >
@@ -47,7 +48,7 @@
                     </div>
                     <div
                      class="replay-container video-main-controller-part"
-                     :class="{'rollover-container': videoOptions.replayMain && videoOptions.replayMainRollover}"
+                     :class="{'rollover-container': isReplayContainer}"
                      v-show="showReplay && !is_video_play"
                      v-if="videoOptions.playsinline && videoOptions.replayMain"
                      >
@@ -64,7 +65,9 @@
                      >
                         <vue-loading
                          v-if="videoOptions.spinner"
-                         :spinner="videoOptions.spinner"></vue-loading>
+                         :spinner="videoOptions.spinner"
+                         >
+                        </vue-loading>
                     </div>
                 </div>
                 <div class="video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
@@ -98,7 +101,7 @@
                      v-if="videoOptions.volume"
                      >
                         <div class="volume button">
-                            <img src="image/volume.png" alt="">
+                            <img :src="videoOptions.volumeSub" alt="">
                         </div>
                     </div>
                     <div
@@ -206,11 +209,12 @@ export default {
                 replayMainRollover: false,
 
                 // sub control button
-                playSub: CONFIG.play,
-                pauseSub: CONFIG.pause,
-                replaySub: CONFIG.replay,
-                fullscreenSub: CONFIG.fullscreen,
-                shrinkscreenSub: CONFIG.shrinkscreen,
+                playSub: require('../image/play.png'),
+                pauseSub: require('../image/pause.png'),
+                replaySub: require('../image/replay.png'),
+                fullscreenSub: 'image/screen.svg',
+                shrinkscreenSub: 'image/screen_shrink.svg',
+                volumeSub: require('../image/volume.png'),
 
                 // if the video loop
                 loop: false,
@@ -270,6 +274,14 @@ export default {
 
         // enable inline play
         enableInlineVideo(this.video);
+    },
+    computed: {
+        isPlayContainer() {
+            return this.videoOptions.playMain && this.videoOptions.playMainRollover;
+        },
+        isReplayContainer() {
+            return this.videoOptions.replayMain && this.videoOptions.replayMainRollover;
+        },
     },
     methods: {
         // if the video is ready for play

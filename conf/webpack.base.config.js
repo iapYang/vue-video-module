@@ -64,6 +64,9 @@ module.exports = {
                         name: 'font/[name].[ext]',
                     },
                 }],
+                include: [
+                    path.resolve('dev/font'),
+                ],
             },
             {
                 test: /\.(jpg|jpeg|png|gif)$/,
@@ -74,6 +77,21 @@ module.exports = {
                         mimetype: 'image/png',
                     },
                 }],
+                include: [
+                    path.resolve('dev/image'),
+                ],
+            },
+            {
+                test: /\.svg/,
+                use: [{
+                    loader: 'svg-url-loader',
+                    options: {
+                        limit: 10240,
+                    },
+                }],
+                include: [
+                    path.resolve('dev/image'),
+                ],
             },
         ],
     },
