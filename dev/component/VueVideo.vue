@@ -127,8 +127,6 @@
 </template>
 
 <script>
-import CONFIG from '../data/config.json';
-
 import Platform from '../script/plugin/platform.js';
 
 import VueLoading from 'vue-simple-loading';
