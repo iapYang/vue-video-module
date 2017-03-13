@@ -7,7 +7,9 @@ const jsFiles = glob.sync('./dev/script/*.js');
 const entry = {};
 
 jsFiles.forEach((file, i) => {
-    entry[path.basename(file, '.js')] = file;
+    if (file !== 'bundle') {
+        entry[path.basename(file, '.js')] = file;
+    }
 });
 
 module.exports = {
