@@ -8,6 +8,7 @@
 </template>
 
 <script>
+// import VueVideo from '../../dist/index.js';
 import VueVideo from './VueVideo.vue';
 export default {
     data() {
