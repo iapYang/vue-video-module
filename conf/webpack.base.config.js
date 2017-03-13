@@ -7,7 +7,7 @@ const jsFiles = glob.sync('./dev/script/*.js');
 const entry = {};
 
 jsFiles.forEach((file, i) => {
-    if (file !== 'bundle') {
+    if (!file.match('bundle')) {
         entry[path.basename(file, '.js')] = file;
     }
 });
@@ -81,6 +81,7 @@ module.exports = {
                 }],
                 include: [
                     path.resolve(__dirname, '../dev/image'),
+                    path.resolve(__dirname, '../dev/backup'),
                 ],
             },
             {
@@ -94,6 +95,7 @@ module.exports = {
                 }],
                 include: [
                     path.resolve(__dirname, '../dev/image'),
+                    path.resolve(__dirname, '../dev/backup'),
                 ],
             },
         ],

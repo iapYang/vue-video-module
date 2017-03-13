@@ -209,12 +209,12 @@ export default {
                 replayMainRollover: false,
 
                 // sub control button
-                playSub: require('../image/play.png'),
-                pauseSub: require('../image/pause.png'),
-                replaySub: require('../image/replay.png'),
-                fullscreenSub: require('../image/screen.svg'),
-                shrinkscreenSub: require('../image/screen_shrink.svg'),
-                volumeSub: require('../image/volume.png'),
+                playSub: require('../backup/play.png'),
+                pauseSub: require('../backup/pause.png'),
+                replaySub: require('../backup/replay.png'),
+                fullscreenSub: require('../backup/screen.svg'),
+                shrinkscreenSub: require('../backup/screen_shrink.svg'),
+                volumeSub: require('../backup/volume.png'),
 
                 // if the video loop
                 loop: false,

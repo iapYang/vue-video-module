@@ -36,6 +36,7 @@ module.exports = merge(baseWebpackConfig, {
         ], {
             ignore: [
                 '*.html',
+                'backup/*/**',
                 'router.js',
                 'style/**/*',
                 'script/**/*',
