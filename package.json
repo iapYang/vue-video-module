@@ -1,8 +1,8 @@
 {
-  "name": "template",
-  "version": "2.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "vue-video-module",
+  "version": "0.0.0",
+  "description": "a video component built for vue",
+  "main": "dist/bundle.js",
   "scripts": {
     "dev": "webpack-dev-server --progress --config ./conf/webpack.dev.config.js",
     "build": "webpack --progress --config ./conf/webpack.prod.config.js",
@@ -11,7 +11,7 @@
     "update-json": "ncu -a",
     "update-package": "npm update"
   },
-  "author": "",
+  "author": "iapYang",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -39,11 +39,11 @@
     "vue-template-compiler": "^2.2.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1",
-    "webpack-merge": "^3.0.0"
-  },
-  "dependencies": {
-    "vue": "^2.2.1",
+    "webpack-merge": "^3.0.0",
     "vue-router": "^2.3.0",
     "vuex": "^2.2.1"
+  },
+  "dependencies": {
+    "vue": "^2.2.1"
   }
 }
