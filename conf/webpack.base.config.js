@@ -81,7 +81,6 @@ module.exports = {
                 }],
                 include: [
                     path.resolve(__dirname, '../dev/image'),
-                    path.resolve(__dirname, '../dev/backup'),
                 ],
             },
             {
@@ -95,7 +94,6 @@ module.exports = {
                 }],
                 include: [
                     path.resolve(__dirname, '../dev/image'),
-                    path.resolve(__dirname, '../dev/backup'),
                 ],
             },
         ],
