@@ -70,6 +70,7 @@ module.exports = {
                 use: [{
                     loader: 'url-loader',
                     options: {
+                        limit: '25000',
                         mimetype: 'image/png',
                     },
                 }],
