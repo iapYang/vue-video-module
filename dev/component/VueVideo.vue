@@ -112,7 +112,7 @@
                             </svg>
                             <div class="volume-progress">
                                 <div class="volume-progress-wrapper">
-                                    <div class="progress-circle" ref="progress-circle"></div>
+                                    <div class="progress-circle"></div>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +145,6 @@ import Platform from '../script/plugin/platform.js';
 import VueLoading from 'vue-simple-loading';
 
 import enableInlineVideo from 'iphone-inline-video';
-const Dragdealer = require('dragdealer');
 
 function floatToPercent(number) {
     return `${number.toFixed(4) * 100}%`;
@@ -289,12 +288,6 @@ export default {
 
         // enable inline play
         enableInlineVideo(this.video);
-
-        // init dragdealer progress-circle
-        new Dragdealer(this.$refs['progress-circle'], {
-            horizontal: false,
-            vertical: true,
-        });
     },
     computed: {
         isPlayContainer() {
@@ -502,7 +495,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .IIV::-webkit-media-controls-play-button,
 .IIV::-webkit-media-controls-start-playback-button {
     opacity: 0;
