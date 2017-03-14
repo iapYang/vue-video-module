@@ -114,7 +114,8 @@
                              class="volume-progress"
                              @mousedown.stop="volumeMDHandler"
                              @mouseup.stop="volumeMDHandler"
-                             @mousemove="volumeMMHandler"
+                             @mousemove.stop="volumeMMHandler"
+                             @mouseleave="volumeMLHandler"
                              >
                                 <div class="volume-progress-wrapper">
                                     <div
@@ -518,8 +519,14 @@ export default {
             this.volumeCalcHandler(e);
         },
 
+        volumeMLHandler(e) {
+            if (!this.isVolumeMousedown) return;
+            this.isVolumeMousedown = !this.isVolumeMousedown;
+        },
+
         // calc volume
         volumeCalcHandler(e) {
+            console.log(e);
             const srcElementHeight = e.srcElement.clientHeight;
             const offsetY = e.offsetY;
             this.volumeSetHandler(srcElementHeight, offsetY);
