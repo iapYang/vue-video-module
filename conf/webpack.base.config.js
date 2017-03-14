@@ -79,9 +79,6 @@ module.exports = {
                         mimetype: 'image/png',
                     },
                 }],
-                include: [
-                    path.resolve(__dirname, '../dev/image'),
-                ],
             },
             {
                 test: /\.svg/,
@@ -92,9 +89,6 @@ module.exports = {
                         noquotes: true,
                     },
                 }],
-                include: [
-                    path.resolve(__dirname, '../dev/image'),
-                ],
             },
         ],
     },
