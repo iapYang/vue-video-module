@@ -110,6 +110,11 @@
                             	<path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
                             	<line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
                             </svg>
+                            <div class="volume-progress">
+                                <div class="volume-progress-wrapper">
+                                    <div class="progress-circle" ref="progress-circle"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div
@@ -140,6 +145,7 @@ import Platform from '../script/plugin/platform.js';
 import VueLoading from 'vue-simple-loading';
 
 import enableInlineVideo from 'iphone-inline-video';
+const Dragdealer = require('dragdealer');
 
 function floatToPercent(number) {
     return `${number.toFixed(4) * 100}%`;
@@ -283,6 +289,12 @@ export default {
 
         // enable inline play
         enableInlineVideo(this.video);
+
+        // init dragdealer progress-circle
+        new Dragdealer(this.$refs['progress-circle'], {
+            horizontal: false,
+            vertical: true,
+        });
     },
     computed: {
         isPlayContainer() {
@@ -711,6 +723,32 @@ export default {
                         #XMLID_138_ {
                             stroke-dasharray: 1000;
                             stroke-dashoffset: 1000;
+                        }
+                    }
+
+                    .volume-progress {
+                        position: absolute;
+                        width: 100%;
+                        height: 80px;
+                        left: 0;
+                        bottom: 100%;
+
+                        .volume-progress-wrapper {
+                            position: relative;
+                            width: 4px;
+                            height: 100%;
+                            background-color: blue;
+                            margin: 0 auto;
+
+                            .progress-circle {
+                                position: absolute;
+                                background-color: red;
+                                width: 8px;
+                                height: 8px;
+                                left: 50%;
+                                border-radius: 50%;
+                                transform: translate(-50%, -50%);
+                            }
                         }
                     }
                 }
