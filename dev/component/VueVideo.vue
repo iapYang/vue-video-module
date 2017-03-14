@@ -738,7 +738,7 @@ export default {
                                 background-color: red;
                                 width: 10px;
                                 height: 10px;
-                                left: calc(50% - 5px);
+                                left: calc(50% - 4.5px);
                                 top: -5px;
                                 border-radius: 50%;
                             }
