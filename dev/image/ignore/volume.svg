@@ -10,5 +10,5 @@
 <rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
 <path id="XMLID_4_" class="st1" d="M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"/>
 <path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
-<rect id="XMLID_59_" x="-2.5" y="6.9" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 7.3768 17.8022)" class="st0" width="19.8" height="1"/>
+<line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
 </svg>

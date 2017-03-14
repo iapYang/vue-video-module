@@ -98,6 +98,7 @@
                     </div>
                     <div
                      class="button-container volume-button"
+                     :class="volumeClass"
                      v-if="videoOptions.volume"
                      >
                         <div class="volume button">
@@ -107,7 +108,7 @@
                             	<rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
                             	<path id="XMLID_4_" class="st1" d="M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"/>
                             	<path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
-                            	<rect id="XMLID_59_" x="-2.5" y="6.9" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 7.3768 17.8022)" class="st0" width="19.8" height="1"/>
+                            	<line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
                             </svg>
                         </div>
                     </div>
@@ -196,6 +197,9 @@ export default {
 
             // check if the current video is ready for play
             videoCanplay: false,
+
+            // Volume
+            currentVolume: 1,
 
             // video options
             videoOptions: Object.assign({
@@ -286,6 +290,15 @@ export default {
         },
         isReplayContainer() {
             return this.videoOptions.replayMain && this.videoOptions.replayMainRollover;
+        },
+        volumeClass() {
+            if (this.currentVolume >= 0.5) {
+                return 'sound-normal';
+            } else if (this.currentVolume === 0) {
+                return 'sound-mute';
+            }
+
+            return 'sound-low';
         },
     },
     methods: {
@@ -687,11 +700,30 @@ export default {
                         .st0 {
                 			fill: #D5A83B;
                 		}
+
                 		.st1 {
                 			fill: none;
                 			stroke: #D5A83B;
                 			stroke-miterlimit: 10;
+                            transition: all ease 0.3s;
                 		}
+
+                        #XMLID_138_ {
+                            stroke-dasharray: 1000;
+                            stroke-dashoffset: 1000;
+                        }
+                    }
+                }
+
+                &.sound-low .button svg {
+                    #XMLID_5_ {
+                        stroke: transparent;
+                    }
+                }
+
+                &.sound-mute .button svg {
+                    #XMLID_138_ {
+                        stroke-dashoffset: 0;
                     }
                 }
             }
