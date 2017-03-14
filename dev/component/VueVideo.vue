@@ -736,11 +736,11 @@ export default {
                             .progress-circle {
                                 position: absolute;
                                 background-color: red;
-                                width: 8px;
-                                height: 8px;
-                                left: 50%;
+                                width: 10px;
+                                height: 10px;
+                                left: calc(50% - 5px);
+                                top: -5px;
                                 border-radius: 50%;
-                                transform: translate(-50%, -50%);
                             }
                         }
                     }
