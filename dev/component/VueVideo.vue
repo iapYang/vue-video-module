@@ -519,6 +519,7 @@ export default {
             this.volumeCalcHandler(e);
         },
 
+        // volume mouseleave
         volumeMLHandler(e) {
             if (!this.isVolumeMousedown) return;
             this.isVolumeMousedown = !this.isVolumeMousedown;
@@ -526,7 +527,6 @@ export default {
 
         // calc volume
         volumeCalcHandler(e) {
-            console.log(e);
             const srcElementHeight = e.srcElement.clientHeight;
             const offsetY = e.offsetY;
             this.volumeSetHandler(srcElementHeight, offsetY);
@@ -773,20 +773,21 @@ export default {
                     .volume-progress {
                         position: absolute;
                         width: 100%;
-                        height: 80px;
+                        height: 100px;
                         left: 0;
                         bottom: 100%;
+                        padding: 10px 0;
 
                         .volume-progress-wrapper {
                             position: relative;
                             width: 4px;
                             height: 100%;
-                            background-color: blue;
+                            background-color: #48391b;
                             margin: 0 auto;
 
                             .progress-circle {
                                 position: absolute;
-                                background-color: red;
+                                background-color: #d5a83d;
                                 width: 12px;
                                 height: 12px;
                                 left: -4px;
