@@ -101,7 +101,14 @@
                      v-if="videoOptions.volume"
                      >
                         <div class="volume button">
-                            <img :src="videoOptions.volumeSub" alt="">
+                            <!-- <img :src="videoOptions.volumeSub" alt=""> -->
+                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14.7 14.7" style="enable-background:new 0 0 14.7 14.7;" xml:space="preserve">
+                            	<polygon id="XMLID_1_" class="st0" points="7.6,1.3 7.6,13.4 4.3,10.5 4.3,4.3 "/>
+                            	<rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
+                            	<path id="XMLID_4_" class="st1" d="M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"/>
+                            	<path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
+                            	<rect id="XMLID_59_" x="-2.5" y="6.9" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 7.3768 17.8022)" class="st0" width="19.8" height="1"/>
+                            </svg>
                         </div>
                     </div>
                     <div
@@ -212,7 +219,7 @@ export default {
                 replaySub: require('../image/ignore/replay.png'),
                 fullscreenSub: require('../image/ignore/screen.svg'),
                 shrinkscreenSub: require('../image/ignore/screen_shrink.svg'),
-                volumeSub: require('../image/ignore/volume.png'),
+                volumeSub: require('../image/ignore/volume.svg'),
 
                 // if the video loop
                 loop: false,
@@ -668,10 +675,24 @@ export default {
                 width: 40px;
 
                 .button {
-                    width: 30px;
+                    width: 20px;
                     height: auto;
                     left: 50%;
                     transform: translate(-50%, -50%);
+
+                    svg {
+                        position: relative;
+                        width: 100%;
+
+                        .st0 {
+                			fill: #D5A83B;
+                		}
+                		.st1 {
+                			fill: none;
+                			stroke: #D5A83B;
+                			stroke-miterlimit: 10;
+                		}
+                    }
                 }
             }
         }
