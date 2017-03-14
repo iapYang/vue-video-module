@@ -100,6 +100,7 @@
                      class="button-container volume-button"
                      :class="volumeClass"
                      v-if="videoOptions.volume"
+                     @click="volumeMuteHandler"
                      >
                         <div class="volume button">
                             <!-- <img :src="videoOptions.volumeSub" alt=""> -->
@@ -116,6 +117,7 @@
                              @mouseup.stop="volumeMDHandler"
                              @mousemove.stop="volumeMMHandler"
                              @mouseleave="volumeMLHandler"
+                             @click.stop
                              >
                                 <div class="volume-progress-wrapper">
                                     <div
@@ -214,6 +216,12 @@ export default {
 
             // Volume current
             volumeCurrent: 1,
+
+            // Volume temp
+            volumeTemp: 1,
+
+            // Volume click count
+            volumeCount: 0,
 
             // volume circle top
             volumeCircleTop: '0%',
@@ -503,6 +511,18 @@ export default {
             cancelAnimationFrame(this.requestId);
         },
 
+        // volume mute change
+        volumeMuteHandler() {
+            this.volumeCount += 1;
+
+            if (this.volumeCount % 2) {
+                this.volumeTemp = this.volumeCurrent;
+                this.volumeSetHandler(1, 1);
+            } else {
+                this.volumeSetHandler(1, 1 - this.volumeTemp);
+            }
+        },
+
         // volume mousedown & mouseup
         volumeMDHandler(e) {
             this.isVolumeMousedown = !this.isVolumeMousedown;
@@ -527,6 +547,7 @@ export default {
 
         // calc volume
         volumeCalcHandler(e) {
+            if (e.srcElement.className.match('circle')) return;
             const srcElementHeight = e.srcElement.clientHeight;
             const offsetY = e.offsetY;
             this.volumeSetHandler(srcElementHeight, offsetY);
@@ -536,6 +557,7 @@ export default {
         volumeSetHandler(height, offsetY) {
             const proportion = offsetY / height;
             this.volumeCurrent = 1 - proportion;
+            this.video.volume = 1 - proportion;
             this.volumeCircleTop = floatToPercent(proportion);
         },
     },
@@ -777,6 +799,8 @@ export default {
                         left: 0;
                         bottom: 100%;
                         padding: 10px 0;
+                        opacity: 0;
+                        transition: all ease 0.3s;
 
                         .volume-progress-wrapper {
                             position: relative;
@@ -808,6 +832,11 @@ export default {
                     #XMLID_138_ {
                         stroke-dashoffset: 0;
                     }
+                }
+
+                .desktop &:hover .button .volume-progress {
+                    opacity: 1;
+                    height: 100px;
                 }
             }
         }
