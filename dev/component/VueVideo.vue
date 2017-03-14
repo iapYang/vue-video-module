@@ -110,9 +110,17 @@
                             	<path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
                             	<line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
                             </svg>
-                            <div class="volume-progress">
-                                <div class="volume-progress-wrapper">
-                                    <div class="progress-circle"></div>
+                            <div
+                             class="volume-progress"
+                             @mousedown.stop="volumeMDHandler"
+                             @mouseup.stop="volumeMDHandler"
+                             >
+                                <div
+                                 class="volume-progress-wrapper"
+                                 >
+                                    <div
+                                     :style="{top: volumeCircleTop}"
+                                     class="progress-circle"></div>
                                 </div>
                             </div>
                         </div>
@@ -203,8 +211,14 @@ export default {
             // check if the current video is ready for play
             videoCanplay: false,
 
-            // Volume
-            currentVolume: 1,
+            // Volume current
+            volumeCurrent: 1,
+
+            // volume circle top
+            volumeCircleTop: '0%',
+
+            // volume mousedown
+            isVolumeMousedown: false,
 
             // video options
             videoOptions: Object.assign({
@@ -297,9 +311,9 @@ export default {
             return this.videoOptions.replayMain && this.videoOptions.replayMainRollover;
         },
         volumeClass() {
-            if (this.currentVolume >= 0.5) {
+            if (this.volumeCurrent >= 0.5) {
                 return 'sound-normal';
-            } else if (this.currentVolume === 0) {
+            } else if (this.volumeCurrent === 0) {
                 return 'sound-mute';
             }
 
@@ -486,6 +500,23 @@ export default {
         // cancelRequest
         cancelRequest() {
             cancelAnimationFrame(this.requestId);
+        },
+
+        // volumeMouseDown & Up
+        volumeMDHandler(e) {
+            const srcElementHeight = e.srcElement.clientHeight;
+            const offsetY = e.offsetY;
+            if (this.isVolumeMousedown) {
+                this.setVolumeHandler(srcElementHeight, offsetY);
+            }
+            this.isVolumeMousedown = !this.isVolumeMousedown;
+        },
+
+        // set volume
+        setVolumeHandler(height, offsetY) {
+            const proportion = offsetY / height;
+            this.volumeCurrent = 1 - proportion;
+            this.volumeCircleTop = floatToPercent(proportion);
         },
     },
     props: ['options'],
@@ -736,10 +767,10 @@ export default {
                             .progress-circle {
                                 position: absolute;
                                 background-color: red;
-                                width: 10px;
-                                height: 10px;
-                                left: calc(50% - 4.5px);
-                                top: -5px;
+                                width: 12px;
+                                height: 12px;
+                                left: -4px;
+                                transform: translateY(-50%);
                                 border-radius: 50%;
                             }
                         }
