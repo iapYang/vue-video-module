@@ -114,12 +114,12 @@
                              class="volume-progress"
                              @mousedown.stop="volumeMDHandler"
                              @mouseup.stop="volumeMDHandler"
+                             @mousemove="volumeMMHandler"
                              >
-                                <div
-                                 class="volume-progress-wrapper"
-                                 >
+                                <div class="volume-progress-wrapper">
                                     <div
                                      :style="{top: volumeCircleTop}"
+                                     @mousemove.stop
                                      class="progress-circle"></div>
                                 </div>
                             </div>
@@ -502,18 +502,31 @@ export default {
             cancelAnimationFrame(this.requestId);
         },
 
-        // volumeMouseDown & Up
+        // volume mousedown & mouseup
         volumeMDHandler(e) {
+            this.isVolumeMousedown = !this.isVolumeMousedown;
+
+            if (this.isVolumeMousedown) return;
+
+            this.volumeCalcHandler(e);
+        },
+
+        // volume mousemove
+        volumeMMHandler(e) {
+            if (!this.isVolumeMousedown) return;
+
+            this.volumeCalcHandler(e);
+        },
+
+        // calc volume
+        volumeCalcHandler(e) {
             const srcElementHeight = e.srcElement.clientHeight;
             const offsetY = e.offsetY;
-            if (this.isVolumeMousedown) {
-                this.setVolumeHandler(srcElementHeight, offsetY);
-            }
-            this.isVolumeMousedown = !this.isVolumeMousedown;
+            this.volumeSetHandler(srcElementHeight, offsetY);
         },
 
         // set volume
-        setVolumeHandler(height, offsetY) {
+        volumeSetHandler(height, offsetY) {
             const proportion = offsetY / height;
             this.volumeCurrent = 1 - proportion;
             this.volumeCircleTop = floatToPercent(proportion);
