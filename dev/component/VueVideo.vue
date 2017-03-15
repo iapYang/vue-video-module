@@ -215,12 +215,6 @@ export default {
             // Volume click count
             volumeCount: 0,
 
-            // volume circle top
-            volumeCircleTop: '0%',
-
-            // volume mousedown
-            isVolumeMousedown: false,
-
             // video options
             videoOptions: Object.assign({
                 // source of video (required)
@@ -505,9 +499,10 @@ export default {
 
             if (this.volumeCount % 2) {
                 this.volumeTemp = this.volumeCurrent;
-                this.volumeSetHandler(1, 1);
+                this.volumechangeHandler(1);
             } else {
-                this.volumeSetHandler(1, 1 - this.volumeTemp);
+                if (!this.volumeTemp) this.volumeTemp = 0.1;
+                this.volumechangeHandler(1 - this.volumeTemp);
             }
         },
 
@@ -516,46 +511,7 @@ export default {
         volumechangeHandler(y) {
             if (!this.video) return;
             this.volumeCurrent = 1 - y;
-
             this.video.volume = 1 - y;
-        },
-
-        // volume mousedown & mouseup
-        volumeMDHandler(e) {
-            this.isVolumeMousedown = !this.isVolumeMousedown;
-
-            if (this.isVolumeMousedown) return;
-
-            this.volumeCalcHandler(e);
-        },
-
-        // volume mousemove
-        volumeMMHandler(e) {
-            if (!this.isVolumeMousedown) return;
-
-            this.volumeCalcHandler(e);
-        },
-
-        // volume mouseleave
-        volumeMLHandler(e) {
-            if (!this.isVolumeMousedown) return;
-            this.isVolumeMousedown = !this.isVolumeMousedown;
-        },
-
-        // calc volume
-        volumeCalcHandler(e) {
-            if (e.srcElement.className.match('circle')) return;
-            const srcElementHeight = e.srcElement.clientHeight;
-            const offsetY = e.offsetY;
-            this.volumeSetHandler(srcElementHeight, offsetY);
-        },
-
-        // set volume
-        volumeSetHandler(height, offsetY) {
-            const proportion = offsetY / height;
-            this.volumeCurrent = 1 - proportion;
-            this.video.volume = 1 - proportion;
-            this.volumeCircleTop = floatToPercent(proportion);
         },
     },
     props: ['options'],
