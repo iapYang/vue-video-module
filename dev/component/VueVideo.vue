@@ -99,6 +99,7 @@
                     <div
                      class="button-container volume-button"
                      :class="volumeClass"
+                     @click="volumeClickHandler"
                      v-if="videoOptions.volume"
                      >
                         <div class="volume button">
@@ -109,8 +110,12 @@
                             	<path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
                             	<line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
                             </svg>
-                            <div class="volume-progress">
-                                <volume-bar ref="volume"></volume-bar>
+                            <div class="volume-progress" @click.stop>
+                                <volume-bar
+                                 ref="volume"
+                                 @volumechange="volumechangeHandler"
+                                 >
+                                </volume-bar>
                             </div>
                         </div>
                     </div>
@@ -277,10 +282,6 @@ export default {
         this.fullscreenElement = Platform.isDesktop ? this.$refs['vue-video'] : this.video;
 
         this.checkInHandler();
-
-        this.$on('video:checkIn', () => {
-            this.checkInHandler();
-        });
 
         // register events when screen came to whole screen
         const fullscreenEvents = [
@@ -499,7 +500,7 @@ export default {
         },
 
         // volume mute change
-        volumeMuteHandler() {
+        volumeClickHandler() {
             this.volumeCount += 1;
 
             if (this.volumeCount % 2) {
@@ -508,6 +509,15 @@ export default {
             } else {
                 this.volumeSetHandler(1, 1 - this.volumeTemp);
             }
+        },
+
+        // to make the volume change
+        // top y = 0, bottom y = 1
+        volumechangeHandler(y) {
+            if (!this.video) return;
+            this.volumeCurrent = 1 - y;
+
+            this.video.volume = 1 - y;
         },
 
         // volume mousedown & mouseup

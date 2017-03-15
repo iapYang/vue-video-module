@@ -28,6 +28,8 @@ export default {
             vertical: true,
             animationCallback(x, y) {
                 self.layerY = 1 - y;
+
+                self.$emit('volumechange', y);
             },
         });
     },
