@@ -4,7 +4,6 @@
          class="vue-video"
          :class="{fullscreen: isFullscreen}"
          ref="vue-video"
-         v-show="videoCanplay"
          >
             <div
              class="main-part part"
@@ -19,6 +18,7 @@
                  @timeupdate="timeupdateHandler"
                  @loadedmetadata="canplayHandler"
                  @webkitendfullscreen="videoPauseHandler"
+                 v-show="videoCanplay"
                  >
                 </video>
                 <transition name="fade">
@@ -100,10 +100,8 @@
                      class="button-container volume-button"
                      :class="volumeClass"
                      v-if="videoOptions.volume"
-                     @click="volumeMuteHandler"
                      >
                         <div class="volume button">
-                            <!-- <img :src="videoOptions.volumeSub" alt=""> -->
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14.7 14.7" style="enable-background:new 0 0 14.7 14.7;" xml:space="preserve">
                             	<polygon id="XMLID_1_" class="st0" points="7.6,1.3 7.6,13.4 4.3,10.5 4.3,4.3 "/>
                             	<rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
@@ -111,27 +109,8 @@
                             	<path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
                             	<line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
                             </svg>
-                            <div
-                             class="volume-progress"
-                             @mousedown.stop="volumeMDHandler"
-                             @mouseup.stop="volumeMDHandler"
-                             @mousemove.stop="volumeMMHandler"
-                             @mouseleave="volumeMLHandler"
-                             @click.stop
-                             >
-                                <div class="volume-progress-wrapper">
-                                    <div
-                                     :style="{top: volumeCircleTop}"
-                                     @mousemove.stop
-                                     class="progress-circle">
-                                    </div>
-                                    <!-- <div
-                                     class="volume-progress-bar"
-                                     :style="{top: volumeCircleTop}"
-                                     @mousemove.stop
-                                     >
-                                    </div> -->
-                                </div>
+                            <div class="volume-progress">
+                                <volume-bar ref="volume"></volume-bar>
                             </div>
                         </div>
                     </div>
@@ -161,6 +140,7 @@
 import Platform from '../script/plugin/platform.js';
 
 import VueLoading from 'vue-simple-loading';
+import VolumeBar from './VueVideo/VolumeBar.vue';
 
 import enableInlineVideo from 'iphone-inline-video';
 
@@ -571,6 +551,7 @@ export default {
     props: ['options'],
     components: {
         VueLoading,
+        VolumeBar,
     },
 };
 </script>
@@ -822,6 +803,7 @@ export default {
                                 width: 12px;
                                 height: 12px;
                                 left: -4px;
+                                top: 0;
                                 transform: translateY(-50%);
                                 border-radius: 50%;
                                 z-index: 2;
