@@ -33,6 +33,11 @@ export default {
             },
         });
     },
+    methods: {
+        muteHandler(y) {
+            this.dragdealer.setValue(0, y, true);
+        },
+    },
 };
 </script>
 

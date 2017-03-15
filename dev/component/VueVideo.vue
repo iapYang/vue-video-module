@@ -273,6 +273,7 @@ export default {
     },
     mounted() {
         this.video = this.$refs.video;
+        this.volume = this.$refs.volume;
         this.fullscreenElement = Platform.isDesktop ? this.$refs['vue-video'] : this.video;
 
         this.checkInHandler();
@@ -500,9 +501,11 @@ export default {
             if (this.volumeCount % 2) {
                 this.volumeTemp = this.volumeCurrent;
                 this.volumechangeHandler(1);
+                this.volume.muteHandler(1);
             } else {
                 if (!this.volumeTemp) this.volumeTemp = 0.1;
                 this.volumechangeHandler(1 - this.volumeTemp);
+                this.volume.muteHandler(1 - this.volumeTemp);
             }
         },
 
