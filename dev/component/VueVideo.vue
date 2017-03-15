@@ -25,14 +25,14 @@
                     <div
                      class="video-poster main-component"
                      v-if="videoOptions.poster"
-                     v-show="is_video_BFF && !is_video_played"
+                     v-show="is_video_BFF && !is_video_played && videoCanplay"
                      >
                         <transition name="fade">
                             <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
                         </transition>
                     </div>
                 </transition>
-                <div class="video-main-controller main-component">
+                <div class="video-main-controller main-component" v-show="videoCanplay">
                     <div
                      class="play-container video-main-controller-part"
                      :class="{'rollover-container': isPlayContainer}"
