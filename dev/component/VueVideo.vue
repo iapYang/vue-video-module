@@ -37,7 +37,7 @@
                      class="play-container video-main-controller-part"
                      :class="{'rollover-container': isPlayContainer}"
                      v-show="!showReplay && !is_video_play"
-                     v-if="videoOptions.playsinline"
+                     v-if="!(platform.isiPhone && !videoOptions.playsinline)"
                      >
                         <div class="normal" v-if="videoOptions.playMain">
                             <img :src="videoOptions.playMain" alt="">
@@ -50,7 +50,7 @@
                      class="replay-container video-main-controller-part"
                      :class="{'rollover-container': isReplayContainer}"
                      v-show="showReplay && !is_video_play"
-                     v-if="videoOptions.playsinline"
+                     v-if="!(platform.isiPhone && !videoOptions.playsinline)"
                      >
                         <div class="normal" v-if="videoOptions.replayMain">
                             <img :src="videoOptions.replayMain" alt="">
@@ -164,6 +164,9 @@ function loadSinglePicture(src, cb) {
 export default {
     data() {
         return {
+            // Platform
+            platform: Platform,
+
             // if video played to control first frame
             is_video_played: false,
 
