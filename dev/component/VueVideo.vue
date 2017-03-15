@@ -37,12 +37,12 @@
                      class="play-container video-main-controller-part"
                      :class="{'rollover-container': isPlayContainer}"
                      v-show="!showReplay && !is_video_play"
-                     v-if="videoOptions.playsinline && videoOptions.playMain"
+                     v-if="videoOptions.playsinline"
                      >
-                        <div class="normal">
+                        <div class="normal" v-if="videoOptions.playMain">
                             <img :src="videoOptions.playMain" alt="">
                         </div>
-                        <div class="hover">
+                        <div class="hover" v-if="videoOptions.playMainRollover">
                             <img :src="videoOptions.playMainRollover" alt="">
                         </div>
                     </div>
@@ -50,12 +50,12 @@
                      class="replay-container video-main-controller-part"
                      :class="{'rollover-container': isReplayContainer}"
                      v-show="showReplay && !is_video_play"
-                     v-if="videoOptions.playsinline && videoOptions.replayMain"
+                     v-if="videoOptions.playsinline"
                      >
-                        <div class="normal">
+                        <div class="normal" v-if="videoOptions.replayMain">
                             <img :src="videoOptions.replayMain" alt="">
                         </div>
-                        <div class="hover">
+                        <div class="hover" v-if="videoOptions.replayMainRollover">
                             <img :src="videoOptions.replayMainRollover" alt="">
                         </div>
                     </div>
@@ -218,12 +218,12 @@ export default {
                 poster: false,
 
                 // main play button
-                playMain: false,
-                playMainRollover: false,
+                playMain: require('../image/ignore/play_op2.png'),
+                playMainRollover: require('../image/ignore/play_rollover_op2.png'),
 
                 // main replay button
-                replayMain: false,
-                replayMainRollover: false,
+                replayMain: require('../image/ignore/replay_op2.png'),
+                replayMainRollover: require('../image/ignore/replay_rollover_op2.png'),
 
                 // sub control button
                 playSub: require('../image/ignore/play.png'),
@@ -611,6 +611,15 @@ export default {
                     height: auto !important;
                 }
 
+                .normal, .hover {
+                    position: relative;
+                    width: 100%;
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+
+            .rollover-container {
                 .hover {
                     position: absolute;
                     width: 100%;
