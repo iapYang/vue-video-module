@@ -179,14 +179,8 @@ export default {
             // control bar progress
             progress: '0%',
 
-            // check the platform if mobile
-            isMobile: Platform.isMobile,
-
             // if the mobile rotate
             isRotate: false,
-
-            // if platform is iphone
-            isiPhone: Platform.isiPhone,
 
             // if the video is buffering
             is_video_buffering: false,
