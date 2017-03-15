@@ -123,7 +123,14 @@
                                     <div
                                      :style="{top: volumeCircleTop}"
                                      @mousemove.stop
-                                     class="progress-circle"></div>
+                                     class="progress-circle">
+                                    </div>
+                                    <!-- <div
+                                     class="volume-progress-bar"
+                                     :style="{top: volumeCircleTop}"
+                                     @mousemove.stop
+                                     >
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -799,7 +806,7 @@ export default {
                         left: 0;
                         bottom: 100%;
                         padding: 10px 0;
-                        opacity: 0;
+                        opacity: 1;
                         transition: all ease 0.3s;
 
                         .volume-progress-wrapper {
@@ -817,6 +824,16 @@ export default {
                                 left: -4px;
                                 transform: translateY(-50%);
                                 border-radius: 50%;
+                                z-index: 2;
+                            }
+
+                            .volume-progress-bar {
+                                position: absolute;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                background-color: #d5a83d;
+                                z-index: 1;
                             }
                         }
                     }
