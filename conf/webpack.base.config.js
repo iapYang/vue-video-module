@@ -89,6 +89,9 @@ module.exports = {
                         noquotes: true,
                     },
                 }],
+                include: [
+                    path.resolve(__dirname, '../dev/image'),
+                ],
             },
         ],
     },
