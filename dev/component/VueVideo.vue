@@ -796,7 +796,7 @@ export default {
                         height: 100px;
                         left: 0;
                         bottom: 100%;
-                        padding: 10px 0;
+                        padding: 2px 0;
                         opacity: 1;
                         transition: all ease 0.3s;
 

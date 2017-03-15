@@ -40,7 +40,7 @@ export default {
     .dragdealer {
         position: relative;
         width: 4px;
-        height: 80px;
+        height: 100%;
         background-color: #48391b;
         margin: 0 auto;
 
