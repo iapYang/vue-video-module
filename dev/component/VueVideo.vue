@@ -99,7 +99,7 @@
                     <div
                      class="button-container volume-button"
                      :class="volumeClass"
-                     @click="volumeClickHandler"
+                     @click.stop="volumeClickHandler"
                      v-if="videoOptions.volume"
                      >
                         <div class="volume button">
@@ -731,7 +731,7 @@ export default {
                 .button {
                     width: 20px;
                     height: auto;
-                    left: 50%;
+                    left: 65%;
                     transform: translate(-50%, -50%);
 
                     svg {
