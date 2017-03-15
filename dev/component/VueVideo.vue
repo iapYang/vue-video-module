@@ -113,6 +113,7 @@
                             <div class="volume-progress" @click.stop>
                                 <volume-bar
                                  ref="volume"
+                                 v-if="!videoOptions.muted"
                                  @volumechange="volumechangeHandler"
                                  >
                                 </volume-bar>
@@ -203,14 +204,14 @@ export default {
             // check if the current video is ready for play
             videoCanplay: false,
 
-            // Volume current
-            volumeCurrent: 1,
-
             // Volume temp
             volumeTemp: 1,
 
             // Volume click count
             volumeCount: 0,
+
+            // volume className
+            volumeClass: this.options.muted ? 'sound-mute' : 'sound-normal',
 
             // video options
             videoOptions: Object.assign({
@@ -298,15 +299,6 @@ export default {
         },
         isReplayContainer() {
             return this.videoOptions.replayMain && this.videoOptions.replayMainRollover;
-        },
-        volumeClass() {
-            if (this.volumeCurrent >= 0.5) {
-                return 'sound-normal';
-            } else if (this.volumeCurrent === 0) {
-                return 'sound-mute';
-            }
-
-            return 'sound-low';
         },
     },
     methods: {
@@ -493,10 +485,11 @@ export default {
 
         // volume mute change
         volumeClickHandler() {
+            if (this.videoOptions.muted) return;
             this.volumeCount += 1;
 
             if (this.volumeCount % 2) {
-                this.volumeTemp = this.volumeCurrent;
+                this.volumeTemp = this.video.volume;
                 this.volumechangeHandler(1);
                 this.volume.muteHandler(1);
             } else {
@@ -510,8 +503,19 @@ export default {
         // top y = 0, bottom y = 1
         volumechangeHandler(y) {
             if (!this.video) return;
-            this.volumeCurrent = 1 - y;
             this.video.volume = 1 - y;
+            this.volumeClassHandler();
+        },
+
+        // set class
+        volumeClassHandler() {
+            if (this.video.volume >= 0.5) {
+                this.volumeClass = 'sound-normal';
+            } else if (this.video.volume === 0) {
+                this.volumeClass = 'sound-mute';
+            } else {
+                this.volumeClass = 'sound-low';
+            }
         },
     },
     props: ['options'],
