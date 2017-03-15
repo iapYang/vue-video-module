@@ -753,37 +753,8 @@ export default {
                         left: 0;
                         bottom: 100%;
                         padding: 2px 0;
-                        opacity: 1;
+                        opacity: 0;
                         transition: all ease 0.3s;
-
-                        .volume-progress-wrapper {
-                            position: relative;
-                            width: 4px;
-                            height: 100%;
-                            background-color: #48391b;
-                            margin: 0 auto;
-
-                            .progress-circle {
-                                position: absolute;
-                                background-color: #d5a83d;
-                                width: 12px;
-                                height: 12px;
-                                left: -4px;
-                                top: 0;
-                                transform: translateY(-50%);
-                                border-radius: 50%;
-                                z-index: 2;
-                            }
-
-                            .volume-progress-bar {
-                                position: absolute;
-                                bottom: 0;
-                                left: 0;
-                                right: 0;
-                                background-color: #d5a83d;
-                                z-index: 1;
-                            }
-                        }
                     }
                 }
 
