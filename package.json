@@ -23,6 +23,7 @@
     "babel-preset-stage-3": "^6.22.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.2",
+    "dragdealer": "^0.9.9",
     "eslint": "^3.16.1",
     "eslint-loader": "^1.6.3",
     "eslint-plugin-html": "^2.0.1",

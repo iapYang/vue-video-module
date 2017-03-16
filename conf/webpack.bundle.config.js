@@ -8,7 +8,7 @@ module.exports = merge(baseWebpackConfig, {
     entry: path.resolve(__dirname, '../dev/script/bundle.js'),
     output: {
         path: path.join(process.cwd(), 'dist'),
-        filename: 'index.js',
+        filename: 'bundle.js',
         libraryTarget: 'umd',
     },
     plugins: [
