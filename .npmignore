@@ -9,3 +9,5 @@ archive
 archive.zip
 *.log
 docs
+dev
+.vscode
