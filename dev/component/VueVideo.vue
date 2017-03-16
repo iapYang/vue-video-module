@@ -769,7 +769,8 @@ $dashoffset: 100;
 
                         #XMLID_138_ {
                             stroke-dasharray: $dashoffset;
-                            stroke-dashoffset: $dashoffset;
+                            stroke-dashoffset: 0;
+                            animation: ani-back 0.6s linear forwards;
                         }
                     }
 
@@ -793,7 +794,8 @@ $dashoffset: 100;
 
                 &.sound-mute .button svg {
                     #XMLID_138_ {
-                        animation: ani-go 1.5s linear forwards;
+                        stroke-dashoffset: $dashoffset;
+                        animation: ani-go 2s linear forwards;
                     }
                 }
 
