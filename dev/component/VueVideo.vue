@@ -100,7 +100,7 @@
                      class="button-container volume-button"
                      :class="volumeClass"
                      @click.stop="volumeClickHandler"
-                     v-if="videoOptions.volume"
+                     v-if="videoOptions.volume && platform.isDesktop"
                      >
                         <div class="volume button">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14.7 14.7" style="enable-background:new 0 0 14.7 14.7;" xml:space="preserve">
@@ -232,7 +232,6 @@ export default {
                 replaySub: require('../image/ignore/replay.png'),
                 fullscreenSub: require('../image/ignore/screen.svg'),
                 shrinkscreenSub: require('../image/ignore/screen_shrink.svg'),
-                volumeSub: require('../image/ignore/volume.svg'),
 
                 // if the video loop
                 loop: false,
