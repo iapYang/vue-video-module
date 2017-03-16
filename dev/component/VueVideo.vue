@@ -257,11 +257,8 @@ export default {
                 // volumes
                 volume: true,
 
-                // checkIn cb
-                checkInCb() {},
-
-                // checkOut cb
-                checkOutCb() {},
+                // when the video can play will call back
+                onInit() {},
             }, this.options),
         };
     },
@@ -301,7 +298,7 @@ export default {
         // if the video is ready for play
         canplayHandler() {
             this.video.currentTime = 0;
-
+            this.videoOptions.onInit(this);
             this.videoCanplay = true;
 
             // to auto play
@@ -321,15 +318,26 @@ export default {
                     this.is_poster_loaded = true;
                 });
             }
-
-            // user choice when video is checkedIn
-            this.videoOptions.checkInCb(this.video);
         },
 
         // reset the video state before next show
         startPointResetHandler() {
             this.progress = '0%';
             this.is_video_play = this.videoOptions.autoPlay;
+        },
+
+        // check out function
+        checkOutHandler() {
+            this.endPointResetHandler();
+        },
+
+        // when close button clicked
+        endPointResetHandler() {
+            this.video.pause();
+            this.is_video_play = false;
+            this.is_video_played = false;
+            this.is_poster_loaded = false;
+            this.is_video_BFF = true;
         },
 
         // check if video is finished
@@ -366,21 +374,6 @@ export default {
             this.video.pause();
             this.cancelRequest();
             this.is_video_play = false;
-        },
-
-        // check out function
-        checkOutHandler() {
-            this.endPointResetHandler();
-            this.videoOptions.checkOutCb(this.video);
-        },
-
-        // when close button clicked
-        endPointResetHandler() {
-            this.video.pause();
-            this.is_video_play = false;
-            this.is_video_played = false;
-            this.is_poster_loaded = false;
-            this.is_video_BFF = true;
         },
 
         // when video is playing
