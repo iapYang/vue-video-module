@@ -51,7 +51,7 @@ videoOptions: {
 
 ### API
 
-##### Props
+#### Props
 
 Below are properties you can use in videoOptions to construct your own video.
 
@@ -76,7 +76,7 @@ If the value is false means this part will not be rendered.
 | controlBar         | if show the controlbar                   | bool              | true      |
 | spinner            | the loading style, check [here](https://github.com/iapYang/vue-simple-loading) | string            | 'circles' |
 | volume             | show the volume controller               | bool              | true      |
-##### Callback
+#### Callback
 
 | Name                    | Description                              | Type     |
 | ----------------------- | ---------------------------------------- | -------- |
