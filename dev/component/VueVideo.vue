@@ -526,12 +526,26 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+$dashoffset: 100;
+
 .IIV::-webkit-media-controls-play-button,
 .IIV::-webkit-media-controls-start-playback-button {
     opacity: 0;
     pointer-events: none;
     width: 5px;
+}
+
+@keyframes ani-go {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes ani-back {
+    to {
+        stroke-dashoffset: $dashoffset;
+    }
 }
 
 .video-enter-active {
@@ -750,12 +764,12 @@ export default {
                 			fill: none;
                 			stroke: #D5A83B;
                 			stroke-miterlimit: 10;
-                            transition: all ease 0.3s;
+                            transition: opacity ease 0.3s;
                 		}
 
                         #XMLID_138_ {
-                            stroke-dasharray: 1000;
-                            stroke-dashoffset: 1000;
+                            stroke-dasharray: $dashoffset;
+                            stroke-dashoffset: $dashoffset;
                         }
                     }
 
@@ -779,7 +793,7 @@ export default {
 
                 &.sound-mute .button svg {
                     #XMLID_138_ {
-                        stroke-dashoffset: 0;
+                        animation: ani-go 1.5s linear forwards;
                     }
                 }
 
