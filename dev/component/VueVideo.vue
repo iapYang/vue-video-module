@@ -301,6 +301,8 @@ export default {
     methods: {
         // if the video is ready for play
         canplayHandler() {
+            this.video.currentTime = 0;
+
             this.videoCanplay = true;
 
             // to auto play
@@ -327,7 +329,6 @@ export default {
 
         // reset the video state before next show
         startPointResetHandler() {
-            this.video.currentTime = 0;
             this.progress = '0%';
             this.is_video_play = this.videoOptions.autoPlay;
         },
@@ -753,6 +754,10 @@ $dashoffset: 100;
                         position: relative;
                         width: 100%;
 
+                        .ie & {
+                            height: 15px;
+                        }
+
                         .st0 {
                 			fill: #D5A83B;
                 		}
@@ -767,7 +772,11 @@ $dashoffset: 100;
                         #XMLID_138_ {
                             stroke-dasharray: $dashoffset;
                             stroke-dashoffset: 0;
-                            animation: ani-back 0.6s linear forwards;
+                            animation: ani-back 0.3s linear forwards;
+
+                            .ie &, .edge & {
+                                stroke-dashoffset: $dashoffset;
+                            }
                         }
                     }
 
@@ -793,6 +802,10 @@ $dashoffset: 100;
                     #XMLID_138_ {
                         stroke-dashoffset: $dashoffset;
                         animation: ani-go 2s linear forwards;
+
+                        .ie & {
+                            stroke-dashoffset: 0;
+                        }
                     }
                 }
 
