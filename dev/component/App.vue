@@ -3,7 +3,6 @@
         <div class="video-container">
             <vue-video ref="video1" :options="videoOptions"></vue-video>
         </div>
-        <router-view></router-view>
     </div>
 </template>
 
@@ -21,11 +20,13 @@ export default {
                 controlBar: true,
                 spinner: 'circles',
                 fullscreen: true,
+                onPlayToPause(vueVideo) {
+                    console.log(vueVideo);
+                },
             },
         };
     },
     mounted() {
-        const self = this;
         this.video1 = this.$refs.video1;
     },
     components: {

@@ -18,6 +18,7 @@
                  @timeupdate="timeupdateHandler"
                  @loadedmetadata="canplayHandler"
                  @webkitendfullscreen="videoPauseHandler"
+                 @ended="videoEndedHandler"
                  v-show="videoCanplay"
                  >
                 </video>
@@ -259,6 +260,15 @@ export default {
 
                 // when the video can play will call back
                 onInit() {},
+
+                // video status from pause to play
+                onPauseToPlay() {},
+
+                // video status from play to pause
+                onPlayToPause() {},
+
+                // end
+                onEnded() {},
             }, this.options),
         };
     },
@@ -366,6 +376,7 @@ export default {
             setTimeout(() => {
                 this.startRequest();
             }, 100);
+            this.videoOptions.onPauseToPlay(this);
             this.is_video_play = true;
         },
 
@@ -373,6 +384,7 @@ export default {
         videoPauseHandler() {
             this.video.pause();
             this.cancelRequest();
+            this.videoOptions.onPlayToPause(this);
             this.is_video_play = false;
         },
 
@@ -380,6 +392,11 @@ export default {
         timeupdateHandler(e) {
             this.checkVideoFinished();
             this.progress = floatToPercent(e.target.currentTime / e.target.duration);
+        },
+
+        // when video is ended
+        videoEndedHandler() {
+            this.videoOptions.onEnded(this);
         },
 
         // when progress bar is clicked
@@ -517,6 +534,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../style/_reset.scss";
+
 $dashoffset: 100;
 
 .IIV::-webkit-media-controls-play-button,
