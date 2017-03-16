@@ -207,9 +207,6 @@ export default {
             // Volume temp
             volumeTemp: 1,
 
-            // Volume click count
-            volumeCount: 0,
-
             // volume className
             volumeClass: this.options.muted ? 'sound-mute' : 'sound-normal',
 
@@ -486,9 +483,9 @@ export default {
         // volume mute change
         volumeClickHandler() {
             if (this.videoOptions.muted) return;
-            this.volumeCount += 1;
 
-            if (this.volumeCount % 2) {
+            if (this.video.volume) {
+                // case when volume is not 0
                 this.volumeTemp = this.video.volume;
                 this.volumechangeHandler(1);
                 this.volume.muteHandler(1);
