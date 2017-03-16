@@ -10,6 +10,8 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 [Demo Page](https://iapyang.github.io/vue-video-module/)
 
+or run `npm run test`
+
 ### Usage
 
 #### Install vue-video-module
