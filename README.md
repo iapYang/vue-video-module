@@ -10,7 +10,14 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 [Demo Page](https://iapyang.github.io/vue-video-module/)
 
-or run `npm run test`
+#### or 
+
+```javascript
+// step 1
+npm install
+//step 2
+npm run test
+```
 
 ### Usage
 
@@ -80,11 +87,15 @@ If the value is false means this part will not be rendered.
 | volume             | show the volume controller               | bool              | true      |
 #### Callback
 
-| Name                    | Description                              | Type     |
-| ----------------------- | ---------------------------------------- | -------- |
-| onInit(vueVideo)        | be called after the video is initialed   | function |
-|                         | vueVideo is the object of the component  |          |
-|                         | vueVideo.$refs.video is the dom of the video |          |
-| onPauseToPlay(vueVideo) | video status from pause to play          | function |
-| onPlayToPause(vueVideo) | video status from play to pause          | function |
-| onEnded(vueVideo)       | video end                                | function |
+##### brief：
+
+the vueVideo is the object of this component
+
+vueVideo.$refs.video is the dom of the video
+
+| Name                    | Description                            | Type     |
+| ----------------------- | -------------------------------------- | -------- |
+| onInit(vueVideo)        | be called after the video is initialed | function |
+| onPauseToPlay(vueVideo) | video status from pause to play        | function |
+| onPlayToPause(vueVideo) | video status from play to pause        | function |
+| onEnded(vueVideo)       | video end                              | function |

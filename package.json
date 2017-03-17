@@ -13,6 +13,11 @@
     "update-package": "npm update"
   },
   "author": "iapYang",
+  "keywords": [
+    "vue",
+    "vue components",
+    "video"
+  ],
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.23.1",
