@@ -18,6 +18,7 @@
                  @timeupdate="timeupdateHandler"
                  @loadedmetadata="canplayHandler"
                  @webkitendfullscreen="videoPauseHandler"
+                 @playing="videoStartHandler"
                  @ended="videoEndedHandler"
                  v-show="videoCanplay"
                  >
@@ -267,6 +268,9 @@ export default {
                 // video status from play to pause
                 onPlayToPause() {},
 
+                // start
+                onStart() {},
+
                 // end
                 onEnded() {},
             }, this.options),
@@ -392,6 +396,13 @@ export default {
         timeupdateHandler(e) {
             this.checkVideoFinished();
             this.progress = floatToPercent(e.target.currentTime / e.target.duration);
+        },
+
+        // when video is start
+        videoStartHandler() {
+            if (this.video.currentTime === 0) {
+                this.videoOptions.onStart(this);
+            }
         },
 
         // when video is ended

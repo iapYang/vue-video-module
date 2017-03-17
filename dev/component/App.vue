@@ -7,8 +7,8 @@
 </template>
 
 <script>
-// import VueVideo from '../../dist/bundle.js';
 import VueVideo from './VueVideo.vue';
+
 export default {
     data() {
         return {
@@ -20,7 +20,7 @@ export default {
                 controlBar: true,
                 spinner: 'circles',
                 fullscreen: true,
-                onPlayToPause(vueVideo) {
+                onStart(vueVideo) {
                     console.log(vueVideo);
                 },
             },

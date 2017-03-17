@@ -98,4 +98,5 @@ vueVideo.$refs.video is the dom of the video
 | onInit(vueVideo)        | be called after the video is initialed | function |
 | onPauseToPlay(vueVideo) | video status from pause to play        | function |
 | onPlayToPause(vueVideo) | video status from play to pause        | function |
+| onStart(vueVideo)       | video start                            | function |
 | onEnded(vueVideo)       | video end                              | function |
