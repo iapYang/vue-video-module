@@ -15,7 +15,7 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 ```javascript
 // step 1
 npm install
-//step 2
+// step 2
 npm run test
 ```
 
