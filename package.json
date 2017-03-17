@@ -12,12 +12,19 @@
     "update-json": "ncu -a",
     "update-package": "npm update"
   },
-  "author": "iapYang",
+  "author": {
+    "name": "iapyang",
+    "email": "yklorse@gmail.com"
+  },
   "keywords": [
     "vue",
     "vue components",
     "video"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iapYang/vue-video-module"
+  },
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.23.1",
