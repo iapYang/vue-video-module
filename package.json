@@ -1,6 +1,6 @@
 {
   "name": "vue-video-module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "a video component built for vue",
   "main": "dist/bundle.js",
   "scripts": {
