@@ -52,6 +52,7 @@
     "url-loader": "^0.5.8",
     "vue-codemirror": "^2.1.8",
     "vue-loader": "^11.1.3",
+    "vue-material": "^0.7.1",
     "vue-router": "^2.3.0",
     "vue-simple-loading": "^1.1.2",
     "vue-template-compiler": "^2.2.1",
