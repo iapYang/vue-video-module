@@ -1,78 +1,80 @@
 <template lang="html">
     <transition name="video">
         <div class="vue-video" :class="{fullscreen: isFullscreen}" ref="vue-video" v-show="videoCanplay">
-            <div class="main-part part" @click="videoClickHandler">
-                <video :loop="videoOptions.loop" :src="videoOptions.src" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartHandler"
-                    @ended="videoEndedHandler">
-                    </video>
-                <transition name="fade">
-                    <div class="video-poster main-component" v-if="videoOptions.poster" v-show="is_video_BFF && !is_video_played">
-                        <transition name="fade">
-                            <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
-                        </transition>
-                    </div>
-                </transition>
-                <div class="video-main-controller main-component">
-                    <div class="play-container video-main-controller-part" :class="{'rollover-container': isPlayContainer}" v-show="!showReplay && !is_video_play" v-if="!(platform.isiPhone && !videoOptions.playsinline)">
-                        <div class="normal" v-if="videoOptions.playMain">
-                            <img :src="videoOptions.playMain" alt="">
+            <div class="vue-video-wrapper">
+                <div class="main-part part" @click="videoClickHandler">
+                    <video :loop="videoOptions.loop" :src="videoOptions.src" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartHandler"
+                        @ended="videoEndedHandler">
+                        </video>
+                    <transition name="fade">
+                        <div class="video-poster main-component" v-if="videoOptions.poster" v-show="is_video_BFF && !is_video_played">
+                            <transition name="fade">
+                                <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
+                            </transition>
                         </div>
-                        <div class="hover" v-if="videoOptions.playMainRollover">
-                            <img :src="videoOptions.playMainRollover" alt="">
+                    </transition>
+                    <div class="video-main-controller main-component">
+                        <div class="play-container video-main-controller-part" :class="{'rollover-container': isPlayContainer}" v-show="!showReplay && !is_video_play" v-if="!(platform.isiPhone && !videoOptions.playsinline)">
+                            <div class="normal" v-if="videoOptions.playMain">
+                                <img :src="videoOptions.playMain" alt="">
+                            </div>
+                            <div class="hover" v-if="videoOptions.playMainRollover">
+                                <img :src="videoOptions.playMainRollover" alt="">
+                            </div>
                         </div>
-                    </div>
-                    <div class="replay-container video-main-controller-part" :class="{'rollover-container': isReplayContainer}" v-show="showReplay && !is_video_play" v-if="!(platform.isiPhone && !videoOptions.playsinline)">
-                        <div class="normal" v-if="videoOptions.replayMain">
-                            <img :src="videoOptions.replayMain" alt="">
+                        <div class="replay-container video-main-controller-part" :class="{'rollover-container': isReplayContainer}" v-show="showReplay && !is_video_play" v-if="!(platform.isiPhone && !videoOptions.playsinline)">
+                            <div class="normal" v-if="videoOptions.replayMain">
+                                <img :src="videoOptions.replayMain" alt="">
+                            </div>
+                            <div class="hover" v-if="videoOptions.replayMainRollover">
+                                <img :src="videoOptions.replayMainRollover" alt="">
+                            </div>
                         </div>
-                        <div class="hover" v-if="videoOptions.replayMainRollover">
-                            <img :src="videoOptions.replayMainRollover" alt="">
-                        </div>
-                    </div>
-                    <div class="video-main-controller-part" v-show="is_video_play && is_video_buffering">
-                        <vue-loading v-if="videoOptions.spinner" :spinner="videoOptions.spinner">
-                        </vue-loading>
-                    </div>
-                </div>
-            </div>
-            <div class="video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
-                <div class="button-container play-button" @click="videoClickHandler">
-                    <div class="button play" v-show="!showReplay && !is_video_play">
-                        <img :src="videoOptions.playSub" alt="">
-                    </div>
-                    <div class="button pause" v-show="!showReplay && is_video_play">
-                        <img :src="videoOptions.pauseSub" alt="">
-                    </div>
-                    <div class="button preload" v-show="showReplay">
-                        <img :src="videoOptions.replaySub" alt="">
-                    </div>
-                </div>
-                <div class="progress-bar" @click="barClickHandler">
-                    <div class="seek-bar">
-                        <div class="play-bar" :style="{width: progress}"></div>
-                    </div>
-                </div>
-                <div class="button-container volume-button" :class="volumeClass" @click.stop="volumeClickHandler" v-if="videoOptions.volume && platform.isDesktop">
-                    <div class="volume button">
-                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14.7 14.7" style="enable-background:new 0 0 14.7 14.7;" xml:space="preserve">
-                                <polygon id="XMLID_1_" class="st0" points="7.6,1.3 7.6,13.4 4.3,10.5 4.3,4.3 "/>
-                                <rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
-                                <path id="XMLID_4_" class="st1" d="M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"/>
-                                <path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
-                                <line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
-                            </svg>
-                        <div class="volume-progress" @click.stop>
-                            <volume-bar ref="volume" v-if="!videoOptions.muted" @volumechange="volumechangeHandler">
-                            </volume-bar>
+                        <div class="video-main-controller-part" v-show="is_video_play && is_video_buffering">
+                            <vue-loading v-if="videoOptions.spinner" :spinner="videoOptions.spinner">
+                            </vue-loading>
                         </div>
                     </div>
                 </div>
-                <div class="screen-button button-container" v-if="videoOptions.fullscreen" @click="fullscreenClickHandler">
-                    <div class="button full">
-                        <img :src="videoOptions.fullscreenSub" alt="">
+                <div class="video-sub-controller" v-if="videoOptions.controlBar" @click.stop>
+                    <div class="button-container play-button" @click="videoClickHandler">
+                        <div class="button play" v-show="!showReplay && !is_video_play">
+                            <img :src="videoOptions.playSub" alt="">
+                        </div>
+                        <div class="button pause" v-show="!showReplay && is_video_play">
+                            <img :src="videoOptions.pauseSub" alt="">
+                        </div>
+                        <div class="button preload" v-show="showReplay">
+                            <img :src="videoOptions.replaySub" alt="">
+                        </div>
                     </div>
-                    <div class="button shrink">
-                        <img :src="videoOptions.shrinkscreenSub" alt="">
+                    <div class="progress-bar" @click="barClickHandler">
+                        <div class="seek-bar">
+                            <div class="play-bar" :style="{width: progress}"></div>
+                        </div>
+                    </div>
+                    <div class="button-container volume-button" :class="volumeClass" @click.stop="volumeClickHandler" v-if="videoOptions.volume && platform.isDesktop">
+                        <div class="volume button">
+                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14.7 14.7" style="enable-background:new 0 0 14.7 14.7;" xml:space="preserve">
+                                    <polygon id="XMLID_1_" class="st0" points="7.6,1.3 7.6,13.4 4.3,10.5 4.3,4.3 "/>
+                                    <rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
+                                    <path id="XMLID_4_" class="st1" d="M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"/>
+                                    <path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
+                                    <line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
+                                </svg>
+                            <div class="volume-progress" @click.stop>
+                                <volume-bar ref="volume" v-if="!videoOptions.muted" @volumechange="volumechangeHandler">
+                                </volume-bar>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="screen-button button-container" v-if="videoOptions.fullscreen" @click="fullscreenClickHandler">
+                        <div class="button full">
+                            <img :src="videoOptions.fullscreenSub" alt="">
+                        </div>
+                        <div class="button shrink">
+                            <img :src="videoOptions.shrinkscreenSub" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -543,6 +545,10 @@
             display: block;
             width: 100%;
         }
+        .vue-video-wrapper {
+            position: relative;
+            width: 100%;
+        }
         .main-part {
             position: relative;
             width: 100%;
@@ -742,6 +748,8 @@
             }
         }
         &.fullscreen {
+            background-color: #000;
+
             .video-sub-controller {
                 position: absolute;
                 top: 100%;
@@ -760,9 +768,14 @@
                     }
                 }
             }
-            .desktop &:hover .video-sub-controller {
+            .desktop & .vue-video-wrapper:hover .video-sub-controller {
                 opacity: 1;
                 visibility: visible;
+            }
+
+            .ie & .video-sub-controller {
+                position: relative;
+                top: 0;
             }
         }
         .firefox &,
