@@ -4,6 +4,7 @@
          class="vue-video"
          :class="{fullscreen: isFullscreen}"
          ref="vue-video"
+         v-show="videoCanplay"
          >
             <div
              class="main-part part"
@@ -20,21 +21,20 @@
                  @webkitendfullscreen="videoPauseHandler"
                  @playing="videoStartHandler"
                  @ended="videoEndedHandler"
-                 v-show="videoCanplay"
                  >
                 </video>
                 <transition name="fade">
                     <div
                      class="video-poster main-component"
                      v-if="videoOptions.poster"
-                     v-show="is_video_BFF && !is_video_played && videoCanplay"
+                     v-show="is_video_BFF && !is_video_played"
                      >
                         <transition name="fade">
                             <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
                         </transition>
                     </div>
                 </transition>
-                <div class="video-main-controller main-component" v-show="videoCanplay">
+                <div class="video-main-controller main-component">
                     <div
                      class="play-container video-main-controller-part"
                      :class="{'rollover-container': isPlayContainer}"
@@ -315,6 +315,10 @@ export default {
             this.videoOptions.onInit(this);
             this.videoCanplay = true;
 
+            setTimeout(() => {
+                this.$refs.volume.reflow();
+            }, 100);
+
             // to auto play
             if (this.videoOptions.autoPlay) {
                 setTimeout(this.videoClickHandler, 500);
@@ -352,6 +356,7 @@ export default {
             this.is_video_played = false;
             this.is_poster_loaded = false;
             this.is_video_BFF = true;
+            this.videoCanplay = false;
         },
 
         // check if video is finished
@@ -695,11 +700,9 @@ $dashoffset: 100;
         }
 
         .video-sub-controller {
-            position: absolute;
+            position: relative;
             width: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 100%;
+            background-color: #fff;
             z-index: 2;
             height: 50px;
             display: -webkit-flex;
@@ -845,6 +848,7 @@ $dashoffset: 100;
             opacity: 0;
             visibility: hidden;
             transition: all ease 0.3s;
+            background-color: transparent;
 
             .play-button .button {
                 left: 5px;

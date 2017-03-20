@@ -37,6 +37,9 @@ export default {
         muteHandler(y) {
             this.dragdealer.setValue(0, y, true);
         },
+        reflow() {
+            this.dragdealer.reflow();
+        },
     },
 };
 </script>
