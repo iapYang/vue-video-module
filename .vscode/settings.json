@@ -3,7 +3,7 @@
     "eslint.run": "onType",
     "eslint.enable": true,
     "eslint.options": { 
-        "configFile": "./.eslintrc"
+        "configFile": ".eslintrc"
     },
     "eslint.validate": [
         "javascript",
