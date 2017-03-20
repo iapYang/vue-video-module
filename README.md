@@ -16,7 +16,9 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 // step 1
 npm install
 // step 2
-npm run test
+npm run dev
+// preview link http://0.0.0.0:8080/#/test
+// code is in dev/component/Test.vue
 ```
 
 ### Usage
