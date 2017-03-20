@@ -32,23 +32,8 @@
     };
 </script>
 
-<style lang="scss">
-    html,
-    body {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-    }
-    
-    #app,
-    .app-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-    
-    .video-container {
+<style lang="scss" scoped>  
+    .test-container .video-container {
         position: relative;
         width: 100%;
         max-width: 800px;

@@ -17,17 +17,12 @@
             </ul>
         </div>
         <div class="examples">
-            <md-card>
+            <md-card v-for="example,index in examples" :key="example">
                 <md-card-header>
-                    <div class="md-subhead">Default</div>
+                    <div class="md-subhead">{{ example.title }}</div>
                 </md-card-header>
                 <div class="md-card-main">
-                    <div class="video-container container">
-                        <vue-video ref="video1" :options="videoOptions"></vue-video>
-                    </div>
-                    <div class="codemirror-container container">
-                        <codemirror :code="code" :options="editorOption"></codemirror>
-                    </div>
+                     <div :is="example.name"></div>
                 </div>
             </md-card>
         </div>
@@ -36,16 +31,12 @@
 
 <script>
     import Vue from 'vue';
-    import VueVideo from './VueVideo.vue';
     import VueMaterial from 'vue-material';
     import 'vue-material/dist/vue-material.css';
+
+    import example01 from '../../example/01-default.vue';
     
     Vue.use(VueMaterial);
-    
-    import {
-        codemirror,
-        CodeMirror,
-    } from 'vue-codemirror';
     
     export default {
         data() {
@@ -59,72 +50,28 @@
                     href: 'https://github.com/iapYang/vue-video-module/issues',
                     class: 'md-accent',
                 }, {
+                    name: 'example',
+                    href: 'https://github.com/iapYang/vue-video-module/tree/master/example',
+                    class: 'md-primary',
+                }, {
                     name: 'API',
                     href: 'https://github.com/iapYang/vue-video-module/blob/master/README.md',
                     class: 'md-primary',
                 }],
-                videoOptions: {
-                    src: 'http://vjs.zencdn.net/v/oceans.mp4',
-                    poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
-                    fullscreen: true,
-                    onStart(vueVideo) {
-                        console.log(vueVideo);
-                    },
-                },
-                code:
-`// example
-export default {
-    data() {
-        return {
-            videoOptions: {
-                src: 'http://vjs.zencdn.net/v/oceans.mp4',
-                poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
-                fullscreen: true,
-                onStart(vueVideo) {
-                    console.log(vueVideo);
-                },
-            },
-        };
-    },
-};`,
-                editorOption: {
-                    tabSize: 4,
-                    styleActiveLine: true,
-                    lineNumbers: true,
-                    line: true,
-                    foldGutter: true,
-                    styleSelectedText: true,
-                    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-                    highlightSelectionMatches: {
-                        showToken: /w/,
-                        annotateScrollbar: true,
-                    },
-                    mode: 'text/javascript',
-                    hintOptions: {
-                        completeSingle: false,
-                    },
-                    keyMap: 'sublime',
-                    matchBrackets: true,
-                    showCursorWhenSelecting: true,
-                    theme: 'monokai',
-                    extraKeys: {
-                        Ctrl: 'autocomplete',
-                    },
-                },
+                examples: [{
+                    title: '01-Default',
+                    name: 'example01',
+                }],
             };
         },
-        mounted() {
-            this.video1 = this.$refs.video1;
-        },
         components: {
-            VueVideo,
-            codemirror,
+            example01,
         },
     };
 </script>
 
-<style lang="scss">
-   .banner {
+<style lang="scss">   
+    .banner {
         h2 {
             // font-family: "Lato-Regular";
             text-transform: uppercase;
@@ -154,9 +101,8 @@ export default {
     .examples {
         position: relative;
         width: 100%;
-        max-width: 1605px;
+        max-width: 1024px;
         margin: 0 auto;
-
         .md-card-main {
             position: relative;
             display: flex;
@@ -164,12 +110,6 @@ export default {
             justify-content: space-between;
             flex-wrap: nowrap;
             align-items: flex-start;
-
-            .container {
-                position: relative;
-                display: inline-block;
-                width: 48%;
-            }
         }
     }
 </style>

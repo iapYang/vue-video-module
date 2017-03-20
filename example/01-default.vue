@@ -1,11 +1,11 @@
 <template lang="html">
-    <div class="video-container container">
+    <div class="video-container">
         <vue-video ref="video1" :options="videoOptions"></vue-video>
     </div>
 </template>
 
 <script>
-    import VueVideo from 'vue-video-module';
+    import VueVideo from '../dev/component/VueVideo.vue';
 
     export default {
         data() {
@@ -35,7 +35,6 @@
     .video-container {
         position: relative;
         width: 100%;
-        max-width: 800px;
         margin: 0 auto;
     }
 </style>
