@@ -16,23 +16,20 @@
                 </li>
             </ul>
         </div>
-        <div class="examples container">
+        <div class="examples">
             <md-card>
                 <md-card-header>
-                    <div class="md-subhead">Subtitle here</div>
+                    <div class="md-subhead">Default</div>
                 </md-card-header>
                 <div class="md-card-main">
                     <div class="video-container container">
                         <vue-video ref="video1" :options="videoOptions"></vue-video>
                     </div>
+                    <div class="codemirror-container container">
+                        <codemirror :code="code" :options="editorOption"></codemirror>
+                    </div>
                 </div>
             </md-card>
-        </div>
-        <div class="video-container container">
-            <vue-video ref="video1" :options="videoOptions"></vue-video>
-        </div>
-        <div class="codemirror-container container">
-            <codemirror :code="code" :options="editorOption"></codemirror>
         </div>
     </div>
 </template>
@@ -74,21 +71,22 @@
                         console.log(vueVideo);
                     },
                 },
-                code: `// example
-                            export default {
-                                data() {
-                                    return {
-                                        videoOptions: {
-                                            src: 'http://vjs.zencdn.net/v/oceans.mp4',
-                                            poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
-                                            fullscreen: true,
-                                            onStart(vueVideo) {
-                                                console.log(vueVideo);
-                                            },
-                                        },
-                                    };
-                                },
-                            };`,
+                code:
+`// example
+export default {
+    data() {
+        return {
+            videoOptions: {
+                src: 'http://vjs.zencdn.net/v/oceans.mp4',
+                poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
+                fullscreen: true,
+                onStart(vueVideo) {
+                    console.log(vueVideo);
+                },
+            },
+        };
+    },
+};`,
                 editorOption: {
                     tabSize: 4,
                     styleActiveLine: true,
@@ -175,14 +173,28 @@
         }
     }
     
-    .container {
+    .examples {
         position: relative;
         width: 100%;
-        max-width: 800px;
+        max-width: 1605px;
         margin: 0 auto;
+
+        .md-card-main {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+
+            .container {
+                position: relative;
+                display: inline-block;
+                width: 48%;
+            }
+        }
     }
     
     .codemirror-container {
-        margin-top: 50px;
     }
 </style>
