@@ -172,7 +172,4 @@ export default {
             }
         }
     }
-    
-    .codemirror-container {
-    }
 </style>

@@ -9,9 +9,5 @@
         "javascript",
         "javascriptreact",
         "vue"
-    ],
-    "emmet.syntaxProfiles": {
-        "vue-html": "html",
-        "vue": "html"
-    }
+    ]
 }
