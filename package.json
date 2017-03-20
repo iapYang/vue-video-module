@@ -7,7 +7,6 @@
     "dev": "webpack-dev-server --progress --config ./conf/webpack.dev.config.js",
     "build": "webpack --progress --config ./conf/webpack.prod.config.js",
     "bundle": "webpack --progress --config ./conf/webpack.bundle.config.js",
-    "test": "webpack-dev-server --progress --config ./conf/webpack.test.config.js",
     "check": "ncu",
     "update-json": "ncu -a",
     "update-package": "npm update"
