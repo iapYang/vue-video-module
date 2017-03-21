@@ -68,7 +68,6 @@ module.exports = {
                 }],
                 include: [
                     path.resolve(__dirname, '../dev/font'),
-                    path.resolve(__dirname, '../example/font'),
                 ],
             },
             {
@@ -92,7 +91,6 @@ module.exports = {
                 }],
                 include: [
                     path.resolve(__dirname, '../dev/image'),
-                    path.resolve(__dirname, '../example/image'),
                 ],
             },
         ],
