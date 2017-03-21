@@ -6,7 +6,6 @@
             </md-toolbar>
         </header>
         <div class="banner">
-            <h2>Vue-video-module</h2>
             <h4>Simple video component bulit for vue</h4>
             <ul class="actions">
                 <li class="action" v-for="action,index in actions" :key="action">
@@ -20,6 +19,7 @@
             <md-card v-for="example,index in examples" :key="example">
                 <md-card-header>
                     <div class="md-subhead">{{ example.title }}</div>
+                    <md-icon>home</md-icon>
                 </md-card-header>
                 <div class="md-card-main">
                      <div :is="example.name"></div>
