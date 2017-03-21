@@ -6,12 +6,14 @@
 
 <script>
     import VueVideo from '../dev/component/VueVideo.vue';
-
+    
     export default {
         data() {
             return {
                 videoOptions: {
                     src: 'http://vjs.zencdn.net/v/oceans.mp4',
+                    poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
+                    fullscreen: true,
                 },
             };
         },
@@ -24,10 +26,10 @@
     };
 </script>
 
-<style lang="scss">  
-    .video-container {
-        position: relative;
-        width: 100%;
-        margin: 0 auto;
-    }
+<style lang="scss">
+      .video-container {
+          position: relative;
+          width: 100%;
+          margin: 0 auto;
+      }
 </style>

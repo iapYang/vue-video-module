@@ -82,6 +82,7 @@ If the value is false means this part will not be rendered.
 | fullscreen         | if fullscreen part shown                 | bool              | true      |
 | fullscreenSub      | the source of full screen button in the video control bar | string \|\| false | base64    |
 | shrinkscreenSub    | the source to shrink screen to normal size, button in the video control bar | string            | base64    |
+| autoPlay           | if the video auto play                   | bool              | false     |
 | loop               | loop video                               | bool              | false     |
 | muted              | muted video                              | bool              | false     |
 | controlBar         | if show the controlbar                   | bool              | true      |
