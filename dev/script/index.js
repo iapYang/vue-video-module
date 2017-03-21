@@ -4,7 +4,7 @@ import Vue from 'vue';
 
 import router from '../router';
 import store from '../store/index';
-import App from '../component/App.vue';
+import App from '../view/App.vue';
 
 import Platform from './plugin/platform.js';
 
