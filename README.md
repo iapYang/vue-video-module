@@ -6,6 +6,10 @@ A simple video component built for vue.
 
 Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
+### Changelog
+
+> v0.3.1 fix IE11 fullscreen layout bug
+
 ### Example
 
 [Demo Page](https://iapyang.github.io/vue-video-module/)
