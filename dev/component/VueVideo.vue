@@ -772,18 +772,14 @@
                 opacity: 1;
                 visibility: visible;
             }
-            .ie & .video-sub-controller {
-                position: relative;
-                top: 0;
+            .firefox &,
+            .ie &,
+            .edge & {
+                display: -webkit-flex;
+                display: -ms-flex;
+                display: flex;
+                align-items: center;
             }
-        }
-        .firefox &,
-        .ie &,
-        .edge & {
-            display: -webkit-flex;
-            display: -ms-flex;
-            display: flex;
-            align-items: center;
         }
     }
 </style>
