@@ -4,8 +4,8 @@
             <div class="vue-video-wrapper">
                 <div class="main-part part" @click="videoClickHandler">
                     <video :loop="videoOptions.loop" :src="videoOptions.src" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartHandler"
-                        @ended="videoEndedHandler">
-                        </video>
+                    @ended="videoEndedHandler">
+                    </video>
                     <transition name="fade">
                         <div class="video-poster main-component" v-if="videoOptions.poster" v-show="is_video_BFF && !is_video_played">
                             <transition name="fade">
@@ -56,12 +56,12 @@
                     <div class="button-container volume-button" :class="volumeClass" @click.stop="volumeClickHandler" v-if="videoOptions.volume && platform.isDesktop">
                         <div class="volume button">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14.7 14.7" style="enable-background:new 0 0 14.7 14.7;" xml:space="preserve">
-                                    <polygon id="XMLID_1_" class="st0" points="7.6,1.3 7.6,13.4 4.3,10.5 4.3,4.3 "/>
-                                    <rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
-                                    <path id="XMLID_4_" class="st1" d="M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"/>
-                                    <path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
-                                    <line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
-                                </svg>
+                            <polygon id="XMLID_1_" class="st0" points="7.6,1.3 7.6,13.4 4.3,10.5 4.3,4.3 "/>
+                            <rect id="XMLID_2_" x="0" y="4.3" class="st0" width="4.5" height="6.2"/>
+                            <path id="XMLID_4_" class="st1" d="M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"/>
+                            <path id="XMLID_5_" class="st1" d="M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"/>
+                            <line id="XMLID_138_" class="st1" x1="0.3" y1="0.4" x2="14.3" y2="14.4"/>
+                            </svg>
                             <div class="volume-progress" @click.stop>
                                 <volume-bar ref="volume" v-if="!videoOptions.muted" @volumechange="volumechangeHandler">
                                 </volume-bar>
@@ -227,6 +227,7 @@
                 'webkitfullscreenchange',
                 'mozfullscreenchange',
                 'msfullscreenchange',
+                'MSFullscreenChange',
             ];
     
             fullscreenEvents.forEach(fullscreenEvent => {
@@ -749,7 +750,6 @@
         }
         &.fullscreen {
             background-color: #000;
-
             .video-sub-controller {
                 position: absolute;
                 top: 100%;
@@ -772,7 +772,6 @@
                 opacity: 1;
                 visibility: visible;
             }
-
             .ie & .video-sub-controller {
                 position: relative;
                 top: 0;
