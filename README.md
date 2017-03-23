@@ -1,6 +1,7 @@
 
 
-[![NPM](https://nodei.co/npm/vue-video-module.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/vue-video-module)
+[![NPM](https://nodei.co/npm/vue-video-module.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/vue-video-module/)
+[![NPM](https://nodei.co/npm-dl/vue-video-module.png?months=9&height=3)](https://nodei.co/npm/vue-video-module/)
 
 # vue-video-module
 
