@@ -7,6 +7,7 @@
     "dev": "webpack-dev-server --progress --config ./conf/webpack.dev.config.js",
     "build": "webpack --progress --config ./conf/webpack.prod.config.js",
     "bundle": "webpack --progress --config ./conf/webpack.bundle.config.js",
+    "gh": "node conf/deploy",
     "check": "ncu",
     "update-json": "ncu -a",
     "update-package": "npm update"
@@ -40,6 +41,7 @@
     "eslint-loader": "^1.6.3",
     "eslint-plugin-html": "^2.0.1",
     "file-loader": "^0.10.1",
+    "gh-pages": "^0.12.0",
     "html-webpack-plugin": "^2.28.0",
     "iphone-inline-video": "^2.0.2",
     "node-sass": "^4.5.0",
