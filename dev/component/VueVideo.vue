@@ -327,6 +327,18 @@
                 this.videoOptions.onPauseToPlay(this);
                 this.is_video_play = true;
             },
+
+            // video play API
+            play() {
+                if (this.is_video_play) return;
+                this.videoPlayHandler();
+            },
+
+            // video pause API
+            pause() {
+                if (!this.is_video_play) return;
+                this.videoPauseHandler();
+            },
     
             // video play to pause action
             videoPauseHandler() {
@@ -357,9 +369,20 @@
             // when progress bar is clicked
             barClickHandler(e) {
                 const rate = e.offsetX / e.target.clientWidth;
+                this.seek(rate);
+            },
+
+            // video seek API
+            seek(rate) {
                 this.progress = floatToPercent(rate);
                 this.video.currentTime = this.video.duration * rate;
                 this.checkVideoFinished();
+            },
+
+            // video replay API
+            replay() {
+                this.seek(0);
+                this.play();
             },
     
             // when click the fullscreen button

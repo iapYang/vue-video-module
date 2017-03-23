@@ -1,7 +1,7 @@
 
 
 [![NPM](https://nodei.co/npm/vue-video-module.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/vue-video-module/)
-[![NPM](https://nodei.co/npm-dl/vue-video-module.png?months=9&height=3)](https://nodei.co/npm/vue-video-module/)
+[![NPM](https://nodei.co/npm-dl/vue-video-module.png?months=1&height=3)](https://nodei.co/npm/vue-video-module/)
 
 # vue-video-module
 
@@ -11,22 +11,13 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.3.2 add API methods
+>
 > v0.3.1 fix IE11 fullscreen layout bug
 
 ### Example
 
 [Demo Page](https://iapyang.github.io/vue-video-module/)
-
-#### or 
-
-```javascript
-// step 1
-npm install
-// step 2
-npm run dev
-// preview link http://0.0.0.0:8080/#/test
-// code is in dev/component/Test.vue
-```
 
 ### Usage
 
@@ -99,9 +90,9 @@ If the value is false means this part will not be rendered.
 
 ##### brief：
 
-the vueVideo is the object of this component
+the `vueVideo` is the object of this component
 
-vueVideo.$refs.video is the dom of the video
+`vueVideo.$refs.video` is the dom of the video
 
 | Name                    | Description                            | Type     |
 | ----------------------- | -------------------------------------- | -------- |
@@ -110,3 +101,24 @@ vueVideo.$refs.video is the dom of the video
 | onPlayToPause(vueVideo) | video status from play to pause        | function |
 | onStart(vueVideo)       | video start                            | function |
 | onEnded(vueVideo)       | video end                              | function |
+#### Methods
+
+##### brief：
+
+the `vueVideo` is the object of this component
+
+```javascript
+// e.g
+vueVideo.play();
+```
+
+| Name       | Description                     |
+| ---------- | ------------------------------- |
+| play()     | make the video play             |
+| pause()    | make the video pause            |
+| replay()   | make the video replay           |
+| seek(rate) | 0 <= rate <= 1, jump to a ponit |
+
+### Todo List
+
+- add options for manually set width and height
