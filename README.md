@@ -1,5 +1,7 @@
 
 
+[![NPM](https://nodei.co/npm/vue-video-module.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/vue-video-module)
+
 # vue-video-module
 
 A simple video component built for vue.
