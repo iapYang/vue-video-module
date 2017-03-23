@@ -28,10 +28,15 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 #### Vue use
 
 ```javascript
-import Vue from 'vue'
-import VueVideo from 'vue-video-module'
+// import
+import Vue from 'vue';
+import VueVideo from 'vue-video-module';
 
-// use
+// require
+var Vue = require('Vue');
+var VueVideo = require('vue-video-module');
+
+// mount with component
 export default {
   components: {
     VueVideo,
