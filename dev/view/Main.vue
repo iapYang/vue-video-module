@@ -130,7 +130,7 @@
                        .md-icon {
                            display: inline-block;
                            margin: 0;
-                           color: #000;
+                           color: rgba(0, 0, 0, 0.5);
                        }
                    }
                    .md-subhead {
