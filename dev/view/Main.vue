@@ -19,6 +19,9 @@
             <md-card v-for="example,index in examples" :key="example">
                 <md-card-header>
                     <div class="md-subhead">{{ example.title }}</div>
+                    <a :href="`https://github.com/iapYang/vue-video-module/blob/master/example/${examples[index].title}.vue`" target="_blank">
+                        <md-icon>code</md-icon>    
+                    </a>
                 </md-card-header>
                 <div class="md-card-main">
                     <div :is="example.name"></div>
@@ -60,13 +63,13 @@
                     class: 'md-primary',
                 }],
                 examples: [{
-                    title: '01-Default',
+                    title: '01-default',
                     name: 'example01',
                 }, {
-                    title: '02-AutoPlay',
+                    title: '02-autoPlay',
                     name: 'example02',
                 }, {
-                    title: '03-Fullscreen',
+                    title: '03-fullscreen',
                     name: 'example03',
                 }],
             };
@@ -116,6 +119,23 @@
                margin-top: 20px;
                &:nth-child(1) {
                    margin-top: 0;
+               }
+               .md-card-header {
+                   display: flex;
+                   justify-content: space-between;
+                   a {
+                       display: inline-block;
+                       margin: 0;
+
+                       .md-icon {
+                           display: inline-block;
+                           margin: 0;
+                           color: #000;
+                       }
+                   }
+                   .md-subhead {
+                       text-transform: capitalize;
+                   }
                }
                .md-card-main {
                    position: relative;
