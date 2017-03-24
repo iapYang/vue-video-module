@@ -6,7 +6,7 @@
             </md-toolbar>
         </header>
         <div class="banner">
-            <h4>Simple video component bulit for vue</h4>
+            <h4 class="title">Simple video component bulit for vue</h4>
             <ul class="actions">
                 <li class="action" v-for="action,index in actions" :key="action">
                     <a :href="action.href" target="_blank">
@@ -16,6 +16,9 @@
             </ul>
         </div>
         <div class="examples">
+            <md-card-header>
+                <div class="md-title">Simple demos for preview</div>
+            </md-card-header>
             <md-card v-for="example,index in examples" :key="example">
                 <md-card-header>
                     <div class="md-subhead">{{ example.title }}</div>
@@ -98,8 +101,8 @@
                font-size: 25px;
                text-align: center;
                color: #a5a5a5;
-               margin-bottom: 0;
                line-height: 1;
+               margin-bottom: 0;
            }
            .actions {
                position: relative;
@@ -130,7 +133,7 @@
                        .md-icon {
                            display: inline-block;
                            margin: 0;
-                           color: rgba(0, 0, 0, 0.5);
+                           color: rgba(0, 0, 0, 0.7);
                        }
                    }
                    .md-subhead {
