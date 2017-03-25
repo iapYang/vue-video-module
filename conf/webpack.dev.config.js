@@ -1,5 +1,6 @@
 const merge = require('webpack-merge');
 const webpack = require('webpack');
+const ip = require('ip');
 
 const baseWebpackConfig = require('./webpack.base.config.js');
 
@@ -7,7 +8,7 @@ module.exports = merge(baseWebpackConfig, {
     devtool: 'eval-source-map',
     devServer: {
         contentBase: './dev',
-        host: '0.0.0.0',
+        host: ip.address(),
         open: true,
         hot: true,
     },
