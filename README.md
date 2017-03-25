@@ -14,6 +14,8 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.3.3 poster size change
+>
 > v0.3.2 add API methods
 >
 > v0.3.1 fix IE11 fullscreen layout bug
@@ -21,6 +23,9 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 ### Example
 
 [Demo Page](https://iapyang.github.io/vue-video-module/)
+
+### Test
+[Test Page](https://iapyang.github.io/vue-video-module/#/test)
 
 ### Usage
 
@@ -130,3 +135,4 @@ vueVideo.play();
 ### Todo List
 
 - add options for manually set width and height
+- add last frame
