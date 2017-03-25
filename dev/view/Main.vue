@@ -1,10 +1,6 @@
 <template lang="html">
     <div class="main-container">
-        <header>
-            <md-toolbar>
-                <h1 class="md-title">Vue-video-module</h1>
-            </md-toolbar>
-        </header>
+        <top></top>
         <div class="banner">
             <h4 class="title">Simple video component bulit for vue</h4>
             <ul class="actions">
@@ -42,6 +38,7 @@
     import example01 from '../../example/01-default.vue';
     import example02 from '../../example/02-autoPlay.vue';
     import example03 from '../../example/03-fullscreen.vue';
+    import Top from '../component/Top.vue';
     
     Vue.use(VueMaterial);
     
@@ -81,6 +78,7 @@
             example01,
             example02,
             example03,
+            Top,
         },
     };
 </script>

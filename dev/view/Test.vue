@@ -1,5 +1,6 @@
 <template lang="html">
     <div class="test-container">
+        <top></top>
         <div class="video-container container">
             <vue-video ref="video1" :options="videoOptions"></vue-video>
         </div>
@@ -8,6 +9,8 @@
 
 <script>
     import VueVideo from '../component/VueVideo.vue';
+    import Top from '../component/Top.vue';
+    
     export default {
         data() {
             return {
@@ -28,6 +31,7 @@
         },
         components: {
             VueVideo,
+            Top,
         },
     };
 </script>
