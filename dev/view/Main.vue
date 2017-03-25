@@ -13,7 +13,13 @@
         </div>
         <div class="examples">
             <md-card-header>
-                <div class="md-title">Simple demos for preview</div>
+                <div class="md-title">
+                    <span>Simple demos to preview Or Click</span>
+                    <md-button href="#/test" class="md-accent">
+                        Test Page
+                    </md-button>
+                    <span>for further explore</span>
+                </div>
             </md-card-header>
             <md-card v-for="example,index in examples" :key="example">
                 <md-card-header>
@@ -116,6 +122,15 @@
            width: 100%;
            max-width: 1024px;
            margin: 0 auto;
+           .md-card-header .md-title {
+               display: flex;
+               align-items: center;
+               a {
+                   font-size: 20px;
+                   font-weight: bold;
+                   margin: 0;
+               }
+           }
            .md-card {
                margin-top: 20px;
                &:nth-child(1) {
