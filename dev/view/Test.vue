@@ -35,7 +35,8 @@
             }, {
                 name: 'poster',
                 options: [
-                    'image/1.jpg', 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
+                    'image/1.jpg',
+                    'image/2.jpg',
                     'false',
                 ],
             }, {

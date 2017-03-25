@@ -12,7 +12,7 @@
             return {
                 videoOptions: {
                     src: 'http://vjs.zencdn.net/v/oceans.mp4',
-                    poster: 'http://www.freemake.com/blog/wp-content/uploads/2015/06/videojs-logo.jpg',
+                    poster: 'image/2.jpg',
                     autoPlay: true,
                 },
             };
