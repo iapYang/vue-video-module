@@ -262,7 +262,13 @@
                     setTimeout(this.videoClickHandler, 500);
                 }
             },
-    
+
+            // reset the video state before next show
+            startPointResetHandler() {
+                this.progress = '0%';
+                this.is_video_play = this.videoOptions.autoPlay;
+            },
+
             // check in function
             checkInHandler() {
                 this.startPointResetHandler();
@@ -276,17 +282,6 @@
                 }
             },
     
-            // reset the video state before next show
-            startPointResetHandler() {
-                this.progress = '0%';
-                this.is_video_play = this.videoOptions.autoPlay;
-            },
-    
-            // check out function
-            checkOutHandler() {
-                this.endPointResetHandler();
-            },
-    
             // when close button clicked
             endPointResetHandler() {
                 this.video.pause();
@@ -295,6 +290,11 @@
                 this.is_poster_loaded = false;
                 this.is_video_BFF = true;
                 this.videoCanplay = false;
+            },
+    
+            // check out function
+            checkOutHandler() {
+                this.endPointResetHandler();
             },
     
             // check if video is finished
@@ -325,18 +325,6 @@
                 }, 100);
                 this.videoOptions.onPauseToPlay(this);
                 this.is_video_play = true;
-            },
-
-            // video play API
-            play() {
-                if (this.is_video_play) return;
-                this.videoPlayHandler();
-            },
-
-            // video pause API
-            pause() {
-                if (!this.is_video_play) return;
-                this.videoPauseHandler();
             },
     
             // video play to pause action
@@ -369,19 +357,6 @@
             barClickHandler(e) {
                 const rate = e.offsetX / e.target.clientWidth;
                 this.seek(rate);
-            },
-
-            // video seek API
-            seek(rate) {
-                this.progress = floatToPercent(rate);
-                this.video.currentTime = this.video.duration * rate;
-                this.checkVideoFinished();
-            },
-
-            // video replay API
-            replay() {
-                this.seek(0);
-                this.play();
             },
     
             // when click the fullscreen button
@@ -500,6 +475,32 @@
                 } else {
                     this.volumeClass = 'sound-low';
                 }
+            },
+
+            // API
+            // video play API
+            play() {
+                if (this.is_video_play) return;
+                this.videoPlayHandler();
+            },
+
+            // video pause API
+            pause() {
+                if (!this.is_video_play) return;
+                this.videoPauseHandler();
+            },
+
+            // video seek API
+            seek(rate) {
+                this.progress = floatToPercent(rate);
+                this.video.currentTime = this.video.duration * rate;
+                this.checkVideoFinished();
+            },
+
+            // video replay API
+            replay() {
+                this.seek(0);
+                this.play();
             },
         },
         props: ['options'],
