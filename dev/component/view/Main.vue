@@ -41,10 +41,10 @@
     import VueMaterial from 'vue-material';
     import 'vue-material/dist/vue-material.css';
     
-    import example01 from '../../example/01-default.vue';
-    import example02 from '../../example/02-autoPlay.vue';
-    import example03 from '../../example/03-fullscreen.vue';
-    import Top from '../component/Top.vue';
+    import example01 from '../example/01-default.vue';
+    import example02 from '../example/02-autoPlay.vue';
+    import example03 from '../example/03-fullscreen.vue';
+    import Top from '../common/Top.vue';
     
     Vue.use(VueMaterial);
     
@@ -90,77 +90,77 @@
 </script>
 
 <style lang="scss">
-       .banner {
-           h2 {
-               // font-family: "Lato-Regular";
-               text-transform: uppercase;
-               font-size: 35px;
-               text-align: center;
-               color: #000;
-               line-height: 1;
-           }
-           h4 {
-               // font-family: "Lato-Regular";
-               text-transform: capitalize;
-               font-size: 25px;
-               text-align: center;
-               color: #a5a5a5;
-               line-height: 1;
-               margin-bottom: 0;
-           }
-           .actions {
-               position: relative;
-               text-align: center;
-               li {
-                   display: inline-block;
-               }
-           }
-       }
-       
-       .examples {
-           position: relative;
-           width: 100%;
-           max-width: 1024px;
-           margin: 0 auto;
-           .md-card-header .md-title {
-               display: flex;
-               align-items: center;
-               a {
-                   font-size: 20px;
-                   font-weight: bold;
-                   margin: 0;
-               }
-           }
-           .md-card {
-               margin-top: 20px;
-               &:nth-child(1) {
-                   margin-top: 0;
-               }
-               .md-card-header {
-                   display: flex;
-                   justify-content: space-between;
-                   a {
-                       display: inline-block;
-                       margin: 0;
+    .banner {
+        h2 {
+            // font-family: "Lato-Regular";
+            text-transform: uppercase;
+            font-size: 35px;
+            text-align: center;
+            color: #000;
+            line-height: 1;
+        }
+        h4 {
+            // font-family: "Lato-Regular";
+            text-transform: capitalize;
+            font-size: 25px;
+            text-align: center;
+            color: #a5a5a5;
+            line-height: 1;
+            margin-bottom: 0;
+        }
+        .actions {
+            position: relative;
+            text-align: center;
+            li {
+                display: inline-block;
+            }
+        }
+    }
+    
+    .examples {
+        position: relative;
+        width: 100%;
+        max-width: 1024px;
+        margin: 0 auto;
+        .md-card-header .md-title {
+            display: flex;
+            align-items: center;
+            a {
+                font-size: 20px;
+                font-weight: bold;
+                margin: 0;
+            }
+        }
+        .md-card {
+            margin-top: 20px;
+            &:nth-child(1) {
+                margin-top: 0;
+            }
+            .md-card-header {
+                display: flex;
+                justify-content: space-between;
+                a {
+                    display: inline-block;
+                    margin: 0;
 
-                       .md-icon {
-                           display: inline-block;
-                           margin: 0;
-                           color: rgba(0, 0, 0, 0.7);
-                       }
-                   }
-                   .md-subhead {
-                       text-transform: capitalize;
-                   }
-               }
-               .md-card-main {
-                   position: relative;
-                   display: flex;
-                   flex-direction: row;
-                   justify-content: space-between;
-                   flex-wrap: nowrap;
-                   align-items: flex-start;
-               }
-           }
-       }
+                    .md-icon {
+                        display: inline-block;
+                        margin: 0;
+                        color: rgba(0, 0, 0, 0.7);
+                    }
+                }
+                .md-subhead {
+                    text-transform: capitalize;
+                }
+            }
+            .md-card-main {
+                position: relative;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                align-items: flex-start;
+            }
+        }
+    }
 </style>

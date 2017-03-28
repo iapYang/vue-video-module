@@ -83,11 +83,10 @@
 </template>
 
 <script>
-    import Platform from '../script/plugin/platform.js';
-    
-    import VueLoading from 'vue-simple-loading';
+    import Platform from '../../script/plugin/platform.js';
     import VolumeBar from './VueVideo/VolumeBar.vue';
     
+    import VueLoading from 'vue-simple-loading';
     import enableInlineVideo from 'iphone-inline-video';
     
     function floatToPercent(number) {
@@ -159,19 +158,19 @@
                     poster: false,
     
                     // main play button
-                    playMain: require('../image/ignore/play_op2.png'),
-                    playMainRollover: require('../image/ignore/play_rollover_op2.png'),
+                    playMain: require('../../image/ignore/play_op2.png'),
+                    playMainRollover: require('../../image/ignore/play_rollover_op2.png'),
     
                     // main replay button
-                    replayMain: require('../image/ignore/replay_op2.png'),
-                    replayMainRollover: require('../image/ignore/replay_rollover_op2.png'),
+                    replayMain: require('../../image/ignore/replay_op2.png'),
+                    replayMainRollover: require('../../image/ignore/replay_rollover_op2.png'),
     
                     // sub control button
-                    playSub: require('../image/ignore/play.png'),
-                    pauseSub: require('../image/ignore/pause.png'),
-                    replaySub: require('../image/ignore/replay.png'),
-                    fullscreenSub: require('../image/ignore/screen.svg'),
-                    shrinkscreenSub: require('../image/ignore/screen_shrink.svg'),
+                    playSub: require('../../image/ignore/play.png'),
+                    pauseSub: require('../../image/ignore/pause.png'),
+                    replaySub: require('../../image/ignore/replay.png'),
+                    fullscreenSub: require('../../image/ignore/screen.svg'),
+                    shrinkscreenSub: require('../../image/ignore/screen_shrink.svg'),
     
                     // if the video loop
                     loop: false,
@@ -512,7 +511,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "../style/_reset.scss";
+    @import "../../style/_reset";
     $dashoffset: 100;
     .IIV::-webkit-media-controls-play-button,
     .IIV::-webkit-media-controls-start-playback-button {

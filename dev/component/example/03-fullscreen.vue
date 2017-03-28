@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import VueVideo from '../dev/component/VueVideo.vue';
+    import VueVideo from '../src/VueVideo.vue';
     
     export default {
         data() {
@@ -27,9 +27,9 @@
 </script>
 
 <style lang="scss">
-      .video-container {
-          position: relative;
-          width: 100%;
-          margin: 0 auto;
-      }
+    .video-container {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+    }
 </style>

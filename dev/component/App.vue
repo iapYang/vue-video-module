@@ -9,7 +9,6 @@
 </script>
 
 <style lang="scss">
-    // @import "../style/reset";
     @import "../style/mixin";
     @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
     @include font-face("Lato-Regular");

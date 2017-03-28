@@ -21,8 +21,8 @@
 </template>
 
 <script>
-    import VueVideo from '../component/VueVideo.vue';
-    import Top from '../component/Top.vue';
+    import VueVideo from '../src/VueVideo.vue';
+    import Top from '../common/Top.vue';
     
     export default {
         data() {

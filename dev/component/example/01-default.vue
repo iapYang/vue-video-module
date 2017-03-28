@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import VueVideo from '../dev/component/VueVideo.vue';
+    import VueVideo from '../src/VueVideo.vue';
 
     export default {
         data() {
