@@ -90,8 +90,10 @@
                 if (value === 'true') currentValue = true;
                 
                 if (!this.video) return;
-                if (name === 'src') this.video.pause();
-                this.video.videoOptions[name] = currentValue;
+                
+                const tmpObj = {};
+                tmpObj[name] = currentValue;
+                this.video.changeVal(tmpObj);
             },
         },
         components: {

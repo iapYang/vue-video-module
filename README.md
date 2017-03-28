@@ -125,14 +125,16 @@ the `vueVideo` is the object of this component
 vueVideo.play();
 ```
 
-| Name       | Description                     |
-| ---------- | ------------------------------- |
-| play()     | make the video play             |
-| pause()    | make the video pause            |
-| replay()   | make the video replay           |
-| seek(rate) | 0 <= rate <= 1, jump to a ponit |
+| Name             | Description                              | parameter |
+| ---------------- | ---------------------------------------- | --------- |
+| play()           | make the video play                      | null      |
+| pause()          | make the video pause                     | null      |
+| replay()         | make the video replay                    | null      |
+| seek(rate)       | 0 <= rate <= 1, jump to a ponit          | number    |
+| changeVal(props) | if you want to the props after you create it, use this function | object    |
 
 ### Todo List
 
 - add options for manually set width and height
 - add last frame
+- in & out function

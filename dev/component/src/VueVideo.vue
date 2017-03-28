@@ -502,6 +502,19 @@
                 this.seek(0);
                 this.play();
             },
+
+            // change API
+            changeVal(val) {
+                this.videoOptions = Object.assign({}, this.videoOptions, val);
+            },
+        },
+        watch: {
+            videoOptions(newVal, oldVal) {
+                if (newVal.src !== oldVal.src) {
+                    this.videoPauseHandler();
+                    this.checkOutHandler();
+                }
+            },
         },
         props: ['options'],
         components: {
