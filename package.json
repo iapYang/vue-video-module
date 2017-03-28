@@ -2,7 +2,7 @@
   "name": "vue-video-module",
   "version": "0.3.3",
   "description": "a video component built for vue",
-  "main": "dist/bundle.js",
+  "main": "bundle/index.js",
   "scripts": {
     "dev": "webpack-dev-server --progress --config ./conf/webpack.dev.config.js",
     "build": "webpack --progress --config ./conf/webpack.prod.config.js",
