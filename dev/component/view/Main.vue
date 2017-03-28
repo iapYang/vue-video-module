@@ -24,7 +24,7 @@
             <md-card v-for="example,index in examples" :key="example">
                 <md-card-header>
                     <div class="md-subhead">{{ example.title }}</div>
-                    <a :href="`https://github.com/iapYang/vue-video-module/blob/master/example/${examples[index].title}.vue`" target="_blank">
+                    <a :href="`https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/${examples[index].title}.vue`" target="_blank">
                         <md-icon>code</md-icon>    
                     </a>
                 </md-card-header>
@@ -61,7 +61,7 @@
                     class: 'md-accent',
                 }, {
                     name: 'example',
-                    href: 'https://github.com/iapYang/vue-video-module/tree/master/example',
+                    href: 'https://github.com/iapYang/vue-video-module/tree/master/dev/component/example',
                     class: 'md-primary',
                 }, {
                     name: 'API',
