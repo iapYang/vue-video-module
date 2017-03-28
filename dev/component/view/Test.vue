@@ -90,7 +90,7 @@
                 if (value === 'true') currentValue = true;
                 
                 if (!this.video) return;
-                
+
                 const tmpObj = {};
                 tmpObj[name] = currentValue;
                 this.video.changeVal(tmpObj);

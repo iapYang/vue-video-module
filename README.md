@@ -131,10 +131,11 @@ vueVideo.play();
 | pause()          | make the video pause                     | null      |
 | replay()         | make the video replay                    | null      |
 | seek(rate)       | 0 <= rate <= 1, jump to a ponit          | number    |
-| changeVal(props) | if you want to the props after you create it, use this function | object    |
+| changeVal(props) | if you want to the props after you create it, use this function. | object    |
+|                  | PS: when you change the video's src, current video will pause and reset to the original state, you'd better make the component disappear first, after reset then make it appear. |           |
+| reset()          | reset to original state                  | null      |
 
 ### Todo List
 
 - add options for manually set width and height
-- add last frame
-- in & out function
+- add last frame 

@@ -502,14 +502,19 @@
             changeVal(val) {
                 this.videoOptions = Object.assign({}, this.videoOptions, val);
             },
+
+            // reset
+            reset() {
+                this.endPointResetHandler();
+            },
         },
         watch: {
-            videoOptions(newVal, oldVal) {
-                if (newVal.src !== oldVal.src) {
-                    this.videoPauseHandler();
-                    this.endPointResetHandler();
-                }
-            },
+            // videoOptions(newVal, oldVal) {
+            //     if (newVal.src !== oldVal.src) {
+            //         this.videoPauseHandler();
+            //         this.endPointResetHandler();
+            //     }
+            // },
         },
         props: ['options'],
         components: {
