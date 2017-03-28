@@ -218,7 +218,8 @@
             this.volume = this.$refs.volume;
             this.fullscreenElement = Platform.isDesktop ? this.$refs['vue-video'] : this.video;
     
-            this.checkInHandler();
+            // first time load poster
+            this.posterLoadHandler();
     
             // register events when screen came to whole screen
             const fullscreenEvents = [
@@ -249,10 +250,17 @@
         methods: {
             // if the video is ready for play
             canplayHandler() {
+                // the video change the src, with this, the poster will show
+                this.posterLoadHandler();
+
                 this.video.currentTime = 0;
                 this.videoOptions.onInit(this);
                 this.videoCanplay = true;
-    
+
+                // is_video_play = if show the play button
+                // in case it'll shown and disappear when auto play
+                this.is_video_play = this.videoOptions.autoPlay;
+
                 setTimeout(() => {
                     this.$refs.volume.reflow();
                 }, 100);
@@ -263,19 +271,11 @@
                 }
             },
 
-            // reset the video state before next show
-            startPointResetHandler() {
-                this.progress = '0%';
-                this.is_video_play = this.videoOptions.autoPlay;
-            },
-
-            // check in function
-            checkInHandler() {
-                this.startPointResetHandler();
-    
+            // preload poster
+            posterLoadHandler() {
                 // after the poster is loaded, it'll show
                 const poster = this.videoOptions.poster;
-                if (poster) {
+                if (poster && !this.is_poster_loaded) {
                     loadSinglePicture(poster, () => {
                         this.is_poster_loaded = true;
                     });
@@ -284,17 +284,12 @@
     
             // when close button clicked
             endPointResetHandler() {
-                this.video.pause();
+                this.progress = '0%';
                 this.is_video_play = false;
                 this.is_video_played = false;
                 this.is_poster_loaded = false;
                 this.is_video_BFF = true;
                 this.videoCanplay = false;
-            },
-    
-            // check out function
-            checkOutHandler() {
-                this.endPointResetHandler();
             },
     
             // check if video is finished
@@ -512,7 +507,7 @@
             videoOptions(newVal, oldVal) {
                 if (newVal.src !== oldVal.src) {
                     this.videoPauseHandler();
-                    this.checkOutHandler();
+                    this.endPointResetHandler();
                 }
             },
         },
