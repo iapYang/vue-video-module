@@ -36,15 +36,14 @@ module.exports = merge(baseWebpackConfig, {
         ], {
             ignore: [
                 '*.html',
-                'image/ignore/**/*',
                 'router.js',
                 'style/**/*',
                 'script/**/*',
                 'store/**/*',
+                'image/ignore/**/*',
                 'component/**/*',
                 'data/**/*',
                 'font/**/*',
-                'view/**/*',
             ],
         }),
     ],

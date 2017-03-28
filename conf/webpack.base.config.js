@@ -3,19 +3,27 @@ const glob = require('glob');
 const webpack = require('webpack');
 const postcssConfig = require('./postcss.config.js');
 
+const fontPath = path.resolve(process.cwd(), 'dev/font');
+const picPath = path.resolve(process.cwd(), 'dev/image');
+
 const jsFiles = glob.sync('./dev/script/*.js');
 const entry = {};
+const eslintLoader = {
+    loader: 'eslint-loader',
+    options: {
+        failOnWarning: true,
+        failOnError: true,
+    },
+};
 
 jsFiles.forEach((file, i) => {
-    if (!file.match('bundle')) {
-        entry[path.basename(file, '.js')] = file;
-    }
+    entry[path.basename(file, '.js')] = file;
 });
 
 module.exports = {
     entry,
     output: {
-        path: path.join(process.cwd(), 'docs'),
+        path: path.join(process.cwd(), 'dist'),
         filename: '[name].js',
     },
     module: {
@@ -24,13 +32,7 @@ module.exports = {
                 test: /\.js(x)?$/,
                 use: [
                     'babel-loader',
-                    {
-                        loader: 'eslint-loader',
-                        options: {
-                            failOnWarning: true,
-                            failOnError: true,
-                        },
-                    },
+                    eslintLoader,
                 ],
                 exclude: /node_module/,
             },
@@ -38,7 +40,7 @@ module.exports = {
                 test: /\.vue$/,
                 use: [
                     'vue-loader',
-                    'eslint-loader',
+                    eslintLoader,
                 ],
             },
             {
@@ -67,7 +69,7 @@ module.exports = {
                     },
                 }],
                 include: [
-                    path.resolve(__dirname, '../dev/font'),
+                    fontPath,
                 ],
             },
             {
@@ -75,7 +77,6 @@ module.exports = {
                 use: [{
                     loader: 'url-loader',
                     options: {
-                        limit: '12000',
                         mimetype: 'image/png',
                     },
                 }],
@@ -90,7 +91,7 @@ module.exports = {
                     },
                 }],
                 include: [
-                    path.resolve(__dirname, '../dev/image'),
+                    picPath,
                 ],
             },
         ],

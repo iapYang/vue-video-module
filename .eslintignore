@@ -1,2 +1,1 @@
-dev/script/plugin/*.js
-dist/*.js
+dev/script/plugin/**/*.js

@@ -1,7 +1,7 @@
 const ghpages = require('gh-pages');
 const path = require('path');
 
-ghpages.publish(path.resolve(__dirname, '../docs'), err => {
+ghpages.publish(path.resolve(__dirname, '../dist'), err => {
     if (err) {
         console.log(err);
     } else {
