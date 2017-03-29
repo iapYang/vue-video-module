@@ -1,0 +1,3076 @@
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+var stylesInDom = {},
+	memoize = function(fn) {
+		var memo;
+		return function () {
+			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+			return memo;
+		};
+	},
+	isOldIE = memoize(function() {
+		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
+	}),
+	getHeadElement = memoize(function () {
+		return document.head || document.getElementsByTagName("head")[0];
+	}),
+	singletonElement = null,
+	singletonCounter = 0,
+	styleElementsInsertedAtTop = [];
+
+module.exports = function(list, options) {
+	if(typeof DEBUG !== "undefined" && DEBUG) {
+		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the bottom of <head>.
+	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+	var styles = listToStyles(list);
+	addStylesToDom(styles, options);
+
+	return function update(newList) {
+		var mayRemove = [];
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+		if(newList) {
+			var newStyles = listToStyles(newList);
+			addStylesToDom(newStyles, options);
+		}
+		for(var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+			if(domStyle.refs === 0) {
+				for(var j = 0; j < domStyle.parts.length; j++)
+					domStyle.parts[j]();
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+}
+
+function addStylesToDom(styles, options) {
+	for(var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+		if(domStyle) {
+			domStyle.refs++;
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles(list) {
+	var styles = [];
+	var newStyles = {};
+	for(var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+		if(!newStyles[id])
+			styles.push(newStyles[id] = {id: id, parts: [part]});
+		else
+			newStyles[id].parts.push(part);
+	}
+	return styles;
+}
+
+function insertStyleElement(options, styleElement) {
+	var head = getHeadElement();
+	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+	if (options.insertAt === "top") {
+		if(!lastStyleElementInsertedAtTop) {
+			head.insertBefore(styleElement, head.firstChild);
+		} else if(lastStyleElementInsertedAtTop.nextSibling) {
+			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			head.appendChild(styleElement);
+		}
+		styleElementsInsertedAtTop.push(styleElement);
+	} else if (options.insertAt === "bottom") {
+		head.appendChild(styleElement);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement(styleElement) {
+	styleElement.parentNode.removeChild(styleElement);
+	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+	if(idx >= 0) {
+		styleElementsInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement(options) {
+	var styleElement = document.createElement("style");
+	styleElement.type = "text/css";
+	insertStyleElement(options, styleElement);
+	return styleElement;
+}
+
+function createLinkElement(options) {
+	var linkElement = document.createElement("link");
+	linkElement.rel = "stylesheet";
+	insertStyleElement(options, linkElement);
+	return linkElement;
+}
+
+function addStyle(obj, options) {
+	var styleElement, update, remove;
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+		styleElement = singletonElement || (singletonElement = createStyleElement(options));
+		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+	} else if(obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function") {
+		styleElement = createLinkElement(options);
+		update = updateLink.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+			if(styleElement.href)
+				URL.revokeObjectURL(styleElement.href);
+		};
+	} else {
+		styleElement = createStyleElement(options);
+		update = applyToTag.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle(newObj) {
+		if(newObj) {
+			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+				return;
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag(styleElement, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = styleElement.childNodes;
+		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+		if (childNodes.length) {
+			styleElement.insertBefore(cssNode, childNodes[index]);
+		} else {
+			styleElement.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag(styleElement, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		styleElement.setAttribute("media", media)
+	}
+
+	if(styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = css;
+	} else {
+		while(styleElement.firstChild) {
+			styleElement.removeChild(styleElement.firstChild);
+		}
+		styleElement.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink(linkElement, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	if(sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = linkElement.href;
+
+	linkElement.href = URL.createObjectURL(blob);
+
+	if(oldSrc)
+		URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+// this module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = Object.create(options.computed || null)
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+    options.computed = computed
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(4)
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(26),
+  /* template */
+  __webpack_require__(19),
+  /* scopeId */
+  "data-v-20b90c50",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/work/Fancy_Pants_Group/GitHub/vue-video-module/dev/component/src/VueVideo.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] VueVideo.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-loader/node_modules/vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-20b90c50", Component.options)
+  } else {
+    hotAPI.reload("data-v-20b90c50", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(6);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(0)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/.0.26.4@css-loader/index.js!../../../node_modules/.11.3.3@vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-20b90c50\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/.1.3.3@postcss-loader/index.js!../../../node_modules/.6.0.3@sass-loader/lib/loader.js!../../../node_modules/.11.3.3@vue-loader/lib/selector.js?type=styles&index=0!./VueVideo.vue", function() {
+			var newContent = require("!!../../../node_modules/.0.26.4@css-loader/index.js!../../../node_modules/.11.3.3@vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-20b90c50\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/.1.3.3@postcss-loader/index.js!../../../node_modules/.6.0.3@sass-loader/lib/loader.js!../../../node_modules/.11.3.3@vue-loader/lib/selector.js?type=styles&index=0!./VueVideo.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(7);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(0)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../../node_modules/.0.26.4@css-loader/index.js!../../../../node_modules/.11.3.3@vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-7e978ffc\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/.1.3.3@postcss-loader/index.js!../../../../node_modules/.6.0.3@sass-loader/lib/loader.js!../../../../node_modules/.11.3.3@vue-loader/lib/selector.js?type=styles&index=0!./VolumeBar.vue", function() {
+			var newContent = require("!!../../../../node_modules/.0.26.4@css-loader/index.js!../../../../node_modules/.11.3.3@vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-7e978ffc\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/.1.3.3@postcss-loader/index.js!../../../../node_modules/.6.0.3@sass-loader/lib/loader.js!../../../../node_modules/.11.3.3@vue-loader/lib/selector.js?type=styles&index=0!./VolumeBar.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "\nhtml[data-v-20b90c50], body[data-v-20b90c50], div[data-v-20b90c50], span[data-v-20b90c50], applet[data-v-20b90c50], object[data-v-20b90c50], iframe[data-v-20b90c50], h1[data-v-20b90c50], h2[data-v-20b90c50], h3[data-v-20b90c50], h4[data-v-20b90c50], h5[data-v-20b90c50], h6[data-v-20b90c50], p[data-v-20b90c50], blockquote[data-v-20b90c50], pre[data-v-20b90c50], a[data-v-20b90c50],\nabbr[data-v-20b90c50], acronym[data-v-20b90c50], address[data-v-20b90c50], big[data-v-20b90c50], cite[data-v-20b90c50], code[data-v-20b90c50], del[data-v-20b90c50], dfn[data-v-20b90c50], em[data-v-20b90c50], img[data-v-20b90c50], ins[data-v-20b90c50], kbd[data-v-20b90c50], q[data-v-20b90c50], s[data-v-20b90c50], samp[data-v-20b90c50], small[data-v-20b90c50], strike[data-v-20b90c50], strong[data-v-20b90c50],\nsub[data-v-20b90c50], sup[data-v-20b90c50], tt[data-v-20b90c50], var[data-v-20b90c50], b[data-v-20b90c50], u[data-v-20b90c50], i[data-v-20b90c50], center[data-v-20b90c50], dl[data-v-20b90c50], dt[data-v-20b90c50], dd[data-v-20b90c50], ol[data-v-20b90c50], ul[data-v-20b90c50], li[data-v-20b90c50], fieldset[data-v-20b90c50], form[data-v-20b90c50], label[data-v-20b90c50], legend[data-v-20b90c50],\ntable[data-v-20b90c50], caption[data-v-20b90c50], tbody[data-v-20b90c50], tfoot[data-v-20b90c50], thead[data-v-20b90c50], tr[data-v-20b90c50], th[data-v-20b90c50], td[data-v-20b90c50], article[data-v-20b90c50], aside[data-v-20b90c50], canvas[data-v-20b90c50], details[data-v-20b90c50], embed[data-v-20b90c50], figure[data-v-20b90c50],\nfigcaption[data-v-20b90c50], footer[data-v-20b90c50], header[data-v-20b90c50], hgroup[data-v-20b90c50], menu[data-v-20b90c50], nav[data-v-20b90c50], output[data-v-20b90c50], ruby[data-v-20b90c50], section[data-v-20b90c50], summary[data-v-20b90c50], time[data-v-20b90c50], mark[data-v-20b90c50], audio[data-v-20b90c50], video[data-v-20b90c50] {\n  text-decoration: none;\n  outline: none;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 0;\n  -webkit-tap-highlight-color: transparent;\n  box-sizing: border-box;\n  -webkit-user-select: none;\n          user-select: none;\n  list-style: none;\n}\nhtml[data-v-20b90c50] {\n  /* Prevent font scaling in landscape while allowing user zoom */\n  -webkit-text-size-adjust: 100%;\n  /* fix font family display error on different browsers */\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-font-smoothing: antialiased;\n  text-rendering: optimizeLegibility;\n}\na[data-v-20b90c50] {\n  text-decoration: none;\n  color: black;\n}\n.preload img[data-v-20b90c50], .preload canvas[data-v-20b90c50] {\n  width: 100%;\n  height: auto;\n  display: block;\n}\n.IIV[data-v-20b90c50]::-webkit-media-controls-play-button,\n.IIV[data-v-20b90c50]::-webkit-media-controls-start-playback-button {\n  opacity: 0;\n  pointer-events: none;\n  width: 5px;\n}\n@-webkit-keyframes ani-go {\nto {\n    stroke-dashoffset: 0;\n}\n}\n@keyframes ani-go {\nto {\n    stroke-dashoffset: 0;\n}\n}\n@-webkit-keyframes ani-back {\nto {\n    stroke-dashoffset: 100;\n}\n}\n@keyframes ani-back {\nto {\n    stroke-dashoffset: 100;\n}\n}\n.video-enter-active[data-v-20b90c50] {\n  -webkit-transition: opacity 0.4s;\n  transition: opacity 0.4s;\n}\n.video-leave-active[data-v-20b90c50] {\n  -webkit-transition: opacity 0.6s;\n  transition: opacity 0.6s;\n}\n\n/* .video-leave-active in <2.1.8 */\n.video-enter[data-v-20b90c50],\n.video-leave-to[data-v-20b90c50] {\n  opacity: 0;\n}\n.vue-video[data-v-20b90c50] {\n  position: relative;\n  width: 100%;\n  cursor: pointer;\n  /* .fade-leave-active in <2.1.8 */\n}\n.vue-video .fade-enter-active[data-v-20b90c50] {\n    -webkit-transition: opacity 0.4s;\n    transition: opacity 0.4s;\n}\n.vue-video .fade-leave-active[data-v-20b90c50] {\n    -webkit-transition: opacity 0.6s;\n    transition: opacity 0.6s;\n}\n.vue-video .fade-enter[data-v-20b90c50],\n  .vue-video .fade-leave-to[data-v-20b90c50] {\n    opacity: 0;\n}\n.vue-video img[data-v-20b90c50] {\n    position: relative;\n    display: block;\n    width: 100%;\n}\n.vue-video .vue-video-wrapper[data-v-20b90c50] {\n    position: relative;\n    width: 100%;\n}\n.vue-video .main-part[data-v-20b90c50] {\n    position: relative;\n    width: 100%;\n}\n.vue-video .main-part video[data-v-20b90c50] {\n      position: relative;\n      display: block;\n      width: 100%;\n}\n.vue-video .main-part video[data-v-20b90c50]::-webkit-media-controls {\n        display: none !important;\n}\n.vue-video .main-part .main-component[data-v-20b90c50] {\n      position: absolute;\n      width: 100%;\n      height: 100%;\n      left: 0;\n      top: 0;\n}\n.vue-video .main-part .video-poster[data-v-20b90c50] {\n      background-color: black;\n}\n.vue-video .main-part .video-poster img[data-v-20b90c50] {\n        position: absolute;\n        width: 100%;\n        height: 100%;\n        left: 0;\n        top: 0;\n}\n.vue-video .main-part .video-main-controller .video-main-controller-part[data-v-20b90c50] {\n      position: absolute;\n      display: inline-block;\n      width: 60px;\n      left: 50%;\n      top: 50%;\n      -webkit-transform: translate(-50%, -50%);\n              transform: translate(-50%, -50%);\n}\n.vue-video .main-part .video-main-controller .video-main-controller-part img[data-v-20b90c50] {\n        height: auto !important;\n}\n.vue-video .main-part .video-main-controller .video-main-controller-part .normal[data-v-20b90c50],\n      .vue-video .main-part .video-main-controller .video-main-controller-part .hover[data-v-20b90c50] {\n        position: relative;\n        width: 100%;\n        opacity: 1;\n        visibility: visible;\n}\n.vue-video .main-part .video-main-controller .rollover-container .hover[data-v-20b90c50] {\n      position: absolute;\n      width: 100%;\n      left: 0;\n      top: 0;\n      opacity: 0;\n      visibility: hidden;\n      -webkit-transition: all ease 0.5s;\n      transition: all ease 0.5s;\n}\n.vue-video .main-part .video-main-controller .rollover-container .normal[data-v-20b90c50] {\n      position: relative;\n      opacity: 1;\n      visibility: visible;\n      -webkit-transition: all ease 0.3s;\n      transition: all ease 0.3s;\n}\n.desktop .vue-video .main-part .video-main-controller:hover .rollover-container .hover[data-v-20b90c50] {\n      opacity: 1;\n      visibility: visible;\n      -webkit-transition: all ease 0.3s;\n      transition: all ease 0.3s;\n}\n.desktop .vue-video .main-part .video-main-controller:hover .rollover-container .normal[data-v-20b90c50] {\n      opacity: 0;\n      visibility: hidden;\n      -webkit-transition: all ease 0.5s;\n      transition: all ease 0.5s;\n}\n.vue-video .video-sub-controller[data-v-20b90c50] {\n    position: relative;\n    width: 100%;\n    z-index: 2;\n    height: 50px;\n    display: -ms-flex;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-pack: justify;\n            justify-content: space-between;\n}\n.vue-video .video-sub-controller .button-container[data-v-20b90c50] {\n      position: relative;\n      width: 50px;\n      height: 50px;\n      -webkit-box-flex: 0;\n              flex-grow: 0;\n}\n.vue-video .video-sub-controller .button-container .button[data-v-20b90c50] {\n        position: absolute;\n        left: 0;\n        top: 50%;\n        -webkit-transform: translateY(-50%);\n                transform: translateY(-50%);\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n}\n.vue-video .video-sub-controller .progress-bar[data-v-20b90c50] {\n      position: relative;\n      height: 50px;\n      display: -webkit-box;\n      display: flex;\n      -webkit-box-pack: center;\n              justify-content: center;\n      -webkit-box-align: center;\n              align-items: center;\n      -webkit-box-orient: vertical;\n      -webkit-box-direction: normal;\n              flex-direction: column;\n      cursor: pointer;\n      -webkit-box-flex: 1;\n              flex-grow: 1;\n}\n.vue-video .video-sub-controller .seek-bar[data-v-20b90c50] {\n      width: 100%;\n      height: 3px;\n      background-color: #48391b;\n}\n.vue-video .video-sub-controller .seek-bar .play-bar[data-v-20b90c50] {\n        height: 100%;\n        background-color: #d5a83d;\n}\n.vue-video .video-sub-controller .screen-button[data-v-20b90c50] {\n      width: 40px;\n}\n.vue-video .video-sub-controller .screen-button .button[data-v-20b90c50] {\n        left: auto;\n        right: 10px;\n}\n.vue-video .video-sub-controller .screen-button .button.shrink[data-v-20b90c50] {\n          display: none;\n}\n.vue-video .video-sub-controller .screen-button .button.full[data-v-20b90c50] {\n          display: block;\n}\n.vue-video .video-sub-controller .volume-button[data-v-20b90c50] {\n      width: 40px;\n}\n.vue-video .video-sub-controller .volume-button .button[data-v-20b90c50] {\n        width: 20px;\n        height: auto;\n        left: 65%;\n        -webkit-transform: translate(-50%, -50%);\n                transform: translate(-50%, -50%);\n}\n.vue-video .video-sub-controller .volume-button .button svg[data-v-20b90c50] {\n          position: relative;\n          width: 100%;\n}\n.ie .vue-video .video-sub-controller .volume-button .button svg[data-v-20b90c50] {\n            height: 15px;\n}\n.vue-video .video-sub-controller .volume-button .button svg .st0[data-v-20b90c50] {\n            fill: #D5A83B;\n}\n.vue-video .video-sub-controller .volume-button .button svg .st1[data-v-20b90c50] {\n            fill: none;\n            stroke: #D5A83B;\n            stroke-miterlimit: 10;\n            -webkit-transition: opacity ease 0.3s;\n            transition: opacity ease 0.3s;\n}\n.vue-video .video-sub-controller .volume-button .button svg #XMLID_138_[data-v-20b90c50] {\n            stroke-dasharray: 100;\n            stroke-dashoffset: 0;\n            -webkit-animation: ani-back 0.3s linear forwards;\n                    animation: ani-back 0.3s linear forwards;\n}\n.ie .vue-video .video-sub-controller .volume-button .button svg #XMLID_138_[data-v-20b90c50],\n            .edge .vue-video .video-sub-controller .volume-button .button svg #XMLID_138_[data-v-20b90c50] {\n              stroke-dashoffset: 100;\n}\n.vue-video .video-sub-controller .volume-button .button .volume-progress[data-v-20b90c50] {\n          position: absolute;\n          width: 100%;\n          height: 100px;\n          left: 0;\n          bottom: 100%;\n          padding: 2px 0;\n          opacity: 0;\n          -webkit-transition: all ease 0.3s;\n          transition: all ease 0.3s;\n}\n.vue-video .video-sub-controller .volume-button.sound-low .button svg #XMLID_5_[data-v-20b90c50] {\n        stroke: transparent;\n}\n.vue-video .video-sub-controller .volume-button.sound-mute .button svg #XMLID_138_[data-v-20b90c50] {\n        stroke-dashoffset: 100;\n        -webkit-animation: ani-go 2s linear forwards;\n                animation: ani-go 2s linear forwards;\n}\n.ie .vue-video .video-sub-controller .volume-button.sound-mute .button svg #XMLID_138_[data-v-20b90c50] {\n          stroke-dashoffset: 0;\n}\n.desktop .vue-video .video-sub-controller .volume-button:hover .button .volume-progress[data-v-20b90c50] {\n        opacity: 1;\n        height: 100px;\n}\n.vue-video.fullscreen[data-v-20b90c50] {\n    background-color: #000;\n}\n.vue-video.fullscreen .video-sub-controller[data-v-20b90c50] {\n      position: absolute;\n      top: 100%;\n      opacity: 0;\n      visibility: hidden;\n      -webkit-transition: all ease 0.3s;\n      transition: all ease 0.3s;\n}\n.vue-video.fullscreen .video-sub-controller .play-button .button[data-v-20b90c50] {\n        left: 5px;\n}\n.vue-video.fullscreen .video-sub-controller .screen-button .button.shrink[data-v-20b90c50] {\n        display: block;\n}\n.vue-video.fullscreen .video-sub-controller .screen-button .button.full[data-v-20b90c50] {\n        display: none;\n}\n.desktop .vue-video.fullscreen .vue-video-wrapper:hover .video-sub-controller[data-v-20b90c50] {\n      opacity: 1;\n      visibility: visible;\n}\n.firefox .vue-video.fullscreen[data-v-20b90c50],\n    .ie .vue-video.fullscreen[data-v-20b90c50],\n    .edge .vue-video.fullscreen[data-v-20b90c50] {\n      display: -ms-flex;\n      display: -webkit-box;\n      display: flex;\n      -webkit-box-align: center;\n              align-items: center;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.dragdealer[data-v-7e978ffc] {\n  position: relative;\n  width: 4px;\n  height: 100%;\n  background-color: #48391b;\n  margin: 0 auto;\n}\n.dragdealer .handle[data-v-7e978ffc] {\n    position: absolute;\n    top: 0px;\n    left: -4px;\n    width: 12px;\n    height: 12px;\n    border-radius: 50%;\n    background-color: #d5a83d;\n    z-index: 2;\n}\n.dragdealer .bar[data-v-7e978ffc] {\n    position: absolute;\n    top: auto;\n    bottom: 0;\n    left: 0;\n    width: 100%;\n    background-color: #d5a83d;\n    z-index: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RTA5RjcyNkZFNUVCMTFFNkE3MkNGOUNDMEIyRkQzMEQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RTA5RjcyNzBFNUVCMTFFNkE3MkNGOUNDMEIyRkQzMEQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFMDlGNzI2REU1RUIxMUU2QTcyQ0Y5Q0MwQjJGRDMwRCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFMDlGNzI2RUU1RUIxMUU2QTcyQ0Y5Q0MwQjJGRDMwRCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqgevWMAAABcSURBVHja7NjBDQAQDIXhVkxjCGuY0RqGsE5x5EKcSP536cVLvqROVTOTV+LkoYD5AuN3D2qO6w/XkIoc9MaYur2nrAkMGDBgwIABAwYMGDBg7qNcIcD8jGkCDACvPQ5B7mW3NQAAAABJRU5ErkJggg=="
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM2QTg4ODNFNUQwMTFFNkJERTREQkU5RDdCRkUyNjciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM2QTg4ODRFNUQwMTFFNkJERTREQkU5RDdCRkUyNjciPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzZBODg4MUU1RDAxMUU2QkRFNERCRTlEN0JGRTI2NyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzZBODg4MkU1RDAxMUU2QkRFNERCRTlEN0JGRTI2NyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PpEVOU8AAAFASURBVHjaYvz//z/DYAFMDIMIjDoGF2DBJXFtpR1NLNQKP0R2yHAOpmhyAuJtQKwwWNKMJxBfAeJifNFKzwTMDcQ9QHwCiI0HS24yhjqoF+rAAc/aoKgqgkad12ApZ0CJeisQLwNi8cFS6EUC8XUgTgJixsFQAgsC8Vwg3g/E6oOlOrAH4gtAXAvEbIOhbuIA4iYgPg/E1oOlotQCYlBFNB2I+QdDrQ0yPwNU7xJTDNCrCXEYiM+R3YSgEngIxDlAvGUgo+kvEE8AYh1iHUKrkAHlojQgPjOQWfsbEJcBsRk5DqFmyOwE4kwgvj+Q1cErII4BYg9KHUKJY0A9vwVArAnES2neO8ADbkELsv0D2bj6BcStQGxAC4eQEjLHodn1ykA2yD8BcTYQ29DaIcSEzGEopgtgHB0SGXUMiQAgwACWojdifEPB/QAAAABJRU5ErkJggg=="
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM2QTg4ODdFNUQwMTFFNkJERTREQkU5RDdCRkUyNjciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM2QTg4ODhFNUQwMTFFNkJERTREQkU5RDdCRkUyNjciPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzZBODg4NUU1RDAxMUU2QkRFNERCRTlEN0JGRTI2NyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzZBODg4NkU1RDAxMUU2QkRFNERCRTlEN0JGRTI2NyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pn4h30oAAAK8SURBVHja7JhLSFRhFMdnzKAposdGpIKwFhWZtDE3Zi/CCJJScGFFuCiDAhdSKlGKVJYRrSJ7QBmkgqLutAe9NqNQJJEbLUsqAiFr0UvS6X/if+N4mbnz+u7MLDrwY777zXfv/d/7nXO+811vIBDwpIqleVLI0ofaNybt5mtKn8wUE8W5C8BOkC/XAZlgFvgGRsFzcBf4QUxzH4mYFeAEKAW+EGOywS5QB0bARXADTJryGRFaD4bAAQchdlsJLoMXYIOJN7MIdAO7Qz0DXaAfvANTYD6nbRMoAYs5djV4Co6C5ljFiG88BDmqTy56jP4QzAZBK6gEh8ApsBDMBlco+EK00yQO2amEyJPXgAIHIdp+gEs8f0D1nwfF0YqpBlvZlogoB40xRMcY2Ays2PWC62BJpGKWM2osk3ZLHGnkO31ojMcybU2RihGfmMO2n28kXhsHe9WblfSwKpyYeWCfbbqmDSVacf4edb+DoQZ6X7VJQv3rXB3sewnWGc784of32X4Pljm9mQLV1+XCMvQIfGF7KchyEpOt+vwGbn6WfmLxmw5s2Wvb/41aTKYa+MaAmFomu0jsGnPZPzE+W+KK1+Rpj4D2MOPETw9b0WaJ+akG+Az5iWTv/aAvxP/i0GUcN8NnPqpBWQYdV0qIPUH8UBbaInuJkabC2bI8w5EkmbhQ3UN+d7A/aDQ9Vn27XQjtr2A76KWQCafQ7mX5aIV5oQuCPlHIh3D1jAi5DSp4fIb17LTHRbMX5HqhPKeiaj04nsx901twWh03cMVN2iZO0vgDVfXdBFUsjhIuZoor+KAS1MSFLjcZ21sJwy2qZPRwl9BPZN3Zxi3J3ETstT+zBmmwZclc+tU9MMw6NyEbf1n2T4K14Bb4lQpfIYa5o8zgwnaVpeRIsJQe11eIKFP6HeKKef9/LAphfwQYACMpl4ewVJKJAAAAAElFTkSuQmCC"
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMMAAADDCAYAAAA/f6WqAAAbjklEQVR4nO2deXhb5Z3vP1qsxfIm73b2xWSBhJAVQlgKCekDDJSh05Yul3KHQmmnt3O503sZCqXM9LbQaWfovcNAgJZeWtqZzjRAQ1vCMmEJJEBIszleSbzvuyxrsWTdP14bHPvIlmzpHOmc9/M8eiSfI+n8JL9fvdtvMSFJJCagACgGSsZvOUD2+G3icQZgH3+NE7AAYcA3fiwAjAIeYGj8fuJx5/itC+gFIkn+TIbBpLUBaYoJ0dCXjt+WjN+XIBq6WowihNEANI7fN4wfkyKJEymG2LABFcD5wOrxW7amFs2MB6gev1UCdUBQU4vSACmG6CwFNgKbgLWAVVNr5kcIOA18ABxF9B6SKUgxfIwFWAfsQAigUFtzkkoPQhhvAycQ8xXDY3QxmBACuAzYjpjgGo0h4B3gLeAUMKatOdphVDEUATuBXeOPJYJu4FXglfHHhsJIYjABW4FPIuYCZm3NSWnGEHOLl4D3MMjKlBHEYAeuBj4FlGlsSzrSDjwPvIbY/9AtehZDNnADcC3GnAskmiHgD8DvEEu3ukOPYnAhRHDj+GNJYvEiBPHC+GPdoCcx2BAi+HNSe0NML3iA5xCi0MWGnh7EYEIsjX4ZuTKkBd3AzxFLs2k90U53MawCvjJ+L9GWGuDJ8fu0JF3F4EL0BLtJ38+gRyLAfkRPkXbziXRsSJcAXwXytTZEEpU+4HHgkNaGxEM6iSEPuAvhNiFJD94BHgMGtDYkFtJFDJuBvwZytTZEEjeDwCPAEa0NmQ2L1gbMgg0xQb4dcGhsi2RuOIArED9kKe0hm8o9w0LgHkQUmUQfNAIPAS1aG6JEqvYM24HvIPcN9EYecBXQBjRrbMs0Uk0MZuC/AHcghkgS/ZGBCKCyASdJoY26VBKDC7gP4WGaysM3yfwxIUJp1yBcxEe1NUeQKmIoAv4e8eVIjEMpsAV4HxjR2JaUEMNK4H8jYw2MSh7Ct+wUYrNOM7QWw0XAg0gvU6PjBK4E6oEOrYzQUgzbgG8jJ8oSgRXRQzQArVoYoJUYrgC+RXrnIpIkHjNwKWLptVHti2shhl3ANzW6tiT1MSOcMXuBM2peWO0GeTXw35CZKSQzM5HJpAs4q9ZF1RTDDuBupBAksTEhiFagSY0LqiWGTQg/Izk0ksSDCbHQUo9IWZNU1GicFcB3katGkrkxMYc4jphHJI1ki6EQsbMs8xZJ5oMVkQXxbZK4U51MMbiA7wHlSbyGxDhkAhuAN0mSL1OyxGAG7kcU9ZBIEkUewn3nDZLg7ZosMdyK8FuXSBJNKWL+eSzRb5wMMWxHhGpKN2xJsliD2KFOaIBQosWwCHgAdYv8SYyHCbFc/y4iIXJCSKQYbAhX7IIEvqdEEo0MYD2isEpCkgwkUgy3IwI1JBK1yEWsWn6QiDdLlBi2IMQg5wkStalA7FC3zfeNEuEnlIdwvpNCkGiBCdH+8ub7RokQw12JMEQimQcTqUfnxXzFcDEy96kkNdjOPNvifMTgIgFqlEgSyJ3Mo3TZfCbQdyAKikskqYITkVzivbm8eK49wypEoRCJJNW4hjlWcpqLGEyI7kiuHklSkTm3z7mI4WrE2q5EkqpUINppXMQrBjvwxXgvIpFowJcQ7TVm4hXDDUjfI0l6kI9orzETjxgygZviMkci0ZabiGOpNR4x3IjMiSpJL7KJo3eIdcadBTzFPDY0jEhultVasciVWZRns2VlWqyZDosl02GxRiIiZNHrC4d7h4LB1i6/v6bJ6/UHxsa0tlmHeBHBZp7ZnhhrrtMbkUKYkWXlTudlG/Lz11dkuxeXOLPKCu2u/JwMZ6yvH4sQ6RkI+tq6/cON7T7PkerBvrePD/R39gWCybTbALgQvcOzsz0xlp7BAfwMOUQ6B5MJLl3vzrt+R3H5lrW5xaUF9qxEXyMSIdLQ7hs8fKq/6/k3utpOfegZTvQ1DIIH+K+Af6YnxSKGP0O4XkiAhcUO+5euXbB498WFi4rybJlqXruxwzf4+4PdTb/a39ba7xkNqXltHfAEsG+mJ8wmBhOwB1lVhw3n5WTfcdOiFTvWu8stFpOm+WL9gbHQ/nd7GvfsbTrb2OGb8ddO8hHtiJ3pqClmZhPDNkTRQcOyaokr8+7PL1t16Xp3ucmUWi4oo6FI+KVD3Y3/+Kuz9V39QTm3mJ3vIZIIKDLbP/cBYHNCzUkT7Blm87e+tGzFp68qW5lhNc3Ju3diUtwzEBwZ8YdDvsBYOBAMhwBTptNicdosVqfdYi3Ot7nyczIcc7V12BcO7tnbdPrpF1taIilTSDYlOYIom6bITGIoREycU+rXUA2u2VZYcM+ty9eV5Mc3KW7p8ntO1Ht6jlYP9Vc1DHuqG4djXi7NzbJa1yzNcp2/PCvnolU5+etXZhcU5MY3J6lp9PZ998m6Eyfq5UQ7ChHgL4FupZMzNfRbgM8nw6JUJcNqMj1we8XqT11RssIU409AS5ff89Kh7ubnXu9sa2hP7Ph9/crsrJuuLFmwc2vhwliXaUdDkbHH9zadenxvkyo1DdKQXwO/UjoR7V9uQvQKhcmyKNVYUup0PHL3mo3nLXblz/bcUDgyduBIb/MvX2prPFI1mLAkVtGwmE2mT2wuyP/iJ8uXbV6TWxqLUA8e72/9m59Un/CMhBKSU0hH9CCWWacNKKN9resRCcEMwRUb8/Mf/qtVm7MzrTPWkBgNRcKvvNfT/Oi/N9YnuheIlY2rc7LvunlxxSUXuMtmm9C3dPk93/jR6fdrm7yaFxxPMe5D1Hs4h2gTw08jsh3rns/sLCv9/l2rtjjtlhl349852d/6jR+dPvKbV9vbBoZDmq3xt/cEgvve6mp/v2qwa/WSrKzCGfY6clxW+3Xbi8orzw73tnT5A2rameIEgfenHlQSgwWRhyYuX/B05LbrFy6859YVF1ln2DfoHQz6Hnyq/uiPnz37YSptdLV1BwL//lp7SzAU8V9YkV2QYTUrfga7zWzdta1wQV3zSF9Du8+ntp0pSjHwAlOGSkpi2AB8Ug2LtOTW6xYs+JsvLt9gnmGocaRqsOO2vzv53vE6z6xOXlpxtHpo8PWjfW3bzs/Ld2crL89mWM3mq7cWlFeeGe5p6vTLTTrxQ38a6Jh8UEkMfwGsUMMirfjzT5SUfPu2lRujCSEcjkR+tq+l6p5Hayp9aeBJ2js4Orr39Y6WZeWZthULMxUTulktJvPOrQXlR6oHO9t7pPMfovrPOVk0porBBHwNkXJDl+y40J330NdXbY02NAqMjoXve7zu/Wf+0Nqqtm3zIRSORPYf7umymE3BTatzi5VWnDKsZvOVGwtKDxzp1XTekyIUAM9PPjBVDEuBm9WyRm0WFjvse/72gu0up1WxfoTXFx69+5Hqd195ryepVSWTyXuVgwOekbD3knV5pWbzdEk47RbrJevy8vce6GwJjxl6v9qByN790f96qhh2IuYMusNiMZmevn/91oXFDkVXdF8gHLrr4cpDh04ODKptW6I5Ue/xdA8EPVdsLFBcfnXnZDiWL8i0vXS4p0sL+1KILqBy4o+pYvgCUKKqOSrx7dtWnHflpoKFSueCo2Phb/646vDhU+kvhAlOnx0eDo6O+S++wK24SbdiYWZed39w6PTZYSO7bliAVyf+mDxutgFrVTdHBbavc+d9ZmeZYq6nsQiRv/9Z/dGDx/sH1LYr2fz0dy3Nv/hja3W089/64vL1ZYV23S+hz8AqJm0hTBbDecQeBpo22DLMpu/cvnK9RWH8DPDsS601ew90dqptl1o8/MyZ+ndO9isuBricFtvf3Vlxvto2pRBWJiXEmyyGNerbkny+8ZklyxaVOHKUzh2rHep8+Jkz9WrbpDZ3/1P1iY7egOJwaPs6d/m124uK1LYphfhoNKRrMZQW2G23XKM8PPKMhAL/8//WnDDCeopnJBS+7/HaP4XDyp/2m59butZiidVPV3d81O4nxGACVmtjS/L4688tXem0WxSXUZ94rrmqtds4/jqHTg4M/v6d7rNK5xYWO7K/fN0CxcUFA7CKcYfVCTEUo7PsF4tKHI5PXlK0ROlcbZO37+kXW1rUtklrfvjMmdp+z6iiO8aXrl1QYcswG7F3yEa0/4/EsFQzU5LEXTcvWaYUrjkWIfL9n394ygjDo6n0e0ZDe/Y2VymdK8qzZX5+d/kCtW1KEZbDx2JYpqEhCSfHZbVes61gsdK5w6f6294/nfyAnFTlly+1trZ0+RUdDz+7s1RX7SAOloBOe4bP7iorV5orRCLw+G+bP9TCplQhEoFnX2pTXEFbXOrM3b7ObcTKrUvhYzEojq3Tlet3FC9SOn68bqjzg2rj9goT/PrltrbugaBi9Ntnd5Uqfnc656OewQKUamtL4jhvsStz5cJMt9K5Z/e3NahsTkoyGopE9r3V1ah07pJ17jIDTqRLAYsZEfSvm53nGy4vVsz+N+AZ9e8/3NOjtj2pym9ebW8di0wPinc5LbZrthUaJhHEOFagyIyOegWA7evcio6Gbx7rb4u26WREmjv9/qqzw4o/DldszC9W254UoMQM6GYr3p2dYY02RHrhjc60CtZRg/2Hu9uUjm9ek2tEMRRNDJN0wY4NbreSW4HXFw4aeTk1Ggc+6FPsGYrdNtfCYofRvFkLzUCu1lYkio2rchR7hdNnh/sMHtWlyJnWEV+0VaUdF7pnTaamM3LNiKqIuuC8xS7FNfKjNUNy4hyFk/Uexe9mzdIsRU9fHeM2I+q16YLFpU5F/6pjtUO6iWBLNKfPDit+N8sXZBpNDNm6EYPTbjG7s5WT81YZO7RxRuqavIrfzYJiu9Fq+GXpRgwVizIzlTzyPSOhYPdAcFR9i9KDuuYRr9Lxglyb4vepY1xWdJJGsrzIoZhNLlqEl54oLbDbPnVFyZz3i0LhyNjUPFJWi8n8329ZtnzEH447v1JHbyDw/BtpF0prtqKT3Wd3dvRcSGrbojYdvYFgSb7NGS3pwVz5yxsWxp0gYsAzGrjjB6cOJdIOlcg0A6pWrEwWedkZiunk5/LLlo48+FR9zW9eba/T0oYBz2jgzocqD1WeSc85mhmdlKmKkvzCMGIAIYj/eK1DE0EMeUOBOx+qPJTGtartmpZwTSQup3J9BX8w9RMHJ5IHnqxTXRBD3lDgK98/lc5CALDqRgxen3IP4LAp1y3QMw88WVfzH//ZoUoKHI83FLjzB2kvBICwmRmKRKcT0bwtMh0zV+TRKw88UVf92wPJFYTHGwrc8YNTh3RSXdRvBnRR72vAM6pYc8CoYgD4zp666r0HOpMiCI83FLjzoVOHdSIEQEygdTHB7PeEFJdQXU7lvElG4f49tdXPvd6Z0Lhvz4gQQipXNJoDI2ZAF2WN2rqVyzOVFsRX2FyP3Pd4bVWiBOEZCQW++lCl3oQAMGYGdPGh6ppHRpSmDdmZVltRns3QvQMIQbzwxvwE4RkJBb/6UOXhY7VDumgzUxjSjRh8gfBYv2dUsZrlmmVZhu8dAO59bO6CGBfCIZ0KAWDYDOgmAqypw6f4j9pwXo5uApjmy72P1Va98GZXXIIwgBBgvGfQja9/bZNXseDIxlU5ugltTQT3/ktN1e/e6joTy3M9I6Hg136oeyGAnoZJAEdrhvqVjq9dlpUfrViJUfnbR2tO75tFEJ6RUPDrPzx9+Gi17oUA42LQTUjkwWP9/UrpYFxOi23r+blGi9yalXserTn94kFlQUwIwUAZCHvMQLfWViSKfs9oqL5lRLF3uPHyEqNmmJ6R//XP0wUx7AsH/+ofDCUEGBdDh9ZWJJJ3TvYrBpVctsFdbuDqNDMyLoizIITw9R9WHj5SZSghAHRYEJtun+bcklZpS8/AaOBzu8qmpVZ32C3WM20j/XXNI7pwP0k0r73f212YZ+Mn/9ZQbUAhhICfm4EwOuodapu8I9GGSl/YXb5UZXPShkgEHnyqvtagydY6GPdaBVDMyJyu7Hurq0np+IUVOSWbVsuJtGQajfDx0KhBOzsSz29ebW/3BabHPptM8NWbF63QwiZJStMAOhXDkDcUevndXsXe4eIL3OVb1sreQXIO5/QMiiVR05nHftt4djQUCU89bjZhuvfLKy6Q60qSSZwFUbUHRIDP9egkhxKI3mFpmdO2aolrWjLiglyb0xcYG/lT7ZARJ4uScxkGnoGPe4YIUK2ZOUnikX9tqFeaOwDccdOiNQuKDJd2XTKdasZDnyfXSS4BLtTEnCQx7AuHs13WyEWrcqYVZLFnmK3rVmZnPfd6p2LBDolheA2ohHPFYAJ2amJOEvmgemjgukuLS3OzrNN6gdICe1a2yzp28Hh/nxa2SVKCfwW64FwxDAA3o5Od6AnCYxHOtPoGr9tRtMhsmj5tXrcyp6CzLzBU1eBVTMAr0TUh4AnExvM5YggjhkmKBQLTmeYuv78gN8O0bkV2wdRzJhOmHRe6S6sbvL2NHT5dxINLYqYK2D/xh2XKSTewQVVzVOLtEwN9V20uKCzMs02r4WCxmMxXbSkoP1oz1NXWEwhoYZ9EE15mfL4A08UwAlyrqjkqEYnA2yf6u/5sR/ECh316LqUMq9m8++LC8ppGb5/sIQzDM0DvxB9TxTAI7AYUK+CkO0PeULi2ydu3++LCBZYp9QgAMqxmy65thQtauwODtU1e6d2qbwaBpyYfmCoGgEWAbv13mjr9/u6BoOfKTQXlJtP0DORWi8l81aaCBQ67Ofxu5YCi96tEFxwEDk8+oCSGUeATqpijEVUNXq/XFx65dL27VEkQZrPJtHF1btHW8/Ny3vxTX7cvYKxM3gbh/wHtkw8oiaEHMW/Q9e7s8TqPZyQw5rtknbtESRAA5UWOrBsvL17QPTA6LIdNumII2AOc8yOnJIYxoBxYqYJRmnKsdmiod3DUc+l6d2m07BmZDkvGrq2FCy9aleOqPDM82O8Z1UVuWoPzOlOGSKAsBoAAcFUyrUkVKs8MD1c1DPdeflF+iT3DHO37YFGJM+cvri5bsrjEkVF5dnho2Bee5hErSRt+DkyLlY/2z+8GdqGTem+z0dju873ybm/rlrW5eQW50/chJrCYTebVS7Pyb7mmbOnqpVnOzr6gr6M3oJgKX5Ky9ABPolCXJJoYIoALWJdEo1KKweFQaO+BjpaSfLtl9ZKs/JniHSwWk3nFwsy8mz9RunT3xUVFxW67tbMv4B8YDskhVOrzAnBC6cRMIS5FwE9neY4uuWZbYcE9ty5fV5IfXzr7li6/50S9p+do9VB/VcOwp7px2OuXK1GpRAS4nXHHvKnM1tAfADYn2qJ0wJ5hNv+PLyxb8ZmdZSszrKaoc4mZGIsQ6RkI+noGgiMj/nDIFxgLd/cHfffvqdVd7EiacAR4MNrJ2f7JfuDyhJqTJoTHIpG3jvX3Hfigt628yGFbXOLMjrYEGw2TCZPLackoctsyy4scWUtKnTklBXbn0/tadBdmmyb8DGiNdnI2MbQBVwLZCTQoregdHB198WBXxzsnBzoK82zWRcWOLPM8khj7AmMhKQZNaEfsLUQl1u5/0/xtSW86egPB37/d3bHvYFeTyWQKlRXaM12O+OvFSTFoxr8xS2hzLL9wDuBpQFa/mYTJBJeud+ddv6O4fMva3OJYa8f1DY36Lrvj8GvJtk9yDsPAbcxSvzCWsrB+4EXgcwkwSjdEInDweP/AweP9A8DpZeVO52Ub8vPXV2S7F5c4s8oK7a78nAxdev+mIS8SQyHPWMe+2YiNCtd8LDIauVlWa8UiV2ZRns2WlWmxZjoslrEx+MUfW6NO4iQJZwSxnDprwZV4JoKfB26Zq0USiUb8GvhVLE+MJ/j/BXRU8kpiCDyIdhsT8YjBCzwXtzkSiXY8j2i3MRFvWph9gMwxJEkH+oDfxfOCeMXgB34R52skEi34JTGsIE1mLgnDXgPq5vA6iUQt6oBX433RXMQQQWxrT/MHl0hSgDm3z7mmkqxhDsqTSFTgVUT7jJv55FV9GpF7RiJJFQYR7XJOzEcMHkTSVokkVXiCeeyFzTfj9pvAoXm+h0SSCA4h2uOcSUT6+X9BpLOXSLRiAHhsvm8yp3DGKfiBFkREnOHipSWaEwH+Afhwvm+UCDGAiIjLAyoS9H4SSaz8kTj8j2YikVV6fgo0J/D9JJLZaEa0u4SQqJ4BROWfE4hMfHGHQ0okceID7gcSlik9kWIAkdC1DbgUOX+QJI8I8GPgVCLfNNFiANF1OYA1SXhviQREKEFcHqmxkAwxgBgurQFKk/T+EuNyDHiEJPjGJUsMEeA9RDa+vCRdQ2I8GoDvAklJ9pwsMYCoAPQ+cBkGyeYtSSp9wL0k0R8umWIAkZmgCriC2NLSSCRKBBA5UpO6dJ9sMYAoLfohsIPE7mtIjEEI+D5wMtkXUkMMIPJctgGXIJdcJbEzBvwjCiWnkoFaYgBoQlQE2oYUhGR2IsD/QdRfUwU1xQBwFlFGaAtSEJLojAH/jMrRlGqLAeAMYti0DTmHkEwnDPwT8J9qX1gLMQA0ItaMtyMFIfmYEPAw8LYWF9dKDCBiIGoRk2q57CrxA99DlJrSBC3FANAB/AkxZJLp241LP/Ad4LSWRmgtBhA7iweBi4BcjW2RqE8TYme5RWtDUkEMIHaq3wBWIp37jMQxREXZlIihTxUxgPBlegOwA6uRS696JoJww36EJDndzYVUEgOIL+kYYrVpMzJiTo/4gB8hMrqnVIrSVBPDBM2IPDgXIucReqIZuA+o1NoQJVJVDCBCSF9BVBmtQA6b0pkIIovFD0hgzHKiSZcGtgX4JrKXSEcGgZ8gYltSmnQRA4iIua8hNukk6cFh4FFSZLVoNtJJDBNsB+4E8rU2RBKVPkSNhHe0NiQe0lEMIOpR3wZcQ/p+Bj0SAV5GpIWPubBgqpDuDWkV8JXxe4m21ABPMsdCIalAuosBxGe4DPgyUKStKYakB9ETvEWK7RvEix7EMIEDuAH4FJCtsS1GYJiPk3nFVVUzVdGTGCZwIURx4/hjSWLxIgTwAmk4L5gJPYphgmyEKK4FcjS2RQ8MAX9ACGHOpaJSGT2LYQI7cDVi+FSmsS3pSDvwPKL+d0BjW5KKEcQwgQm4GNgNbMRYnz1eIsBRYD9i4yytJ8axYtQGUQTsAnYiV6Am04PISPEyIq2PoTCqGCYwA+sQ2f62Y8y5hQexU/wWImvdmLbmaIfRxTAZC8JlfAcilsKtrTlJpR8ReH8QOI5Iz2J4pBiUMQHLgE2I+cVq0juDRwioRswDPkAkczPEPCAepBhiwwacB6xFCGM1qb2x50E0/mpExolaUii8MlWRYpgbJqAEWDrlVoK6PUgI6EQkZJu4NSJS8Mhf/jiRYkgsJqAAKEYIowQxKc9B9CQ5iMg92/gNxC65CdF4J3Z0g+O3YcRml2fSfQdCAF2IdP+y0SeI/w8eQEMk0I1mpQAAAABJRU5ErkJggg=="
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * Dragdealer.js 0.9.8
+ * http://github.com/skidding/dragdealer
+ *
+ * (c) 2010+ Ovidiu Cherecheș
+ * http://skidding.mit-license.org
+ */
+
+(function (root, factory) {
+  if (true) {
+    // AMD. Register as an anonymous module.
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof module === 'object' && module.exports) {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like enviroments that support module.exports,
+    // like Node.
+    module.exports.Dragdealer = factory();
+  } else {
+    // Browser globals
+    root.Dragdealer = factory();
+  }
+}(this, function () {
+
+var Dragdealer = function(wrapper, options) {
+  /**
+   * Drag-based component that works around two basic DOM elements.
+   *
+   *   - The wrapper: The top-level element with the .dragdealer class. We
+   *                  create a Dragdealer instance with the wrapper as the
+   *                  first constructor parameter (it can either receive the ID
+   *                  of the wrapper, or the element itself.) The wrapper
+   *                  establishes the dragging bounds.
+   *
+   *   - The handle: A child of the wrapper element, div with a required
+   *                 .handle class (may be overridden in options). This will be
+   *                 the dragged element, constrained by the wrapper's bounds.
+   *
+   *
+   * The handle can be both smaller or bigger than the wrapper.
+   *
+   *   - When the handle is smaller, Dragdealer will act as a regular slider,
+   *     enabling the handle to be dragged from one side of the wrapper to
+   *     another.
+   *
+   *   - When the handle is bigger, Dragdealer will act a mask for a draggable
+   *     surface, where the handle is the draggable surface contrained by the
+   *     smaller bounds of the wrapper. The drag action in this case is used
+   *     to reveal and "discover" partial content at a time.
+   *
+   *
+   * Simple usage:
+   *
+   *   // JavaScript
+   *   new Dragdealer('simple-slider');
+   *
+   *   <!-- HTML -->
+   *   <div id="simple-slider" class="dragdealer">
+   *     <div class="handle">drag me</div>
+   *   </div>
+   *
+   *
+   * The second parameter of the Dragdealer constructor is an object used for
+   * specifying any of the supported options. All of them are optional.
+   *
+   *   - bool disabled=false: Init Dragdealer in a disabled state. The handle
+   *                          will have a .disabled class.
+   *
+   *   - bool horizontal=true: Enable horizontal dragging.
+   *
+   *   - bool vertical=false: Enable vertical dragging.
+   *
+   *   - number x=0: Initial horizontal (left) position. Accepts a float number
+   *                 value between 0 and 1. Read below about positioning in
+   *                 Dragdealer.
+   *
+   *   - number y=0: Initial vertical (top) position. Accepts a float number
+   *                 value between 0 and 1. Read below about positoning in
+   *                 Dragdealer.
+   *
+   *   - number steps=0: Limit the positioning of the handle within the bounds
+   *                     of the wrapper, by defining a virtual grid made out of
+   *                     a number of equally-spaced steps. This restricts
+   *                     placing the handle anywhere in-between these steps.
+   *                     E.g. setting 3 steps to a regular slider will only
+   *                     allow you to move it to the left, to the right or
+   *                     exactly in the middle.
+   *
+   *   - bool snap=false: When a number of steps is set, snap the position of
+   *                      the handle to its closest step instantly, even when
+   *                      dragging.
+   *
+   *   - number speed=0.1: Speed can be set between 0 and 1, with 1 being the
+   *                       fastest. It represents how fast the handle will slide
+   *                       to position after you mouse up.
+   *
+   *   - bool slide=true: Slide handle after releasing it, depending on the
+   *                      movement speed before the mouse/touch release. The
+   *                      formula for calculating how much will the handle
+   *                      slide after releasing it is defined by simply
+   *                      extending the movement of the handle in the current
+   *                      direction, with the last movement unit times four (a
+   *                      movement unit is considered the distance crossed
+   *                      since the last animation loop, which is currently
+   *                      25ms.) So if you were to drag the handle 50px in the
+   *                      blink of an eye, it will slide another 200px in the
+   *                      same direction. Steps interfere with this formula, as
+   *                      the closest step is calculated before the sliding
+   *                      distance.
+   *
+   *   - bool loose=false: Loosen-up wrapper boundaries when dragging. This
+   *                       allows the handle to be *slightly* dragged outside
+   *                       the bounds of the wrapper, but slides it back to the
+   *                       margins of the wrapper upon release. The formula for
+   *                       calculating how much the handle exceeds the wrapper
+   *                       bounds is made out of the actual drag distance
+   *                       divided by 4. E.g. Pulling a slider outside its
+   *                       frame by 100px will only position it 25px outside
+   *                       the frame.
+   *
+   *   - number top=0: Top padding between the wrapper and the handle.
+   *
+   *   - number bottom=0: Bottom padding between the wrapper and the handle.
+   *
+   *   - number left=0: Left padding between the wrapper and the handle.
+   *
+   *   - number right=0: Right padding between the wrapper and the handle.
+   *
+   *   - fn callback(x, y): Called when releasing handle, with the projected
+   *                        x, y position of the handle. Projected value means
+   *                        the value the slider will have after finishing a
+   *                        sliding animation, caused by either a step
+   *                        restriction or drag motion (see steps and slide
+   *                        options.) This implies that the actual position of
+   *                        the handle at the time this callback is called
+   *                        might not yet reflect the x, y values received.
+   *
+   *   - fn dragStopCallback(x,y): Same as callback(x,y) but only called after
+   *                               a drag motion, not after setting the step
+   *                               manually.
+   *
+   *   - fn dragStartCallback(x,y): Same as dragStopCallback(x,y) but called at
+   *                                the beginning of a drag motion and with the
+   *                                sliders initial x, y values.
+   *
+   *   - fn animationCallback(x, y): Called every animation loop, as long as
+   *                                 the handle is being dragged or in the
+   *                                 process of a sliding animation. The x, y
+   *                                 positional values received by this
+   *                                 callback reflect the exact position of the
+   *                                 handle DOM element, which includes
+   *                                 exceeding values (even negative values)
+   *                                 when the loose option is set true.
+   *
+   *   - string handleClass='handle': Custom class of handle element.
+   *
+   *   - bool css3=true: Use css3 transform in modern browsers instead of
+   *                     absolute positioning.
+   *
+   *   - fn customRequestAnimationFrame: Provide custom requestAnimationFrame
+   *                                     function (used in tests).
+   *   - fn customCancelAnimationFrame: Provide custom cancelAnimationFrame
+   *                                    function (used in tests).
+   *
+   * Dragdealer also has a few methods to interact with, post-initialization.
+   *
+   *   - disable: Disable dragging of a Dragdealer instance. Just as with the
+   *              disabled option, the handle will receive a .disabled class
+   *
+   *   - enable: Enable dragging of a Dragdealer instance. The .disabled class
+   *             of the handle will be removed.
+   *
+   *   - reflow: Recalculate the wrapper bounds of a Dragdealer instance, used
+   *             when the wrapper is responsive and its parent container
+   *             changed its size, or after changing the size of the wrapper
+   *             directly.
+   *
+   *   - getValue: Get the value of a Dragdealer instance programatically. The
+   *               value is returned as an [x, y] tuple and is the equivalent
+   *               of the (projected) value returned by the regular callback,
+   *               not animationCallback.
+   *
+   *   - getStep: Same as getValue, but the value returned is in step
+   *              increments (see steps option)
+   *
+   *   - setValue(x, y, snap=false): Set the value of a Dragdealer instance
+   *                                 programatically. The 3rd parameter allows
+   *                                 to snap the handle directly to the desired
+   *                                 value, without any sliding transition.
+   *
+   *   - setStep(x, y, snap=false): Same as setValue, but the value is received
+   *                                in step increments (see steps option)
+   *
+   *
+   * Positioning in Dragdealer:
+   *
+   *   Besides the top, bottom, left and right paddings, which represent a
+   *   number of pixels, Dragdealer uses a [0, 1]-based positioning. Both
+   *   horizontal and vertical positions are represented by ratios between 0
+   *   and 1. This allows the Dragdealer wrapper to have a responsive size and
+   *   not revolve around a specific number of pixels. This is how the x, y
+   *   options are set, what the callback args contain and what values the
+   *   setValue method expects. Once picked up, the ratios can be scaled and
+   *   mapped to match any real-life system of coordinates or dimensions.
+   */
+  this.options = this.applyDefaults(options || {});
+  this.bindMethods();
+  this.wrapper = this.getWrapperElement(wrapper);
+  if (!this.wrapper) {
+    return;
+  }
+  this.handle = this.getHandleElement(this.wrapper, this.options.handleClass);
+  if (!this.handle) {
+    return;
+  }
+  this.init();
+  this.bindEventListeners();
+};
+
+
+Dragdealer.prototype = {
+  defaults: {
+    disabled: false,
+    horizontal: true,
+    vertical: false,
+    slide: true,
+    steps: 0,
+    snap: false,
+    loose: false,
+    speed: 0.1,
+    xPrecision: 0,
+    yPrecision: 0,
+    handleClass: 'handle',
+    css3: true,
+    activeClass: 'active',
+    tapping: true
+  },
+  init: function() {
+    if (this.options.css3) {
+      triggerWebkitHardwareAcceleration(this.handle);
+    }
+    this.value = {
+      prev: [-1, -1],
+      current: [this.options.x || 0, this.options.y || 0],
+      target: [this.options.x || 0, this.options.y || 0]
+    };
+    this.offset = {
+      wrapper: [0, 0],
+      mouse: [0, 0],
+      prev: [-999999, -999999],
+      current: [0, 0],
+      target: [0, 0]
+    };
+    this.dragStartPosition = {x: 0, y: 0};
+    this.change = [0, 0];
+    this.stepRatios = this.calculateStepRatios();
+
+    this.activity = false;
+    this.dragging = false;
+    this.tapping = false;
+
+    this.reflow();
+    if (this.options.disabled) {
+      this.disable();
+    }
+  },
+  applyDefaults: function(options) {
+    for (var k in this.defaults) {
+      if (!options.hasOwnProperty(k)) {
+        options[k] = this.defaults[k];
+      }
+    }
+    return options;
+  },
+  getWrapperElement: function(wrapper) {
+    if (typeof(wrapper) == 'string') {
+      return document.getElementById(wrapper);
+    } else {
+      return wrapper;
+    }
+  },
+  getHandleElement: function(wrapper, handleClass) {
+    var childElements,
+        handleClassMatcher,
+        i;
+    if (wrapper.getElementsByClassName) {
+      childElements = wrapper.getElementsByClassName(handleClass);
+      if (childElements.length > 0) {
+        return childElements[0];
+      }
+    } else {
+      handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)');
+      childElements = wrapper.getElementsByTagName('*');
+      for (i = 0; i < childElements.length; i++) {
+        if (handleClassMatcher.test(childElements[i].className)) {
+          return childElements[i];
+        }
+      }
+    }
+  },
+  calculateStepRatios: function() {
+    var stepRatios = [];
+    if (this.options.steps >= 1) {
+      for (var i = 0; i <= this.options.steps - 1; i++) {
+        if (this.options.steps > 1) {
+          stepRatios[i] = i / (this.options.steps - 1);
+        } else {
+          // A single step will always have a 0 value
+          stepRatios[i] = 0;
+        }
+      }
+    }
+    return stepRatios;
+  },
+  setWrapperOffset: function() {
+    this.offset.wrapper = Position.get(this.wrapper);
+  },
+  calculateBounds: function() {
+    // Apply top/bottom/left and right padding options to wrapper extremities
+    // when calculating its bounds
+    var bounds = {
+      top: this.options.top || 0,
+      bottom: -(this.options.bottom || 0) + this.wrapper.offsetHeight,
+      left: this.options.left || 0,
+      right: -(this.options.right || 0) + this.wrapper.offsetWidth
+    };
+    // The available width and height represents the horizontal and vertical
+    // space the handle has for moving. It is determined by the width and
+    // height of the wrapper, minus the width and height of the handle
+    bounds.availWidth = (bounds.right - bounds.left) - this.handle.offsetWidth;
+    bounds.availHeight = (bounds.bottom - bounds.top) - this.handle.offsetHeight;
+    return bounds;
+  },
+  calculateValuePrecision: function() {
+    // The sliding transition works by dividing itself until it reaches a min
+    // value step; because Dragdealer works with [0-1] values, we need this
+    // "min value step" to represent a pixel when applied to the real handle
+    // position within the DOM. The xPrecision/yPrecision options can be
+    // specified to increase the granularity when we're controlling larger
+    // objects from one of the callbacks
+    var xPrecision = this.options.xPrecision || Math.abs(this.bounds.availWidth),
+        yPrecision = this.options.yPrecision || Math.abs(this.bounds.availHeight);
+    return [
+      xPrecision ? 1 / xPrecision : 0,
+      yPrecision ? 1 / yPrecision : 0
+    ];
+  },
+  bindMethods: function() {
+    if (typeof(this.options.customRequestAnimationFrame) === 'function') {
+      this.requestAnimationFrame = bind(this.options.customRequestAnimationFrame, window);
+    } else {
+      this.requestAnimationFrame = bind(requestAnimationFrame, window);
+    }
+    if (typeof(this.options.customCancelAnimationFrame) === 'function') {
+      this.cancelAnimationFrame = bind(this.options.customCancelAnimationFrame, window);
+    } else {
+      this.cancelAnimationFrame = bind(cancelAnimationFrame, window);
+    }
+    this.animateWithRequestAnimationFrame = bind(this.animateWithRequestAnimationFrame, this);
+    this.animate = bind(this.animate, this);
+    this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
+    this.onHandleTouchStart = bind(this.onHandleTouchStart, this);
+    this.onDocumentMouseMove = bind(this.onDocumentMouseMove, this);
+    this.onWrapperTouchMove = bind(this.onWrapperTouchMove, this);
+    this.onWrapperMouseDown = bind(this.onWrapperMouseDown, this);
+    this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
+    this.onDocumentMouseUp = bind(this.onDocumentMouseUp, this);
+    this.onDocumentTouchEnd = bind(this.onDocumentTouchEnd, this);
+    this.onHandleClick = bind(this.onHandleClick, this);
+    this.onWindowResize = bind(this.onWindowResize, this);
+  },
+  bindEventListeners: function() {
+    // Start dragging
+    addEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
+    addEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
+    // While dragging
+    addEventListener(document, 'mousemove', this.onDocumentMouseMove);
+    addEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
+    // Start tapping
+    addEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
+    addEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
+    // Stop dragging/tapping
+    addEventListener(document, 'mouseup', this.onDocumentMouseUp);
+    addEventListener(document, 'touchend', this.onDocumentTouchEnd);
+
+    addEventListener(this.handle, 'click', this.onHandleClick);
+    addEventListener(window, 'resize', this.onWindowResize);
+
+    this.animate(false, true);
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
+
+  },
+  unbindEventListeners: function() {
+    removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
+    removeEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
+    removeEventListener(document, 'mousemove', this.onDocumentMouseMove);
+    removeEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
+    removeEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
+    removeEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
+    removeEventListener(document, 'mouseup', this.onDocumentMouseUp);
+    removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
+    removeEventListener(this.handle, 'click', this.onHandleClick);
+    removeEventListener(window, 'resize', this.onWindowResize);
+    this.cancelAnimationFrame(this.interval);
+  },
+  onHandleMouseDown: function(e) {
+    Cursor.refresh(e);
+    preventEventDefaults(e);
+    stopEventPropagation(e);
+    this.activity = false;
+    this.startDrag();
+  },
+  onHandleTouchStart: function(e) {
+    Cursor.refresh(e);
+    // Unlike in the `mousedown` event handler, we don't prevent defaults here,
+    // because this would disable the dragging altogether. Instead, we prevent
+    // it in the `touchmove` handler. Read more about touch events
+    // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Touch_events#Handling_clicks
+    stopEventPropagation(e);
+    this.activity = false;
+    this.startDrag();
+  },
+  onDocumentMouseMove: function(e) {
+    if ((e.clientX - this.dragStartPosition.x) === 0 &&
+        (e.clientY - this.dragStartPosition.y) === 0) {
+      // This is required on some Windows8 machines that get mouse move events without actual mouse movement
+      return;
+    }
+
+    Cursor.refresh(e);
+    if (this.dragging) {
+      this.activity = true;
+      preventEventDefaults(e);
+    }
+  },
+  onWrapperTouchMove: function(e) {
+    Cursor.refresh(e);
+    // Dragging on a disabled axis (horizontal or vertical) shouldn't prevent
+    // defaults on touch devices. !this.activity denotes this is the first move
+    // inside a drag action; you can drag in any direction after this point if
+    // the dragging wasn't stopped
+    if (!this.activity && this.draggingOnDisabledAxis()) {
+      if (this.dragging) {
+        this.stopDrag();
+      }
+      return;
+    }
+    // Read comment in `onHandleTouchStart` above, to understand why we're
+    // preventing defaults here and not there
+    preventEventDefaults(e);
+    this.activity = true;
+  },
+  onWrapperMouseDown: function(e) {
+    Cursor.refresh(e);
+    preventEventDefaults(e);
+    this.startTap();
+  },
+  onWrapperTouchStart: function(e) {
+    Cursor.refresh(e);
+    preventEventDefaults(e);
+    this.startTap();
+  },
+  onDocumentMouseUp: function(e) {
+    this.stopDrag();
+    this.stopTap();
+  },
+  onDocumentTouchEnd: function(e) {
+    this.stopDrag();
+    this.stopTap();
+  },
+  onHandleClick: function(e) {
+    // We keep track if any dragging activity has been made between the
+    // mouse/touch down and up events; based on this we allow or cancel a click
+    // event from inside the handle. i.e. Click events shouldn't be triggered
+    // when dragging, but should be allowed when clicking still
+    if (this.activity) {
+      preventEventDefaults(e);
+      stopEventPropagation(e);
+    }
+  },
+  onWindowResize: function(e) {
+    this.reflow();
+  },
+  enable: function() {
+    this.disabled = false;
+    this.handle.className = this.handle.className.replace(/\s?disabled/g, '');
+  },
+  disable: function() {
+    this.disabled = true;
+    this.handle.className += ' disabled';
+  },
+  reflow: function() {
+    this.setWrapperOffset();
+    this.bounds = this.calculateBounds();
+    this.valuePrecision = this.calculateValuePrecision();
+    this.updateOffsetFromValue();
+  },
+  getStep: function() {
+    return [
+      this.getStepNumber(this.value.target[0]),
+      this.getStepNumber(this.value.target[1])
+    ];
+  },
+  getStepWidth: function () {
+    return Math.abs(this.bounds.availWidth / this.options.steps);
+  },
+  getValue: function() {
+    return this.value.target;
+  },
+  setStep: function(x, y, snap) {
+    this.setValue(
+      this.options.steps && x > 1 ? (x - 1) / (this.options.steps - 1) : 0,
+      this.options.steps && y > 1 ? (y - 1) / (this.options.steps - 1) : 0,
+      snap
+    );
+  },
+  setValue: function(x, y, snap) {
+    this.setTargetValue([x, y || 0]);
+    if (snap) {
+      this.groupCopy(this.value.current, this.value.target);
+      // Since the current value will be equal to the target one instantly, the
+      // animate function won't get to run so we need to update the positions
+      // and call the callbacks manually
+      this.updateOffsetFromValue();
+      this.callAnimationCallback();
+    }
+  },
+  startTap: function() {
+    if (this.disabled || !this.options.tapping) {
+      return;
+    }
+
+    this.tapping = true;
+    this.setWrapperOffset();
+
+    this.setTargetValueByOffset([
+      Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
+      Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
+    ]);
+  },
+  stopTap: function() {
+    if (this.disabled || !this.tapping) {
+      return;
+    }
+    this.tapping = false;
+
+    this.setTargetValue(this.value.current);
+  },
+  startDrag: function() {
+    if (this.disabled) {
+      return;
+    }
+    this.dragging = true;
+    this.setWrapperOffset();
+
+    this.dragStartPosition = {x: Cursor.x, y: Cursor.y};
+    this.offset.mouse = [
+      Cursor.x - Position.get(this.handle)[0],
+      Cursor.y - Position.get(this.handle)[1]
+    ];
+    if (!this.wrapper.className.match(this.options.activeClass)) {
+      this.wrapper.className += ' ' + this.options.activeClass;
+    }
+    this.callDragStartCallback();
+  },
+  stopDrag: function() {
+    if (this.disabled || !this.dragging) {
+      return;
+    }
+    this.dragging = false;
+    var deltaX = this.bounds.availWidth === 0 ? 0 :
+          ((Cursor.x - this.dragStartPosition.x) / this.bounds.availWidth),
+        deltaY = this.bounds.availHeight === 0 ? 0 :
+          ((Cursor.y - this.dragStartPosition.y) / this.bounds.availHeight),
+        delta = [deltaX, deltaY];
+
+    var target = this.groupClone(this.value.current);
+    if (this.options.slide) {
+      var ratioChange = this.change;
+      target[0] += ratioChange[0] * 4;
+      target[1] += ratioChange[1] * 4;
+    }
+    this.setTargetValue(target);
+    this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
+    this.callDragStopCallback(delta);
+  },
+  callAnimationCallback: function() {
+    var value = this.value.current;
+    if (this.options.snap && this.options.steps > 1) {
+      value = this.getClosestSteps(value);
+    }
+    if (!this.groupCompare(value, this.value.prev)) {
+      if (typeof(this.options.animationCallback) == 'function') {
+        this.options.animationCallback.call(this, value[0], value[1]);
+      }
+      this.groupCopy(this.value.prev, value);
+    }
+  },
+  callTargetCallback: function() {
+    if (typeof(this.options.callback) == 'function') {
+      this.options.callback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStartCallback: function() {
+    if (typeof(this.options.dragStartCallback) == 'function') {
+      this.options.dragStartCallback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStopCallback: function(delta) {
+    if (typeof(this.options.dragStopCallback) == 'function') {
+      this.options.dragStopCallback.call(this, this.value.target[0], this.value.target[1], delta);
+    }
+  },
+  animateWithRequestAnimationFrame: function (time) {
+    if (time) {
+      // using requestAnimationFrame
+      this.timeOffset = this.timeStamp ? time - this.timeStamp : 0;
+      this.timeStamp = time;
+    } else {
+      // using setTimeout(callback, 25) polyfill
+      this.timeOffset = 25;
+    }
+    this.animate();
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
+  },
+  animate: function(direct, first) {
+    if (direct && !this.dragging) {
+      return;
+    }
+    if (this.dragging) {
+      var prevTarget = this.groupClone(this.value.target);
+
+      var offset = [
+        Cursor.x - this.offset.wrapper[0] - this.offset.mouse[0],
+        Cursor.y - this.offset.wrapper[1] - this.offset.mouse[1]
+      ];
+      this.setTargetValueByOffset(offset, this.options.loose);
+
+      this.change = [
+        this.value.target[0] - prevTarget[0],
+        this.value.target[1] - prevTarget[1]
+      ];
+    }
+    if (this.dragging || first) {
+      this.groupCopy(this.value.current, this.value.target);
+    }
+    if (this.dragging || this.glide() || first) {
+      this.updateOffsetFromValue();
+      this.callAnimationCallback();
+    }
+  },
+  glide: function() {
+    var diff = [
+      this.value.target[0] - this.value.current[0],
+      this.value.target[1] - this.value.current[1]
+    ];
+    if (!diff[0] && !diff[1]) {
+      return false;
+    }
+    if (Math.abs(diff[0]) > this.valuePrecision[0] ||
+        Math.abs(diff[1]) > this.valuePrecision[1]) {
+      this.value.current[0] += diff[0] * Math.min(this.options.speed * this.timeOffset / 25, 1);
+      this.value.current[1] += diff[1] * Math.min(this.options.speed * this.timeOffset / 25, 1);
+    } else {
+      this.groupCopy(this.value.current, this.value.target);
+    }
+    return true;
+  },
+  updateOffsetFromValue: function() {
+    if (!this.options.snap) {
+      this.offset.current = this.getOffsetsByRatios(this.value.current);
+    } else {
+      this.offset.current = this.getOffsetsByRatios(
+        this.getClosestSteps(this.value.current)
+      );
+    }
+    if (!this.groupCompare(this.offset.current, this.offset.prev)) {
+      this.renderHandlePosition();
+      this.groupCopy(this.offset.prev, this.offset.current);
+    }
+  },
+  renderHandlePosition: function() {
+
+    var transform = '';
+    if (this.options.css3 && StylePrefix.transform) {
+      if (this.options.horizontal) {
+        transform += 'translateX(' + this.offset.current[0] + 'px)';
+      }
+      if (this.options.vertical) {
+        transform += ' translateY(' + this.offset.current[1] + 'px)';
+      }
+      this.handle.style[StylePrefix.transform] = transform;
+      return;
+    }
+
+    if (this.options.horizontal) {
+      this.handle.style.left = this.offset.current[0] + 'px';
+    }
+    if (this.options.vertical) {
+      this.handle.style.top = this.offset.current[1] + 'px';
+    }
+  },
+  setTargetValue: function(value, loose) {
+    var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
+
+    this.groupCopy(this.value.target, target);
+    this.offset.target = this.getOffsetsByRatios(target);
+
+    this.callTargetCallback();
+  },
+  setTargetValueByOffset: function(offset, loose) {
+    var value = this.getRatiosByOffsets(offset);
+    var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
+
+    this.groupCopy(this.value.target, target);
+    this.offset.target = this.getOffsetsByRatios(target);
+  },
+  getLooseValue: function(value) {
+    var proper = this.getProperValue(value);
+    return [
+      proper[0] + ((value[0] - proper[0]) / 4),
+      proper[1] + ((value[1] - proper[1]) / 4)
+    ];
+  },
+  getProperValue: function(value) {
+    var proper = this.groupClone(value);
+
+    proper[0] = Math.max(proper[0], 0);
+    proper[1] = Math.max(proper[1], 0);
+    proper[0] = Math.min(proper[0], 1);
+    proper[1] = Math.min(proper[1], 1);
+
+    if ((!this.dragging && !this.tapping) || this.options.snap) {
+      if (this.options.steps > 1) {
+        proper = this.getClosestSteps(proper);
+      }
+    }
+    return proper;
+  },
+  getRatiosByOffsets: function(group) {
+    return [
+      this.getRatioByOffset(group[0], this.bounds.availWidth, this.bounds.left),
+      this.getRatioByOffset(group[1], this.bounds.availHeight, this.bounds.top)
+    ];
+  },
+  getRatioByOffset: function(offset, range, padding) {
+    return range ? (offset - padding) / range : 0;
+  },
+  getOffsetsByRatios: function(group) {
+    return [
+      this.getOffsetByRatio(group[0], this.bounds.availWidth, this.bounds.left),
+      this.getOffsetByRatio(group[1], this.bounds.availHeight, this.bounds.top)
+    ];
+  },
+  getOffsetByRatio: function(ratio, range, padding) {
+    return Math.round(ratio * range) + padding;
+  },
+  getStepNumber: function(value) {
+    // Translate a [0-1] value into a number from 1 to N steps (set using the
+    // "steps" option)
+    return this.getClosestStep(value) * (this.options.steps - 1) + 1;
+  },
+  getClosestSteps: function(group) {
+    return [
+      this.getClosestStep(group[0]),
+      this.getClosestStep(group[1])
+    ];
+  },
+  getClosestStep: function(value) {
+    var k = 0;
+    var min = 1;
+    for (var i = 0; i <= this.options.steps - 1; i++) {
+      if (Math.abs(this.stepRatios[i] - value) < min) {
+        min = Math.abs(this.stepRatios[i] - value);
+        k = i;
+      }
+    }
+    return this.stepRatios[k];
+  },
+  groupCompare: function(a, b) {
+    return a[0] == b[0] && a[1] == b[1];
+  },
+  groupCopy: function(a, b) {
+    a[0] = b[0];
+    a[1] = b[1];
+  },
+  groupClone: function(a) {
+    return [a[0], a[1]];
+  },
+  draggingOnDisabledAxis: function() {
+    return (!this.options.horizontal && Cursor.xDiff > Cursor.yDiff) ||
+           (!this.options.vertical && Cursor.yDiff > Cursor.xDiff);
+  }
+};
+
+
+var bind = function(fn, context) {
+  /**
+   * CoffeeScript-like function to bind the scope of a method to an instance,
+   * the context of that method, regardless from where it is called
+   */
+  return function() {
+    return fn.apply(context, arguments);
+  };
+};
+
+// Cross-browser vanilla JS event handling
+
+var addEventListener = function(element, type, callback) {
+  if (element.addEventListener) {
+    element.addEventListener(type, callback, false);
+  } else if (element.attachEvent) {
+    element.attachEvent('on' + type, callback);
+  }
+};
+
+var removeEventListener = function(element, type, callback) {
+  if (element.removeEventListener) {
+    element.removeEventListener(type, callback, false);
+  } else if (element.detachEvent) {
+    element.detachEvent('on' + type, callback);
+  }
+};
+
+var preventEventDefaults = function(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.returnValue = false;
+};
+
+var stopEventPropagation = function(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  e.cancelBubble = true;
+};
+
+
+var Cursor = {
+  /**
+   * Abstraction for making the combined mouse or touch position available at
+   * any time.
+   *
+   * It picks up the "move" events as an independent component and simply makes
+   * the latest x and y mouse/touch position of the user available at any time,
+   * which is requested with Cursor.x and Cursor.y respectively.
+   *
+   * It can receive both mouse and touch events consecutively, extracting the
+   * relevant meta data from each type of event.
+   *
+   * Cursor.refresh(e) is called to update the global x and y values, with a
+   * genuine MouseEvent or a TouchEvent from an event listener, e.g.
+   * mousedown/up or touchstart/end
+   */
+  x: 0,
+  y: 0,
+  xDiff: 0,
+  yDiff: 0,
+  refresh: function(e) {
+    if (!e) {
+      e = window.event;
+    }
+    if (e.type == 'mousemove') {
+      this.set(e);
+    } else if (e.touches) {
+      this.set(e.touches[0]);
+    }
+  },
+  set: function(e) {
+    var lastX = this.x,
+        lastY = this.y;
+    if (e.clientX || e.clientY) {
+      this.x = e.clientX;
+      this.y = e.clientY;
+    } else if (e.pageX || e.pageY) {
+      this.x = e.pageX - document.body.scrollLeft - document.documentElement.scrollLeft;
+      this.y = e.pageY - document.body.scrollTop - document.documentElement.scrollTop;
+    }
+    this.xDiff = Math.abs(this.x - lastX);
+    this.yDiff = Math.abs(this.y - lastY);
+  }
+};
+
+
+var Position = {
+  /**
+   * Helper for extracting position of a DOM element, relative to the viewport
+   *
+   * The get(obj) method accepts a DOM element as the only parameter, and
+   * returns the position under a (x, y) tuple, as an array with two elements.
+   */
+  get: function(obj) {
+    // Dragdealer relies on getBoundingClientRect to calculate element offsets,
+    // but we want to be sure we don't throw any unhandled exceptions and break
+    // other code from the page if running from in very old browser that doesn't
+    // support this method
+    var rect = {left: 0, top: 0};
+    if (obj.getBoundingClientRect !== undefined) {
+      rect = obj.getBoundingClientRect();
+    }
+    return [rect.left, rect.top];
+  }
+};
+
+
+var StylePrefix = {
+  transform: getPrefixedStylePropName('transform'),
+  perspective: getPrefixedStylePropName('perspective'),
+  backfaceVisibility: getPrefixedStylePropName('backfaceVisibility')
+};
+
+function getPrefixedStylePropName(propName) {
+  var domPrefixes = 'Webkit Moz ms O'.split(' '),
+      elStyle = document.documentElement.style;
+  if (elStyle[propName] !== undefined) return propName; // Is supported unprefixed
+  propName = propName.charAt(0).toUpperCase() + propName.substr(1);
+  for (var i = 0; i < domPrefixes.length; i++) {
+    if (elStyle[domPrefixes[i] + propName] !== undefined) {
+      return domPrefixes[i] + propName; // Is supported with prefix
+    }
+  }
+};
+
+function triggerWebkitHardwareAcceleration(element) {
+  if (StylePrefix.backfaceVisibility && StylePrefix.perspective) {
+    element.style[StylePrefix.perspective] = '1000px';
+    element.style[StylePrefix.backfaceVisibility] = 'hidden';
+  }
+};
+
+var vendors = ['webkit', 'moz'];
+var requestAnimationFrame = window.requestAnimationFrame;
+var cancelAnimationFrame = window.cancelAnimationFrame;
+
+for (var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
+  requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+  cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
+                         window[vendors[x] + 'CancelRequestAnimationFrame'];
+}
+
+if (!requestAnimationFrame) {
+  requestAnimationFrame = function (callback) {
+    return setTimeout(callback, 25);
+  };
+  cancelAnimationFrame = clearTimeout;
+}
+
+return Dragdealer;
+
+}));
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export intervalometer */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return frameIntervalometer; });
+/* unused harmony export timerIntervalometer */
+/*! npm.im/intervalometer */
+function intervalometer(cb, request, cancel, requestParameter) {
+	var requestId;
+	var previousLoopTime;
+	function loop(now) {
+		// must be requested before cb() because that might call .stop()
+		requestId = request(loop, requestParameter);
+
+		// called with "ms since last call". 0 on start()
+		cb(now - (previousLoopTime || now));
+
+		previousLoopTime = now;
+	}
+	return {
+		start: function start() {
+			if (!requestId) { // prevent double starts
+				loop(0);
+			}
+		},
+		stop: function stop() {
+			cancel(requestId);
+			requestId = null;
+			previousLoopTime = 0;
+		}
+	};
+}
+
+function frameIntervalometer(cb) {
+	return intervalometer(cb, requestAnimationFrame, cancelAnimationFrame);
+}
+
+function timerIntervalometer(cb, delay) {
+	return intervalometer(cb, setTimeout, clearTimeout, delay);
+}
+
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,n){if(true)module.exports=n();else if("function"==typeof define&&define.amd)define([],n);else{var t=n();for(var a in t)("object"==typeof exports?exports:e)[a]=t[a]}}(this,function(){return function(e){function n(a){if(t[a])return t[a].exports;var i=t[a]={i:a,l:!1,exports:{}};return e[a].call(i.exports,i,i.exports,n),i.l=!0,i.exports}var t={};return n.m=e,n.c=t,n.i=function(e){return e},n.d=function(e,t,a){n.o(e,t)||Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:a})},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,n){return Object.prototype.hasOwnProperty.call(e,n)},n.p="",n(n.s=51)}([function(e,n){function t(e,n){for(var t=0;t<e.length;t++){var a=e[t],i=u[a.id];if(i){i.refs++;for(var s=0;s<i.parts.length;s++)i.parts[s](a.parts[s]);for(;s<a.parts.length;s++)i.parts.push(d(a.parts[s],n))}else{for(var r=[],s=0;s<a.parts.length;s++)r.push(d(a.parts[s],n));u[a.id]={id:a.id,refs:1,parts:r}}}}function a(e){for(var n=[],t={},a=0;a<e.length;a++){var i=e[a],s=i[0],r=i[1],o=i[2],d=i[3],c={css:r,media:o,sourceMap:d};t[s]?t[s].parts.push(c):n.push(t[s]={id:s,parts:[c]})}return n}function i(e,n){var t=b(),a=g[g.length-1];if("top"===e.insertAt)a?a.nextSibling?t.insertBefore(n,a.nextSibling):t.appendChild(n):t.insertBefore(n,t.firstChild),g.push(n);else{if("bottom"!==e.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");t.appendChild(n)}}function s(e){e.parentNode.removeChild(e);var n=g.indexOf(e);n>=0&&g.splice(n,1)}function r(e){var n=document.createElement("style");return n.type="text/css",i(e,n),n}function o(e){var n=document.createElement("link");return n.rel="stylesheet",i(e,n),n}function d(e,n){var t,a,i;if(n.singleton){var d=m++;t=v||(v=r(n)),a=c.bind(null,t,d,!1),i=c.bind(null,t,d,!0)}else e.sourceMap&&"function"==typeof URL&&"function"==typeof URL.createObjectURL&&"function"==typeof URL.revokeObjectURL&&"function"==typeof Blob&&"function"==typeof btoa?(t=o(n),a=f.bind(null,t),i=function(){s(t),t.href&&URL.revokeObjectURL(t.href)}):(t=r(n),a=l.bind(null,t),i=function(){s(t)});return a(e),function(n){if(n){if(n.css===e.css&&n.media===e.media&&n.sourceMap===e.sourceMap)return;a(e=n)}else i()}}function c(e,n,t,a){var i=t?"":a.css;if(e.styleSheet)e.styleSheet.cssText=y(n,i);else{var s=document.createTextNode(i),r=e.childNodes;r[n]&&e.removeChild(r[n]),r.length?e.insertBefore(s,r[n]):e.appendChild(s)}}function l(e,n){var t=n.css,a=n.media;if(a&&e.setAttribute("media",a),e.styleSheet)e.styleSheet.cssText=t;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(t))}}function f(e,n){var t=n.css,a=n.sourceMap;a&&(t+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(a))))+" */");var i=new Blob([t],{type:"text/css"}),s=e.href;e.href=URL.createObjectURL(i),s&&URL.revokeObjectURL(s)}var u={},k=function(e){var n;return function(){return void 0===n&&(n=e.apply(this,arguments)),n}},p=k(function(){return/msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase())}),b=k(function(){return document.head||document.getElementsByTagName("head")[0]}),v=null,m=0,g=[];e.exports=function(e,n){if("undefined"!=typeof DEBUG&&DEBUG&&"object"!=typeof document)throw new Error("The style-loader cannot be used in a non-browser environment");n=n||{},void 0===n.singleton&&(n.singleton=p()),void 0===n.insertAt&&(n.insertAt="bottom");var i=a(e);return t(i,n),function(e){for(var s=[],r=0;r<i.length;r++){var o=i[r],d=u[o.id];d.refs--,s.push(d)}if(e){t(a(e),n)}for(var r=0;r<s.length;r++){var d=s[r];if(0===d.refs){for(var c=0;c<d.parts.length;c++)d.parts[c]();delete u[d.id]}}}};var y=function(){var e=[];return function(n,t){return e[n]=t,e.filter(Boolean).join("\n")}}()},function(e,n){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],n=0;n<this.length;n++){var t=this[n];t[2]?e.push("@media "+t[2]+"{"+t[1]+"}"):e.push(t[1])}return e.join("")},e.i=function(n,t){"string"==typeof n&&(n=[[null,n,""]]);for(var a={},i=0;i<this.length;i++){var s=this[i][0];"number"==typeof s&&(a[s]=!0)}for(i=0;i<n.length;i++){var r=n[i];"number"==typeof r[0]&&a[r[0]]||(t&&!r[2]?r[2]=t:t&&(r[2]="("+r[2]+") and ("+t+")"),e.push(r))}},e}},function(e,n){e.exports=function(e,n,t,a){var i,s=e=e||{},r=typeof e.default;"object"!==r&&"function"!==r||(i=e,s=e.default);var o="function"==typeof s?s.options:s;if(n&&(o.render=n.render,o.staticRenderFns=n.staticRenderFns),t&&(o._scopeId=t),a){var d=Object.create(o.computed||null);Object.keys(a).forEach(function(e){var n=a[e];d[e]=function(){return n}}),o.computed=d}return{esModule:i,exports:s,options:o}}},function(e,n,t){t(15);var a=t(2)(t(52),t(50),"data-v-e0f7d754",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){var a=t(16);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(17);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(18);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(19);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(20);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(21);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(22);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(23);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(24);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(25);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(26);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){var a=t(27);"string"==typeof a&&(a=[[e.i,a,""]]);t(0)(a,{});a.locals&&(e.exports=a.locals)},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-chasing-dots[data-v-084984bc] {\n  width: 60px;\n  height: 60px;\n  position: relative;\n  text-align: center;\n  -webkit-animation: sk-chasingDotsRotate 2s infinite linear;\n          animation: sk-chasingDotsRotate 2s infinite linear;\n}\n.sk-chasing-dots .sk-child[data-v-084984bc] {\n    width: 60%;\n    height: 60%;\n    display: inline-block;\n    position: absolute;\n    top: 0;\n    background-color: #f1f1f1;\n    border-radius: 100%;\n    -webkit-animation: sk-chasingDotsBounce 2s infinite ease-in-out;\n            animation: sk-chasingDotsBounce 2s infinite ease-in-out;\n}\n.sk-chasing-dots .sk-dot2[data-v-084984bc] {\n    top: auto;\n    bottom: 0;\n    -webkit-animation-delay: -1s;\n            animation-delay: -1s;\n}\n@-webkit-keyframes sk-chasingDotsRotate {\n100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n}\n}\n@keyframes sk-chasingDotsRotate {\n100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n}\n}\n@-webkit-keyframes sk-chasingDotsBounce {\n0%,\n  100% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n@keyframes sk-chasingDotsBounce {\n0%,\n  100% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-wave[data-v-3754eb62] {\n  width: 75px;\n  height: 60px;\n  text-align: center;\n  font-size: 0;\n}\n.sk-wave .sk-rect[data-v-3754eb62] {\n    background-color: #f1f1f1;\n    height: 100%;\n    width: 6px;\n    margin: 0 3px 0 0;\n    display: inline-block;\n    -webkit-animation: sk-waveStretchDelay 1.2s infinite ease-in-out;\n            animation: sk-waveStretchDelay 1.2s infinite ease-in-out;\n}\n.sk-wave .sk-rect1[data-v-3754eb62] {\n    -webkit-animation-delay: -1.2s;\n            animation-delay: -1.2s;\n}\n.sk-wave .sk-rect2[data-v-3754eb62] {\n    -webkit-animation-delay: -1.1s;\n            animation-delay: -1.1s;\n}\n.sk-wave .sk-rect3[data-v-3754eb62] {\n    -webkit-animation-delay: -1s;\n            animation-delay: -1s;\n}\n.sk-wave .sk-rect4[data-v-3754eb62] {\n    -webkit-animation-delay: -0.9s;\n            animation-delay: -0.9s;\n}\n.sk-wave .sk-rect5[data-v-3754eb62] {\n    -webkit-animation-delay: -0.8s;\n            animation-delay: -0.8s;\n}\n@-webkit-keyframes sk-waveStretchDelay {\n0%,\n  100%,\n  40% {\n    -webkit-transform: scaleY(0.4);\n            transform: scaleY(0.4);\n}\n20% {\n    -webkit-transform: scaleY(1);\n            transform: scaleY(1);\n}\n}\n@keyframes sk-waveStretchDelay {\n0%,\n  100%,\n  40% {\n    -webkit-transform: scaleY(0.4);\n            transform: scaleY(0.4);\n}\n20% {\n    -webkit-transform: scaleY(1);\n            transform: scaleY(1);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-rotating-plane[data-v-4695d96a] {\n  position: relative;\n  width: 60px;\n  height: 60px;\n  background-color: #f1f1f1;\n  -webkit-animation: sk-rotatePlane 1.2s infinite ease-in-out;\n          animation: sk-rotatePlane 1.2s infinite ease-in-out;\n}\n@-webkit-keyframes sk-rotatePlane {\n0% {\n    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);\n            transform: perspective(120px) rotateX(0deg) rotateY(0deg);\n}\n50% {\n    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);\n            transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);\n}\n100% {\n    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);\n            transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);\n}\n}\n@keyframes sk-rotatePlane {\n0% {\n    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);\n            transform: perspective(120px) rotateX(0deg) rotateY(0deg);\n}\n50% {\n    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);\n            transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);\n}\n100% {\n    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);\n            transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-three-bounce[data-v-4c34e1ed] {\n  width: 120px;\n  text-align: center;\n}\n.sk-three-bounce .sk-child[data-v-4c34e1ed] {\n    width: 30px;\n    height: 30px;\n    background-color: #f1f1f1;\n    border-radius: 100%;\n    display: inline-block;\n    -webkit-animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;\n            animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;\n}\n.sk-three-bounce .sk-bounce1[data-v-4c34e1ed] {\n    -webkit-animation-delay: -0.32s;\n            animation-delay: -0.32s;\n}\n.sk-three-bounce .sk-bounce2[data-v-4c34e1ed] {\n    -webkit-animation-delay: -0.16s;\n            animation-delay: -0.16s;\n}\n@-webkit-keyframes sk-three-bounce {\n0%,\n  100%,\n  80% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n40% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n@keyframes sk-three-bounce {\n0%,\n  100%,\n  80% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n40% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-wandering-cubes[data-v-4fb70e1c] {\n  width: 60px;\n  height: 60px;\n  position: relative;\n}\n.sk-wandering-cubes .sk-cube[data-v-4fb70e1c] {\n    background-color: #f1f1f1;\n    width: 10px;\n    height: 10px;\n    position: absolute;\n    top: 0;\n    left: 0;\n    -webkit-animation: sk-wanderingCube 1.8s ease-in-out -1.8s infinite both;\n            animation: sk-wanderingCube 1.8s ease-in-out -1.8s infinite both;\n}\n.sk-wandering-cubes .sk-cube2[data-v-4fb70e1c] {\n    -webkit-animation-delay: -0.9s;\n            animation-delay: -0.9s;\n}\n@-webkit-keyframes sk-wanderingCube {\n0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n}\n25% {\n    -webkit-transform: translateX(30px) rotate(-90deg) scale(0.5);\n            transform: translateX(30px) rotate(-90deg) scale(0.5);\n}\n50% {\n    /* Hack to make FF rotate in the right direction */\n    -webkit-transform: translateX(30px) translateY(30px) rotate(-179deg);\n            transform: translateX(30px) translateY(30px) rotate(-179deg);\n}\n50.1% {\n    -webkit-transform: translateX(30px) translateY(30px) rotate(-180deg);\n            transform: translateX(30px) translateY(30px) rotate(-180deg);\n}\n75% {\n    -webkit-transform: translateX(0) translateY(30px) rotate(-270deg) scale(0.5);\n            transform: translateX(0) translateY(30px) rotate(-270deg) scale(0.5);\n}\n100% {\n    -webkit-transform: rotate(-360deg);\n            transform: rotate(-360deg);\n}\n}\n@keyframes sk-wanderingCube {\n0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n}\n25% {\n    -webkit-transform: translateX(30px) rotate(-90deg) scale(0.5);\n            transform: translateX(30px) rotate(-90deg) scale(0.5);\n}\n50% {\n    /* Hack to make FF rotate in the right direction */\n    -webkit-transform: translateX(30px) translateY(30px) rotate(-179deg);\n            transform: translateX(30px) translateY(30px) rotate(-179deg);\n}\n50.1% {\n    -webkit-transform: translateX(30px) translateY(30px) rotate(-180deg);\n            transform: translateX(30px) translateY(30px) rotate(-180deg);\n}\n75% {\n    -webkit-transform: translateX(0) translateY(30px) rotate(-270deg) scale(0.5);\n            transform: translateX(0) translateY(30px) rotate(-270deg) scale(0.5);\n}\n100% {\n    -webkit-transform: rotate(-360deg);\n            transform: rotate(-360deg);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-fading-circle[data-v-582d5dd2] {\n  width: 60px;\n  height: 60px;\n  position: relative;\n}\n.sk-fading-circle .sk-circle[data-v-582d5dd2] {\n    width: 100%;\n    height: 100%;\n    position: absolute;\n    left: 0;\n    top: 0;\n    display: inline-block;\n}\n.sk-fading-circle .sk-circle[data-v-582d5dd2]:before {\n    content: '';\n    display: block;\n    margin: 0 auto;\n    width: 15%;\n    height: 15%;\n    background-color: #f1f1f1;\n    border-radius: 100%;\n    -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;\n            animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;\n}\n.sk-fading-circle .sk-circle2[data-v-582d5dd2] {\n    -webkit-transform: rotate(30deg);\n            transform: rotate(30deg);\n}\n.sk-fading-circle .sk-circle3[data-v-582d5dd2] {\n    -webkit-transform: rotate(60deg);\n            transform: rotate(60deg);\n}\n.sk-fading-circle .sk-circle4[data-v-582d5dd2] {\n    -webkit-transform: rotate(90deg);\n            transform: rotate(90deg);\n}\n.sk-fading-circle .sk-circle5[data-v-582d5dd2] {\n    -webkit-transform: rotate(120deg);\n            transform: rotate(120deg);\n}\n.sk-fading-circle .sk-circle6[data-v-582d5dd2] {\n    -webkit-transform: rotate(150deg);\n            transform: rotate(150deg);\n}\n.sk-fading-circle .sk-circle7[data-v-582d5dd2] {\n    -webkit-transform: rotate(180deg);\n            transform: rotate(180deg);\n}\n.sk-fading-circle .sk-circle8[data-v-582d5dd2] {\n    -webkit-transform: rotate(210deg);\n            transform: rotate(210deg);\n}\n.sk-fading-circle .sk-circle9[data-v-582d5dd2] {\n    -webkit-transform: rotate(240deg);\n            transform: rotate(240deg);\n}\n.sk-fading-circle .sk-circle10[data-v-582d5dd2] {\n    -webkit-transform: rotate(270deg);\n            transform: rotate(270deg);\n}\n.sk-fading-circle .sk-circle11[data-v-582d5dd2] {\n    -webkit-transform: rotate(300deg);\n            transform: rotate(300deg);\n}\n.sk-fading-circle .sk-circle12[data-v-582d5dd2] {\n    -webkit-transform: rotate(330deg);\n            transform: rotate(330deg);\n}\n.sk-fading-circle .sk-circle2[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -1.1s;\n            animation-delay: -1.1s;\n}\n.sk-fading-circle .sk-circle3[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -1s;\n            animation-delay: -1s;\n}\n.sk-fading-circle .sk-circle4[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.9s;\n            animation-delay: -0.9s;\n}\n.sk-fading-circle .sk-circle5[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.8s;\n            animation-delay: -0.8s;\n}\n.sk-fading-circle .sk-circle6[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.7s;\n            animation-delay: -0.7s;\n}\n.sk-fading-circle .sk-circle7[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.6s;\n            animation-delay: -0.6s;\n}\n.sk-fading-circle .sk-circle8[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.5s;\n            animation-delay: -0.5s;\n}\n.sk-fading-circle .sk-circle9[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.4s;\n            animation-delay: -0.4s;\n}\n.sk-fading-circle .sk-circle10[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.3s;\n            animation-delay: -0.3s;\n}\n.sk-fading-circle .sk-circle11[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.2s;\n            animation-delay: -0.2s;\n}\n.sk-fading-circle .sk-circle12[data-v-582d5dd2]:before {\n    -webkit-animation-delay: -0.1s;\n            animation-delay: -0.1s;\n}\n@-webkit-keyframes sk-circleFadeDelay {\n0%,\n  100%,\n  39% {\n    opacity: 0;\n}\n40% {\n    opacity: 1;\n}\n}\n@keyframes sk-circleFadeDelay {\n0%,\n  100%,\n  39% {\n    opacity: 0;\n}\n40% {\n    opacity: 1;\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-spinner-pulse[data-v-66664d00] {\n  width: 60px;\n  height: 60px;\n  background-color: #f1f1f1;\n  border-radius: 100%;\n  -webkit-animation: sk-pulseScaleOut 1.0s infinite ease-in-out;\n          animation: sk-pulseScaleOut 1.0s infinite ease-in-out;\n}\n@-webkit-keyframes sk-pulseScaleOut {\n0% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n100% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n    opacity: 0;\n}\n}\n@keyframes sk-pulseScaleOut {\n0% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n100% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n    opacity: 0;\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-folding-cube[data-v-75a6df86] {\n  margin: 0 auto;\n  width: 60px;\n  height: 60px;\n  position: relative;\n  -webkit-transform: rotateZ(45deg);\n          transform: rotateZ(45deg);\n}\n.sk-folding-cube .sk-cube[data-v-75a6df86] {\n    float: left;\n    width: 50%;\n    height: 50%;\n    position: relative;\n    -webkit-transform: scale(1.1);\n            transform: scale(1.1);\n}\n.sk-folding-cube .sk-cube[data-v-75a6df86]:before {\n    content: '';\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background-color: #f1f1f1;\n    -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;\n            animation: sk-foldCubeAngle 2.4s infinite linear both;\n    -webkit-transform-origin: 100% 100%;\n            transform-origin: 100% 100%;\n}\n.sk-folding-cube .sk-cube2[data-v-75a6df86] {\n    -webkit-transform: scale(1.1) rotateZ(90deg);\n            transform: scale(1.1) rotateZ(90deg);\n}\n.sk-folding-cube .sk-cube3[data-v-75a6df86] {\n    -webkit-transform: scale(1.1) rotateZ(180deg);\n            transform: scale(1.1) rotateZ(180deg);\n}\n.sk-folding-cube .sk-cube4[data-v-75a6df86] {\n    -webkit-transform: scale(1.1) rotateZ(270deg);\n            transform: scale(1.1) rotateZ(270deg);\n}\n.sk-folding-cube .sk-cube2[data-v-75a6df86]:before {\n    -webkit-animation-delay: 0.3s;\n            animation-delay: 0.3s;\n}\n.sk-folding-cube .sk-cube3[data-v-75a6df86]:before {\n    -webkit-animation-delay: 0.6s;\n            animation-delay: 0.6s;\n}\n.sk-folding-cube .sk-cube4[data-v-75a6df86]:before {\n    -webkit-animation-delay: 0.9s;\n            animation-delay: 0.9s;\n}\n@-webkit-keyframes sk-foldCubeAngle {\n0%,\n  10% {\n    -webkit-transform: perspective(140px) rotateX(-180deg);\n            transform: perspective(140px) rotateX(-180deg);\n    opacity: 0;\n}\n25%,\n  75% {\n    -webkit-transform: perspective(140px) rotateX(0deg);\n            transform: perspective(140px) rotateX(0deg);\n    opacity: 1;\n}\n100%,\n  90% {\n    -webkit-transform: perspective(140px) rotateY(180deg);\n            transform: perspective(140px) rotateY(180deg);\n    opacity: 0;\n}\n}\n@keyframes sk-foldCubeAngle {\n0%,\n  10% {\n    -webkit-transform: perspective(140px) rotateX(-180deg);\n            transform: perspective(140px) rotateX(-180deg);\n    opacity: 0;\n}\n25%,\n  75% {\n    -webkit-transform: perspective(140px) rotateX(0deg);\n            transform: perspective(140px) rotateX(0deg);\n    opacity: 1;\n}\n100%,\n  90% {\n    -webkit-transform: perspective(140px) rotateY(180deg);\n            transform: perspective(140px) rotateY(180deg);\n    opacity: 0;\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-double-bounce[data-v-9900d5bc] {\n  width: 60px;\n  height: 60px;\n  position: relative;\n}\n.sk-double-bounce .sk-child[data-v-9900d5bc] {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    background-color: #f1f1f1;\n    opacity: 0.6;\n    position: absolute;\n    top: 0;\n    left: 0;\n    -webkit-animation: sk-doubleBounce 2.0s infinite ease-in-out;\n            animation: sk-doubleBounce 2.0s infinite ease-in-out;\n}\n.sk-double-bounce .sk-double-bounce2[data-v-9900d5bc] {\n    -webkit-animation-delay: -1.0s;\n            animation-delay: -1.0s;\n}\n@-webkit-keyframes sk-doubleBounce {\n0%,\n  100% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n@keyframes sk-doubleBounce {\n0%,\n  100% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-circle[data-v-d55c626c] {\n  margin: 0 auto;\n  width: 60px;\n  height: 60px;\n  position: relative;\n}\n.sk-circle .sk-child[data-v-d55c626c] {\n    width: 100%;\n    height: 100%;\n    position: absolute;\n    left: 0;\n    top: 0;\n}\n.sk-circle .sk-child[data-v-d55c626c]:before {\n    content: '';\n    display: block;\n    margin: 0 auto;\n    width: 15%;\n    height: 15%;\n    background-color: #f1f1f1;\n    border-radius: 100%;\n    -webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;\n            animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;\n}\n.sk-circle .sk-circle2[data-v-d55c626c] {\n    -webkit-transform: rotate(30deg);\n            transform: rotate(30deg);\n}\n.sk-circle .sk-circle3[data-v-d55c626c] {\n    -webkit-transform: rotate(60deg);\n            transform: rotate(60deg);\n}\n.sk-circle .sk-circle4[data-v-d55c626c] {\n    -webkit-transform: rotate(90deg);\n            transform: rotate(90deg);\n}\n.sk-circle .sk-circle5[data-v-d55c626c] {\n    -webkit-transform: rotate(120deg);\n            transform: rotate(120deg);\n}\n.sk-circle .sk-circle6[data-v-d55c626c] {\n    -webkit-transform: rotate(150deg);\n            transform: rotate(150deg);\n}\n.sk-circle .sk-circle7[data-v-d55c626c] {\n    -webkit-transform: rotate(180deg);\n            transform: rotate(180deg);\n}\n.sk-circle .sk-circle8[data-v-d55c626c] {\n    -webkit-transform: rotate(210deg);\n            transform: rotate(210deg);\n}\n.sk-circle .sk-circle9[data-v-d55c626c] {\n    -webkit-transform: rotate(240deg);\n            transform: rotate(240deg);\n}\n.sk-circle .sk-circle10[data-v-d55c626c] {\n    -webkit-transform: rotate(270deg);\n            transform: rotate(270deg);\n}\n.sk-circle .sk-circle11[data-v-d55c626c] {\n    -webkit-transform: rotate(300deg);\n            transform: rotate(300deg);\n}\n.sk-circle .sk-circle12[data-v-d55c626c] {\n    -webkit-transform: rotate(330deg);\n            transform: rotate(330deg);\n}\n.sk-circle .sk-circle2[data-v-d55c626c]:before {\n    -webkit-animation-delay: -1.1s;\n            animation-delay: -1.1s;\n}\n.sk-circle .sk-circle3[data-v-d55c626c]:before {\n    -webkit-animation-delay: -1s;\n            animation-delay: -1s;\n}\n.sk-circle .sk-circle4[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.9s;\n            animation-delay: -0.9s;\n}\n.sk-circle .sk-circle5[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.8s;\n            animation-delay: -0.8s;\n}\n.sk-circle .sk-circle6[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.7s;\n            animation-delay: -0.7s;\n}\n.sk-circle .sk-circle7[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.6s;\n            animation-delay: -0.6s;\n}\n.sk-circle .sk-circle8[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.5s;\n            animation-delay: -0.5s;\n}\n.sk-circle .sk-circle9[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.4s;\n            animation-delay: -0.4s;\n}\n.sk-circle .sk-circle10[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.3s;\n            animation-delay: -0.3s;\n}\n.sk-circle .sk-circle11[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.2s;\n            animation-delay: -0.2s;\n}\n.sk-circle .sk-circle12[data-v-d55c626c]:before {\n    -webkit-animation-delay: -0.1s;\n            animation-delay: -0.1s;\n}\n@-webkit-keyframes sk-circleBounceDelay {\n0%,\n  100%,\n  80% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n40% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n@keyframes sk-circleBounceDelay {\n0%,\n  100%,\n  80% {\n    -webkit-transform: scale(0);\n            transform: scale(0);\n}\n40% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\n.sk-cube-grid[data-v-dd00eff8] {\n  width: 60px;\n  height: 60px;\n  margin: 0 auto;\n  /*\n   * Spinner positions\n   * 1 2 3\n   * 4 5 6\n   * 7 8 9\n   */\n}\n.sk-cube-grid .sk-cube[data-v-dd00eff8] {\n    width: calc(100% / 3);\n    height: calc(100% / 3);\n    background-color: #f1f1f1;\n    float: left;\n    -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;\n            animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;\n}\n.sk-cube-grid .sk-cube1[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.2s;\n            animation-delay: 0.2s;\n}\n.sk-cube-grid .sk-cube2[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.3s;\n            animation-delay: 0.3s;\n}\n.sk-cube-grid .sk-cube3[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.4s;\n            animation-delay: 0.4s;\n}\n.sk-cube-grid .sk-cube4[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.1s;\n            animation-delay: 0.1s;\n}\n.sk-cube-grid .sk-cube5[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.2s;\n            animation-delay: 0.2s;\n}\n.sk-cube-grid .sk-cube6[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.3s;\n            animation-delay: 0.3s;\n}\n.sk-cube-grid .sk-cube7[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.0s;\n            animation-delay: 0.0s;\n}\n.sk-cube-grid .sk-cube8[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.1s;\n            animation-delay: 0.1s;\n}\n.sk-cube-grid .sk-cube9[data-v-dd00eff8] {\n    -webkit-animation-delay: 0.2s;\n            animation-delay: 0.2s;\n}\n@-webkit-keyframes sk-cubeGridScaleDelay {\n0%,\n  100%,\n  70% {\n    -webkit-transform: scale3D(1, 1, 1);\n            transform: scale3D(1, 1, 1);\n}\n35% {\n    -webkit-transform: scale3D(0, 0, 1);\n            transform: scale3D(0, 0, 1);\n}\n}\n@keyframes sk-cubeGridScaleDelay {\n0%,\n  100%,\n  70% {\n    -webkit-transform: scale3D(1, 1, 1);\n            transform: scale3D(1, 1, 1);\n}\n35% {\n    -webkit-transform: scale3D(0, 0, 1);\n            transform: scale3D(0, 0, 1);\n}\n}\n",""])},function(e,n,t){n=e.exports=t(1)(),n.push([e.i,"\nhtml[data-v-e0f7d754], body[data-v-e0f7d754], div[data-v-e0f7d754], span[data-v-e0f7d754], applet[data-v-e0f7d754], object[data-v-e0f7d754], iframe[data-v-e0f7d754], h1[data-v-e0f7d754], h2[data-v-e0f7d754], h3[data-v-e0f7d754], h4[data-v-e0f7d754], h5[data-v-e0f7d754], h6[data-v-e0f7d754], p[data-v-e0f7d754], blockquote[data-v-e0f7d754], pre[data-v-e0f7d754], a[data-v-e0f7d754],\nabbr[data-v-e0f7d754], acronym[data-v-e0f7d754], address[data-v-e0f7d754], big[data-v-e0f7d754], cite[data-v-e0f7d754], code[data-v-e0f7d754], del[data-v-e0f7d754], dfn[data-v-e0f7d754], em[data-v-e0f7d754], img[data-v-e0f7d754], ins[data-v-e0f7d754], kbd[data-v-e0f7d754], q[data-v-e0f7d754], s[data-v-e0f7d754], samp[data-v-e0f7d754], small[data-v-e0f7d754], strike[data-v-e0f7d754], strong[data-v-e0f7d754],\nsub[data-v-e0f7d754], sup[data-v-e0f7d754], tt[data-v-e0f7d754], var[data-v-e0f7d754], b[data-v-e0f7d754], u[data-v-e0f7d754], i[data-v-e0f7d754], center[data-v-e0f7d754], dl[data-v-e0f7d754], dt[data-v-e0f7d754], dd[data-v-e0f7d754], ol[data-v-e0f7d754], ul[data-v-e0f7d754], li[data-v-e0f7d754], fieldset[data-v-e0f7d754], form[data-v-e0f7d754], label[data-v-e0f7d754], legend[data-v-e0f7d754],\ntable[data-v-e0f7d754], caption[data-v-e0f7d754], tbody[data-v-e0f7d754], tfoot[data-v-e0f7d754], thead[data-v-e0f7d754], tr[data-v-e0f7d754], th[data-v-e0f7d754], td[data-v-e0f7d754], article[data-v-e0f7d754], aside[data-v-e0f7d754], canvas[data-v-e0f7d754], details[data-v-e0f7d754], embed[data-v-e0f7d754], figure[data-v-e0f7d754],\nfigcaption[data-v-e0f7d754], footer[data-v-e0f7d754], header[data-v-e0f7d754], hgroup[data-v-e0f7d754], menu[data-v-e0f7d754], nav[data-v-e0f7d754], output[data-v-e0f7d754], ruby[data-v-e0f7d754], section[data-v-e0f7d754], summary[data-v-e0f7d754], time[data-v-e0f7d754], mark[data-v-e0f7d754], audio[data-v-e0f7d754], video[data-v-e0f7d754] {\n  text-decoration: none;\n  outline: none;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 0;\n  -webkit-tap-highlight-color: transparent;\n  box-sizing: border-box;\n  -webkit-user-select: none;\n          user-select: none;\n  list-style: none;\n}\nhtml[data-v-e0f7d754] {\n  /* Prevent font scaling in landscape while allowing user zoom */\n  -webkit-text-size-adjust: 100%;\n  /* fix font family display error on different browsers */\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-font-smoothing: antialiased;\n  text-rendering: optimizeLegibility;\n}\na[data-v-e0f7d754] {\n  text-decoration: none;\n  color: black;\n}\n.preload img[data-v-e0f7d754], .preload canvas[data-v-e0f7d754] {\n  width: 100%;\n  height: auto;\n  display: block;\n}\n.vue-loading-container[data-v-e0f7d754] {\n  position: relative;\n  display: inline-block;\n}\n",""])},function(e,n,t){t(4);var a=t(2)(t(53),t(39),"data-v-084984bc",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/ChasingDots.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(13);var a=t(2)(t(54),t(48),"data-v-d55c626c",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/Circles.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(14);var a=t(2)(t(55),t(49),"data-v-dd00eff8",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/CubeGrid.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(12);var a=t(2)(t(56),t(47),"data-v-9900d5bc",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/DoubleBounce.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(9);var a=t(2)(t(57),t(44),"data-v-582d5dd2",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/FadingCircle.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(11);var a=t(2)(t(58),t(46),"data-v-75a6df86",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/FoldingCube.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(10);var a=t(2)(t(59),t(45),"data-v-66664d00",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/Pulse.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(6);var a=t(2)(t(60),t(41),"data-v-4695d96a",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/RotatingPlane.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(7);var a=t(2)(t(61),t(42),"data-v-4c34e1ed",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/ThreeBounce.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(8);var a=t(2)(t(62),t(43),"data-v-4fb70e1c",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/WanderingCubes.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){t(5);var a=t(2)(t(63),t(40),"data-v-3754eb62",null);a.options.__file="/Users/work/Fancy_Pants_Group/GitHub/vue-simple-loading/dev/component/src/VueLoading/Wave.vue",a.esModule&&Object.keys(a.esModule).some(function(e){return"default"!==e&&"__esModule"!==e}),a.options.functional,e.exports=a.exports},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},staticRenderFns:[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-chasing-dots"},[t("div",{staticClass:"sk-child sk-dot1"}),e._v(" "),t("div",{staticClass:"sk-child sk-dot2"})])}]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-wave"},e._l(5,function(e){return t("div",{key:e,staticClass:"sk-rect",class:"sk-rect"+e})}))},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement;return(e._self._c||n)("div",{staticClass:"sk-rotating-plane"})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},staticRenderFns:[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-three-bounce"},[t("div",{staticClass:"sk-child sk-bounce1"}),e._v(" "),t("div",{staticClass:"sk-child sk-bounce2"}),e._v(" "),t("div",{staticClass:"sk-child sk-bounce3"})])}]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},staticRenderFns:[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-wandering-cubes"},[t("div",{staticClass:"sk-cube sk-cube1"}),e._v(" "),t("div",{staticClass:"sk-cube sk-cube2"})])}]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-fading-circle sk-container"},e._l(12,function(e){return t("div",{key:e,staticClass:"sk-circle",class:"sk-circle"+e})}))},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement;return(e._self._c||n)("div",{staticClass:"sk-spinner sk-spinner-pulse"})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},staticRenderFns:[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-folding-cube"},[t("div",{staticClass:"sk-cube1 sk-cube"}),e._v(" "),t("div",{staticClass:"sk-cube2 sk-cube"}),e._v(" "),t("div",{staticClass:"sk-cube4 sk-cube"}),e._v(" "),t("div",{staticClass:"sk-cube3 sk-cube"})])}]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},staticRenderFns:[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-double-bounce"},[t("div",{staticClass:"sk-child sk-double-bounce1"}),e._v(" "),t("div",{staticClass:"sk-child sk-double-bounce2"})])}]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-circle"},e._l(12,function(e){return t("div",{key:e,staticClass:"sk-child",class:"sk-circle"+e})}))},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"sk-cube-grid"},e._l(9,function(e){return t("div",{key:e,staticClass:"sk-cube",class:"sk-cube"+e})}))},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,n,t){e.exports={render:function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{staticClass:"vue-loading-container"},[t(e.spinner,{tag:"div"})])},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var a=t(3),i=t.n(a);n.default=i.a},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var a=t(35),i=t.n(a),s=t(31),r=t.n(s),o=t(38),d=t.n(o),c=t(37),l=t.n(c),f=t(34),u=t.n(f),k=t(28),p=t.n(k),b=t(36),v=t.n(b),m=t(29),g=t.n(m),y=t(30),h=t.n(y),w=t(32),x=t.n(w),_=t(33),C=t.n(_);n.default={components:{RotatingPlane:i.a,DoubleBounce:r.a,Wave:d.a,WanderingCubes:l.a,Pulse:u.a,ChasingDots:p.a,ThreeBounce:v.a,Circles:g.a,CubeGrid:h.a,FadingCircle:x.a,FoldingCube:C.a},props:{spinner:{type:String,required:!0}}}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={methods:function(){}}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}},function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={}}])});
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(5)
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(27),
+  /* template */
+  __webpack_require__(20),
+  /* scopeId */
+  "data-v-7e978ffc",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/work/Fancy_Pants_Group/GitHub/vue-video-module/dev/component/src/VueVideo/VolumeBar.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] VolumeBar.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-loader/node_modules/vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7e978ffc", Component.options)
+  } else {
+    hotAPI.reload("data-v-7e978ffc", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('transition', {
+    attrs: {
+      "name": "video"
+    }
+  }, [_c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.videoCanplay),
+      expression: "videoCanplay"
+    }],
+    ref: "vue-video",
+    staticClass: "vue-video",
+    class: {
+      fullscreen: _vm.isFullscreen
+    }
+  }, [_c('div', {
+    staticClass: "vue-video-wrapper"
+  }, [_c('div', {
+    staticClass: "main-part part",
+    on: {
+      "click": _vm.videoClickHandler
+    }
+  }, [_c('video', {
+    ref: "video",
+    attrs: {
+      "loop": _vm.videoOptions.loop,
+      "src": _vm.videoOptions.src,
+      "playsinline": _vm.videoOptions.playsinline
+    },
+    domProps: {
+      "muted": _vm.videoOptions.muted
+    },
+    on: {
+      "timeupdate": _vm.timeupdateHandler,
+      "loadedmetadata": _vm.canplayHandler,
+      "webkitendfullscreen": _vm.videoPauseHandler,
+      "playing": _vm.videoStartHandler,
+      "ended": _vm.videoEndedHandler
+    }
+  }), _vm._v(" "), _c('transition', {
+    attrs: {
+      "name": "fade"
+    }
+  }, [(_vm.videoOptions.poster) ? _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.is_video_BFF && !_vm.is_video_played),
+      expression: "is_video_BFF && !is_video_played"
+    }],
+    staticClass: "video-poster main-component"
+  }, [_c('transition', {
+    attrs: {
+      "name": "fade"
+    }
+  }, [_c('img', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.is_poster_loaded),
+      expression: "is_poster_loaded"
+    }],
+    attrs: {
+      "src": _vm.videoOptions.poster,
+      "alt": ""
+    }
+  })])], 1) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "video-main-controller main-component"
+  }, [(!(_vm.platform.isiPhone && !_vm.videoOptions.playsinline)) ? _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.showReplay && !_vm.is_video_play),
+      expression: "!showReplay && !is_video_play"
+    }],
+    staticClass: "play-container video-main-controller-part",
+    class: {
+      'rollover-container': _vm.isPlayContainer
+    }
+  }, [(_vm.videoOptions.playMain) ? _c('div', {
+    staticClass: "normal"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.playMain,
+      "alt": ""
+    }
+  })]) : _vm._e(), _vm._v(" "), (_vm.videoOptions.playMainRollover) ? _c('div', {
+    staticClass: "hover"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.playMainRollover,
+      "alt": ""
+    }
+  })]) : _vm._e()]) : _vm._e(), _vm._v(" "), (!(_vm.platform.isiPhone && !_vm.videoOptions.playsinline)) ? _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.showReplay && !_vm.is_video_play),
+      expression: "showReplay && !is_video_play"
+    }],
+    staticClass: "replay-container video-main-controller-part",
+    class: {
+      'rollover-container': _vm.isReplayContainer
+    }
+  }, [(_vm.videoOptions.replayMain) ? _c('div', {
+    staticClass: "normal"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.replayMain,
+      "alt": ""
+    }
+  })]) : _vm._e(), _vm._v(" "), (_vm.videoOptions.replayMainRollover) ? _c('div', {
+    staticClass: "hover"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.replayMainRollover,
+      "alt": ""
+    }
+  })]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.is_video_play && _vm.is_video_buffering),
+      expression: "is_video_play && is_video_buffering"
+    }],
+    staticClass: "video-main-controller-part"
+  }, [(_vm.videoOptions.spinner) ? _c('vue-loading', {
+    attrs: {
+      "spinner": _vm.videoOptions.spinner
+    }
+  }) : _vm._e()], 1)])], 1), _vm._v(" "), (_vm.videoOptions.controlBar) ? _c('div', {
+    staticClass: "video-sub-controller",
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+      }
+    }
+  }, [_c('div', {
+    staticClass: "button-container play-button",
+    on: {
+      "click": _vm.videoClickHandler
+    }
+  }, [_c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.showReplay && !_vm.is_video_play),
+      expression: "!showReplay && !is_video_play"
+    }],
+    staticClass: "button play"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.playSub,
+      "alt": ""
+    }
+  })]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.showReplay && _vm.is_video_play),
+      expression: "!showReplay && is_video_play"
+    }],
+    staticClass: "button pause"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.pauseSub,
+      "alt": ""
+    }
+  })]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.showReplay),
+      expression: "showReplay"
+    }],
+    staticClass: "button preload"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.replaySub,
+      "alt": ""
+    }
+  })])]), _vm._v(" "), _c('div', {
+    staticClass: "progress-bar",
+    on: {
+      "click": _vm.barClickHandler
+    }
+  }, [_c('div', {
+    staticClass: "seek-bar"
+  }, [_c('div', {
+    staticClass: "play-bar",
+    style: ({
+      width: _vm.progress
+    })
+  })])]), _vm._v(" "), (_vm.videoOptions.volume && _vm.platform.isDesktop) ? _c('div', {
+    staticClass: "button-container volume-button",
+    class: _vm.volumeClass,
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.volumeClickHandler($event)
+      }
+    }
+  }, [_c('div', {
+    staticClass: "volume button"
+  }, [_c('svg', {
+    staticStyle: {
+      "enable-background": "new 0 0 14.7 14.7"
+    },
+    attrs: {
+      "version": "1.1",
+      "id": "Layer_1",
+      "xmlns": "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+      "x": "0px",
+      "y": "0px",
+      "viewBox": "0 0 14.7 14.7",
+      "xml:space": "preserve"
+    }
+  }, [_c('polygon', {
+    staticClass: "st0",
+    attrs: {
+      "id": "XMLID_1_",
+      "points": "7.6,1.3 7.6,13.4 4.3,10.5 4.3,4.3 "
+    }
+  }), _vm._v(" "), _c('rect', {
+    staticClass: "st0",
+    attrs: {
+      "id": "XMLID_2_",
+      "x": "0",
+      "y": "4.3",
+      "width": "4.5",
+      "height": "6.2"
+    }
+  }), _vm._v(" "), _c('path', {
+    staticClass: "st1",
+    attrs: {
+      "id": "XMLID_4_",
+      "d": "M8.2,4.2c0,0,2.2,1.2,2.2,3.1s-2.2,3.1-2.2,3.1"
+    }
+  }), _vm._v(" "), _c('path', {
+    staticClass: "st1",
+    attrs: {
+      "id": "XMLID_5_",
+      "d": "M10.2,3c0,0,3,1.7,3,4.3s-3,4.3-3,4.3"
+    }
+  }), _vm._v(" "), _c('line', {
+    staticClass: "st1",
+    attrs: {
+      "id": "XMLID_138_",
+      "x1": "0.3",
+      "y1": "0.4",
+      "x2": "14.3",
+      "y2": "14.4"
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "volume-progress",
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+      }
+    }
+  }, [(!_vm.videoOptions.muted) ? _c('volume-bar', {
+    ref: "volume",
+    on: {
+      "volumechange": _vm.volumechangeHandler
+    }
+  }) : _vm._e()], 1)])]) : _vm._e(), _vm._v(" "), (_vm.videoOptions.fullscreen) ? _c('div', {
+    staticClass: "screen-button button-container",
+    on: {
+      "click": _vm.fullscreenClickHandler
+    }
+  }, [_c('div', {
+    staticClass: "button full"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.fullscreenSub,
+      "alt": ""
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "button shrink"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.videoOptions.shrinkscreenSub,
+      "alt": ""
+    }
+  })])]) : _vm._e()]) : _vm._e()])])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-loader/node_modules/vue-hot-reload-api").rerender("data-v-20b90c50", module.exports)
+  }
+}
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    ref: "dragdealer",
+    staticClass: "dragdealer"
+  }, [_c('div', {
+    staticClass: "handle"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "bar",
+    style: ({
+      height: _vm.barHeight
+    })
+  })])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-loader/node_modules/vue-hot-reload-api").rerender("data-v-7e978ffc", module.exports)
+  }
+}
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_intervalometer__ = __webpack_require__(16);
+/*! npm.im/iphone-inline-video 2.0.2 */
+
+
+function preventEvent(element, eventName, toggleProperty, preventWithProperty) {
+	function handler(e) {
+		if (Boolean(element[toggleProperty]) === Boolean(preventWithProperty)) {
+			e.stopImmediatePropagation();
+			// console.log(eventName, 'prevented on', element);
+		}
+		delete element[toggleProperty];
+	}
+	element.addEventListener(eventName, handler, false);
+
+	// Return handler to allow to disable the prevention. Usage:
+	// const preventionHandler = preventEvent(el, 'click');
+	// el.removeEventHandler('click', preventionHandler);
+	return handler;
+}
+
+function proxyProperty(object, propertyName, sourceObject, copyFirst) {
+	function get() {
+		return sourceObject[propertyName];
+	}
+	function set(value) {
+		sourceObject[propertyName] = value;
+	}
+
+	if (copyFirst) {
+		set(object[propertyName]);
+	}
+
+	Object.defineProperty(object, propertyName, {get: get, set: set});
+}
+
+function proxyEvent(object, eventName, sourceObject) {
+	sourceObject.addEventListener(eventName, function () { return object.dispatchEvent(new Event(eventName)); });
+}
+
+function dispatchEventAsync(element, type) {
+	Promise.resolve().then(function () {
+		element.dispatchEvent(new Event(type));
+	});
+}
+
+var iOS8or9 = typeof document === 'object' && 'object-fit' in document.head.style && !matchMedia('(-webkit-video-playable-inline)').matches;
+
+var ಠ = 'bfred-it:iphone-inline-video';
+var ಠevent = 'bfred-it:iphone-inline-video:event';
+var ಠplay = 'bfred-it:iphone-inline-video:nativeplay';
+var ಠpause = 'bfred-it:iphone-inline-video:nativepause';
+
+/**
+ * UTILS
+ */
+
+function getAudioFromVideo(video) {
+	var audio = new Audio();
+	proxyEvent(video, 'play', audio);
+	proxyEvent(video, 'playing', audio);
+	proxyEvent(video, 'pause', audio);
+	audio.crossOrigin = video.crossOrigin;
+
+	// 'data:' causes audio.networkState > 0
+	// which then allows to keep <audio> in a resumable playing state
+	// i.e. once you set a real src it will keep playing if it was if .play() was called
+	audio.src = video.src || video.currentSrc || 'data:';
+
+	// if (audio.src === 'data:') {
+	//   TODO: wait for video to be selected
+	// }
+	return audio;
+}
+
+var lastRequests = [];
+var requestIndex = 0;
+var lastTimeupdateEvent;
+
+function setTime(video, time, rememberOnly) {
+	// allow one timeupdate event every 200+ ms
+	if ((lastTimeupdateEvent || 0) + 200 < Date.now()) {
+		video[ಠevent] = true;
+		lastTimeupdateEvent = Date.now();
+	}
+	if (!rememberOnly) {
+		video.currentTime = time;
+	}
+	lastRequests[++requestIndex % 3] = time * 100 | 0 / 100;
+}
+
+function isPlayerEnded(player) {
+	return player.driver.currentTime >= player.video.duration;
+}
+
+function update(timeDiff) {
+	var player = this;
+	// console.log('update', player.video.readyState, player.video.networkState, player.driver.readyState, player.driver.networkState, player.driver.paused);
+	if (player.video.readyState >= player.video.HAVE_FUTURE_DATA) {
+		if (!player.hasAudio) {
+			player.driver.currentTime = player.video.currentTime + ((timeDiff * player.video.playbackRate) / 1000);
+			if (player.video.loop && isPlayerEnded(player)) {
+				player.driver.currentTime = 0;
+			}
+		}
+		setTime(player.video, player.driver.currentTime);
+	} else if (player.video.networkState === player.video.NETWORK_IDLE && player.video.buffered.length === 0) {
+		// this should happen when the source is available but:
+		// - it's potentially playing (.paused === false)
+		// - it's not ready to play
+		// - it's not loading
+		// If it hasAudio, that will be loaded in the 'emptied' handler below
+		player.video.load();
+		// console.log('Will load');
+	}
+
+	// console.assert(player.video.currentTime === player.driver.currentTime, 'Video not updating!');
+
+	if (player.video.ended) {
+		delete player.video[ಠevent]; // allow timeupdate event
+		player.video.pause(true);
+	}
+}
+
+/**
+ * METHODS
+ */
+
+function play() {
+	// console.log('play');
+	var video = this;
+	var player = video[ಠ];
+
+	// if it's fullscreen, use the native player
+	if (video.webkitDisplayingFullscreen) {
+		video[ಠplay]();
+		return;
+	}
+
+	if (player.driver.src !== 'data:' && player.driver.src !== video.src) {
+		// console.log('src changed on play', video.src);
+		setTime(video, 0, true);
+		player.driver.src = video.src;
+	}
+
+	if (!video.paused) {
+		return;
+	}
+	player.paused = false;
+
+	if (video.buffered.length === 0) {
+		// .load() causes the emptied event
+		// the alternative is .play()+.pause() but that triggers play/pause events, even worse
+		// possibly the alternative is preventing this event only once
+		video.load();
+	}
+
+	player.driver.play();
+	player.updater.start();
+
+	if (!player.hasAudio) {
+		dispatchEventAsync(video, 'play');
+		if (player.video.readyState >= player.video.HAVE_ENOUGH_DATA) {
+			// console.log('onplay');
+			dispatchEventAsync(video, 'playing');
+		}
+	}
+}
+function pause(forceEvents) {
+	// console.log('pause');
+	var video = this;
+	var player = video[ಠ];
+
+	player.driver.pause();
+	player.updater.stop();
+
+	// if it's fullscreen, the developer the native player.pause()
+	// This is at the end of pause() because it also
+	// needs to make sure that the simulation is paused
+	if (video.webkitDisplayingFullscreen) {
+		video[ಠpause]();
+	}
+
+	if (player.paused && !forceEvents) {
+		return;
+	}
+
+	player.paused = true;
+	if (!player.hasAudio) {
+		dispatchEventAsync(video, 'pause');
+	}
+	if (video.ended) {
+		video[ಠevent] = true;
+		dispatchEventAsync(video, 'ended');
+	}
+}
+
+/**
+ * SETUP
+ */
+
+function addPlayer(video, hasAudio) {
+	var player = video[ಠ] = {};
+	player.paused = true; // track whether 'pause' events have been fired
+	player.hasAudio = hasAudio;
+	player.video = video;
+	player.updater = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_intervalometer__["a" /* frameIntervalometer */])(update.bind(player));
+
+	if (hasAudio) {
+		player.driver = getAudioFromVideo(video);
+	} else {
+		video.addEventListener('canplay', function () {
+			if (!video.paused) {
+				// console.log('oncanplay');
+				dispatchEventAsync(video, 'playing');
+			}
+		});
+		player.driver = {
+			src: video.src || video.currentSrc || 'data:',
+			muted: true,
+			paused: true,
+			pause: function () {
+				player.driver.paused = true;
+			},
+			play: function () {
+				player.driver.paused = false;
+				// media automatically goes to 0 if .play() is called when it's done
+				if (isPlayerEnded(player)) {
+					setTime(video, 0);
+				}
+			},
+			get ended() {
+				return isPlayerEnded(player);
+			}
+		};
+	}
+
+	// .load() causes the emptied event
+	video.addEventListener('emptied', function () {
+		// console.log('driver src is', player.driver.src);
+		var wasEmpty = !player.driver.src || player.driver.src === 'data:';
+		if (player.driver.src && player.driver.src !== video.src) {
+			// console.log('src changed to', video.src);
+			setTime(video, 0, true);
+			player.driver.src = video.src;
+			// playing videos will only keep playing if no src was present when .play()’ed
+			if (wasEmpty) {
+				player.driver.play();
+			} else {
+				player.updater.stop();
+			}
+		}
+	}, false);
+
+	// stop programmatic player when OS takes over
+	video.addEventListener('webkitbeginfullscreen', function () {
+		if (!video.paused) {
+			// make sure that the <audio> and the syncer/updater are stopped
+			video.pause();
+
+			// play video natively
+			video[ಠplay]();
+		} else if (hasAudio && player.driver.buffered.length === 0) {
+			// if the first play is native,
+			// the <audio> needs to be buffered manually
+			// so when the fullscreen ends, it can be set to the same current time
+			player.driver.load();
+		}
+	});
+	if (hasAudio) {
+		video.addEventListener('webkitendfullscreen', function () {
+			// sync audio to new video position
+			player.driver.currentTime = video.currentTime;
+			// console.assert(player.driver.currentTime === video.currentTime, 'Audio not synced');
+		});
+
+		// allow seeking
+		video.addEventListener('seeking', function () {
+			if (lastRequests.indexOf(video.currentTime * 100 | 0 / 100) < 0) {
+				// console.log('User-requested seeking');
+				player.driver.currentTime = video.currentTime;
+			}
+		});
+	}
+}
+
+function overloadAPI(video) {
+	var player = video[ಠ];
+	video[ಠplay] = video.play;
+	video[ಠpause] = video.pause;
+	video.play = play;
+	video.pause = pause;
+	proxyProperty(video, 'paused', player.driver);
+	proxyProperty(video, 'muted', player.driver, true);
+	proxyProperty(video, 'playbackRate', player.driver, true);
+	proxyProperty(video, 'ended', player.driver);
+	proxyProperty(video, 'loop', player.driver, true);
+	preventEvent(video, 'seeking');
+	preventEvent(video, 'seeked');
+	preventEvent(video, 'timeupdate', ಠevent, false);
+	preventEvent(video, 'ended', ಠevent, false); // prevent occasional native ended events
+}
+
+function enableInlineVideo(video, opts) {
+	if ( opts === void 0 ) opts = {};
+
+	// Stop if already enabled
+	if (video[ಠ]) {
+		return;
+	}
+
+	// Allow the user to skip detection
+	if (!opts.everywhere) {
+		// Only iOS8 and 9 are supported
+		if (!iOS8or9) {
+			return;
+		}
+
+		// Stop if it's not an allowed device
+		if (!(opts.iPad || opts.ipad ? /iPhone|iPod|iPad/ : /iPhone|iPod/).test(navigator.userAgent)) {
+			return;
+		}
+	}
+
+	// Stop native playback
+	if (!video.paused && video.webkitDisplayingFullscreen) {
+		video.pause();
+	}
+
+	addPlayer(video, !video.muted);
+	overloadAPI(video);
+	video.classList.add('IIV');
+
+	// Autoplay
+	if (video.muted && video.autoplay) {
+		video.play();
+	}
+
+	if (!/iPhone|iPod|iPad/.test(navigator.platform)) {
+		console.warn('iphone-inline-video is not guaranteed to work in emulated environments');
+	}
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (enableInlineVideo);
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='utf-8'?%3E %3C!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E %3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 29 29' style='enable-background:new 0 0 29 29;' xml:space='preserve'%3E %3Cstyle type='text/css'%3E .st0%7Bfill:%23D5A83B;%7D %3C/style%3E %3Crect id='XMLID_1_' class='st0' width='12' height='3'/%3E %3Crect id='XMLID_2_' class='st0' width='3' height='12'/%3E %3Crect id='XMLID_3_' y='17' class='st0' width='3' height='12'/%3E %3Crect id='XMLID_4_' y='26' class='st0' width='12' height='3'/%3E %3Crect id='XMLID_5_' x='17' y='26' class='st0' width='12' height='3'/%3E %3Crect id='XMLID_6_' x='17' class='st0' width='12' height='3'/%3E %3Crect id='XMLID_7_' x='26' y='17' class='st0' width='3' height='12'/%3E %3Crect id='XMLID_8_' x='26' class='st0' width='3' height='12'/%3E %3C/svg%3E"
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='utf-8'?%3E %3C!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E %3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 29 29' style='enable-background:new 0 0 29 29;' xml:space='preserve'%3E %3Cstyle type='text/css'%3E .st0%7Bfill:%23D5A83B;%7D %3C/style%3E %3Cg%3E %3Crect id='XMLID_4_' x='17.9' class='st0' width='3' height='11'/%3E %3Crect id='XMLID_6_' x='17.9' y='8' class='st0' width='11' height='3'/%3E %3C/g%3E %3Cg%3E %3Crect id='XMLID_2_' x='0' y='8' class='st0' width='11' height='3'/%3E %3Crect id='XMLID_1_' x='8' y='0' class='st0' width='3' height='11'/%3E %3C/g%3E %3Cg%3E %3Crect id='XMLID_5_' x='8' y='18' class='st0' width='3' height='11'/%3E %3Crect id='XMLID_3_' x='0' y='18' class='st0' width='11' height='3'/%3E %3C/g%3E %3Cg%3E %3Crect id='XMLID_8_' x='17.9' y='18' class='st0' width='3' height='11'/%3E %3Crect id='XMLID_7_' x='17.9' y='18' class='st0' width='11' height='3'/%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+/* 24 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueVideo_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueVideo_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__VueVideo_vue__);
+
+
+/* harmony default export */ __webpack_exports__["default"] = (__WEBPACK_IMPORTED_MODULE_0__VueVideo_vue___default.a);
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+(function (root, factory) {
+    if (true) {
+        // AMD. Register as an anonymous module.
+        !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+        // CommonJS
+        module.exports = factory();
+    } else {
+        // Browser global
+        factory();
+    }
+})(this, function () {
+    //////////
+    // Name //
+    //////////
+
+    var COMPONENT_NAME = 'Platform';
+
+    ///////////////
+    // Component //
+    ///////////////
+
+    var ua = window.navigator.userAgent.toLowerCase();
+    var html = document.getElementsByTagName('html')[0];
+
+    var Component = {
+        hasTouch: 'ontouchstart' in window,
+        isiPad: ua.match(/ipad/i) !== null,
+        isNexus7: ua.match(/Nexus 7/gi) !== null,
+        isMobile: ua.match(/Android|webOS|iPhone|iPod|BlackBerry|IEMobile/i) !== null && ua.match(/Mobile/i) !== null,
+        isiPhone: ua.match(/iphone/i) !== null,
+        isAndroid: ua.match(/android/i) !== null,
+        isS4: ua.match(/(gt\-i95)|(sph\-l720)/i) !== null,
+        isS5: ua.match(/sm\-g900/i) !== null,
+        isS6: ua.match(/sm\-g9250/i) !== null,
+        isS7: ua.match(/sm\-g930(0|p|v)/i) !== null,
+        isIE: ua.match(/(msie|trident)/i) !== null,
+        isIE11: ua.match(/Trident\/7\.0/i) !== null,
+        isEdge: ua.match(/edge/i) !== null,
+        isChrome: ua.match(/chrome/gi) !== null && ua.match(/edge/gi) === null,
+        isSafari: ua.match(/safari/gi) !== null && ua.match(/chrome/gi) === null,
+        isFirefox: ua.match(/firefox/gi) !== null,
+        isMac: ua.match(/mac/gi) !== null,
+        isWindows: ua.match(/windows/gi) !== null,
+        isSamsungNative: ua.match(/samsung/gi) !== null
+    };
+
+    Component.isAndroidPad = Component.isAndroid && !Component.isMobile;
+    Component.isTablet = Component.isiPad || Component.isAndroidPad;
+    Component.isDesktop = !(Component.isMobile || Component.isTablet);
+    Component.isIOS = Component.isiPad || Component.isiPhone;
+
+    Object.keys(Component).forEach(function (key) {
+        var className = key.toLowerCase().replace('is', '');
+
+        if (className.indexOf('has') === 0) {
+            className = className.replace('has', 'has-');
+        }
+
+        if (!Component[key]) {
+            if (className.indexOf('has') === 0) {
+                className = className.replace('has', 'no');
+            } else {
+                className = 'not-' + className;
+            }
+        }
+
+        html.classList.add(className);
+    });
+
+    if (window[COMPONENT_NAME] === undefined) {
+        window[COMPONENT_NAME] = Component;
+    }
+
+    return Component;
+});
+
+/***/ }),
+/* 26 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__script_plugin_platform_js__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__script_plugin_platform_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__script_plugin_platform_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VueVideo_VolumeBar_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VueVideo_VolumeBar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__VueVideo_VolumeBar_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_simple_loading__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_simple_loading___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_simple_loading__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_iphone_inline_video__ = __webpack_require__(21);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+function floatToPercent(number) {
+    return number.toFixed(4) * 100 + '%';
+}
+
+function loadSinglePicture(src, cb) {
+    var downloadingImage = new Image();
+    downloadingImage.onload = function () {
+        cb();
+    };
+    downloadingImage.src = src;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            // Platform
+            platform: __WEBPACK_IMPORTED_MODULE_0__script_plugin_platform_js___default.a,
+
+            // canplay count
+            count_canplay: 0,
+
+            // if video played to control first frame
+            is_video_played: false,
+
+            // if the video is playing
+            is_video_play: false,
+
+            // should show the replay btn
+            showReplay: false,
+
+            // if the poster of loaded
+            is_poster_loaded: false,
+
+            // control bar progress
+            progress: '0%',
+
+            // if the mobile rotate
+            isRotate: false,
+
+            // if the video is buffering
+            is_video_buffering: false,
+
+            // requestAnimation id
+            requestId: 0,
+
+            // if the video is buffering at the first frame
+            is_video_BFF: true,
+
+            // check if is fullscreen
+            isFullscreen: false,
+
+            // video
+            video: false,
+
+            // check if the current video is ready for play
+            videoCanplay: false,
+
+            // Volume temp
+            volumeTemp: 1,
+
+            // volume className
+            volumeClass: this.options.muted ? 'sound-mute' : 'sound-normal',
+
+            // video options
+            videoOptions: Object.assign({
+                // source of video (required)
+                // src: this.options.src,
+
+                // poster
+                poster: false,
+
+                // main play button
+                playMain: __webpack_require__(10),
+                playMainRollover: __webpack_require__(11),
+
+                // main replay button
+                replayMain: __webpack_require__(13),
+                replayMainRollover: __webpack_require__(14),
+
+                // sub control button
+                playSub: __webpack_require__(9),
+                pauseSub: __webpack_require__(8),
+                replaySub: __webpack_require__(12),
+                fullscreenSub: __webpack_require__(22),
+                shrinkscreenSub: __webpack_require__(23),
+
+                // if the video loop
+                loop: false,
+
+                // if the video muted
+                muted: false,
+
+                // autoPlay
+                autoPlay: false,
+
+                // control bar
+                controlBar: true,
+
+                // loading
+                spinner: 'circles',
+
+                // fullscreen
+                fullscreen: false,
+
+                // play inline on isiPhone
+                playsinline: true,
+
+                // volumes
+                volume: true,
+
+                // when the video can play will call back
+                onInit: function onInit() {},
+
+
+                // video status from pause to play
+                onPauseToPlay: function onPauseToPlay() {},
+
+
+                // video status from play to pause
+                onPlayToPause: function onPlayToPause() {},
+
+
+                // start
+                onStart: function onStart() {},
+
+
+                // end
+                onEnded: function onEnded() {},
+
+
+                // canplay
+                onCanplay: function onCanplay() {}
+            }, this.options)
+        };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        this.video = this.$refs.video;
+        this.volume = this.$refs.volume;
+        this.fullscreenElement = __WEBPACK_IMPORTED_MODULE_0__script_plugin_platform_js___default.a.isDesktop ? this.$refs['vue-video'] : this.video;
+
+        // first time load poster
+        this.posterLoadHandler();
+
+        // register events when screen came to whole screen
+        var fullscreenEvents = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'msfullscreenchange', 'MSFullscreenChange'];
+
+        fullscreenEvents.forEach(function (fullscreenEvent) {
+            document.addEventListener(fullscreenEvent, function () {
+                _this.checkIsFullscreen();
+            });
+        });
+
+        // enable inline play
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_iphone_inline_video__["a" /* default */])(this.video);
+    },
+
+    computed: {
+        isPlayContainer: function isPlayContainer() {
+            return this.videoOptions.playMain && this.videoOptions.playMainRollover;
+        },
+        isReplayContainer: function isReplayContainer() {
+            return this.videoOptions.replayMain && this.videoOptions.replayMainRollover;
+        }
+    },
+    methods: {
+        // if the video is ready for play
+        canplayHandler: function canplayHandler() {
+            var _this2 = this;
+
+            if (!this.count_canplay) {
+                this.count_canplay += 1;
+                this.videoOptions.onInit(this);
+            }
+            this.videoCanplay = true;
+
+            this.videoOptions.onCanplay(this);
+
+            // is_video_play = if show the play button
+            // in case it'll shown and disappear when auto play
+            this.is_video_play = this.videoOptions.autoPlay;
+
+            setTimeout(function () {
+                _this2.$refs.volume.reflow();
+            }, 100);
+
+            // to auto play
+            if (this.videoOptions.autoPlay) {
+                setTimeout(this.videoClickHandler, 500);
+            }
+        },
+
+
+        // preload poster
+        posterLoadHandler: function posterLoadHandler() {
+            var _this3 = this;
+
+            // after the poster is loaded, it'll show
+            var poster = this.videoOptions.poster;
+            if (poster && !this.is_poster_loaded) {
+                loadSinglePicture(poster, function () {
+                    _this3.is_poster_loaded = true;
+                });
+            }
+        },
+
+
+        // when close button clicked
+        endPointResetHandler: function endPointResetHandler() {
+            this.video.currentTime = 0;
+            this.progress = '0%';
+            this.is_video_play = false;
+            this.is_video_played = false;
+            this.is_poster_loaded = false;
+            this.is_video_BFF = true;
+            this.videoCanplay = false;
+        },
+
+
+        // check if video is finished
+        checkVideoFinished: function checkVideoFinished() {
+            if (this.video.ended) {
+                this.showReplay = true;
+                this.is_video_play = false;
+                this.cancelRequest();
+            } else {
+                this.showReplay = false;
+            }
+        },
+
+
+        // when click the buttons or video itself
+        videoClickHandler: function videoClickHandler() {
+            if (this.video.paused) {
+                this.videoPlayHandler();
+            } else {
+                this.videoPauseHandler();
+            }
+        },
+
+
+        // video pause to play action
+        videoPlayHandler: function videoPlayHandler() {
+            var _this4 = this;
+
+            this.video.play();
+            setTimeout(function () {
+                _this4.startRequest();
+            }, 100);
+            this.videoOptions.onPauseToPlay(this);
+            this.is_video_play = true;
+        },
+
+
+        // video play to pause action
+        videoPauseHandler: function videoPauseHandler() {
+            this.video.pause();
+            this.cancelRequest();
+            this.videoOptions.onPlayToPause(this);
+            this.is_video_play = false;
+        },
+
+
+        // when video is playing
+        timeupdateHandler: function timeupdateHandler(e) {
+            this.checkVideoFinished();
+            this.progress = floatToPercent(e.target.currentTime / e.target.duration);
+        },
+
+
+        // when video is start
+        videoStartHandler: function videoStartHandler() {
+            if (this.video.currentTime === 0) {
+                this.videoOptions.onStart(this);
+            }
+        },
+
+
+        // when video is ended
+        videoEndedHandler: function videoEndedHandler() {
+            this.videoOptions.onEnded(this);
+        },
+
+
+        // when progress bar is clicked
+        barClickHandler: function barClickHandler(e) {
+            var rate = e.offsetX / e.target.clientWidth;
+            this.seek(rate);
+        },
+
+
+        // when click the fullscreen button
+        fullscreenClickHandler: function fullscreenClickHandler() {
+            if (this.isFullscreen) {
+                this.exitFullscreenHandler();
+            } else {
+                this.requestFullscreenHandler();
+            }
+        },
+        checkIsFullscreen: function checkIsFullscreen() {
+            var fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            this.isFullscreen = fullscreenElement === this.fullscreenElement;
+        },
+
+
+        // into fullscreen
+        requestFullscreenHandler: function requestFullscreenHandler() {
+            if (this.fullscreenElement.requestFullscreen) {
+                this.fullscreenElement.requestFullscreen();
+            } else if (this.fullscreenElement.mozRequestFullScreen) {
+                this.fullscreenElement.mozRequestFullScreen();
+            } else if (this.fullscreenElement.webkitRequestFullscreen) {
+                this.fullscreenElement.webkitRequestFullscreen();
+            } else if (this.fullscreenElement.msRequestFullscreen) {
+                this.fullscreenElement.msRequestFullscreen();
+            } else if (this.fullscreenElement.webkitEnterFullscreen) {
+                this.fullscreenElement.webkitEnterFullscreen();
+            }
+        },
+
+
+        // exit fullscreen
+        exitFullscreenHandler: function exitFullscreenHandler() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        },
+
+
+        // the request function is to check if the video is buffering, timeupdate is too slow
+        // startRequest
+        startRequest: function startRequest() {
+            var lastTime = -1;
+
+            var self = this;
+
+            function ifVideoBuffered() {
+                self.is_video_buffering = lastTime === self.video.currentTime;
+                lastTime = self.video.currentTime;
+                self.is_video_BFF = self.video.currentTime === 0;
+
+                if (self.video.currentTime !== 0) {
+                    self.is_video_played = true;
+                }
+
+                var delayTime = 0;
+
+                if (__WEBPACK_IMPORTED_MODULE_0__script_plugin_platform_js___default.a.isFirefox) {
+                    delayTime = 40;
+                }
+
+                if (__WEBPACK_IMPORTED_MODULE_0__script_plugin_platform_js___default.a.isAndroid) {
+                    delayTime = 1000;
+                }
+
+                setTimeout(function () {
+                    self.requestId = requestAnimationFrame(ifVideoBuffered);
+                }, delayTime);
+            }
+
+            ifVideoBuffered();
+        },
+
+
+        // cancelRequest
+        cancelRequest: function cancelRequest() {
+            cancelAnimationFrame(this.requestId);
+        },
+
+
+        // volume mute change
+        volumeClickHandler: function volumeClickHandler() {
+            if (this.videoOptions.muted) return;
+
+            if (this.video.volume) {
+                // case when volume is not 0
+                this.volumeTemp = this.video.volume;
+                this.volumechangeHandler(1);
+                this.volume.muteHandler(1);
+            } else {
+                if (!this.volumeTemp) this.volumeTemp = 0.1;
+                this.volumechangeHandler(1 - this.volumeTemp);
+                this.volume.muteHandler(1 - this.volumeTemp);
+            }
+        },
+
+
+        // to make the volume change
+        // top y = 0, bottom y = 1
+        volumechangeHandler: function volumechangeHandler(y) {
+            if (!this.video) return;
+            this.video.volume = 1 - y;
+            this.volumeClassHandler();
+        },
+
+
+        // set class
+        volumeClassHandler: function volumeClassHandler() {
+            if (this.video.volume >= 0.5) {
+                this.volumeClass = 'sound-normal';
+            } else if (this.video.volume === 0) {
+                this.volumeClass = 'sound-mute';
+            } else {
+                this.volumeClass = 'sound-low';
+            }
+        },
+
+
+        // API
+        // video play API
+        play: function play() {
+            if (this.is_video_play) return;
+            this.videoPlayHandler();
+        },
+
+
+        // video pause API
+        pause: function pause() {
+            if (!this.is_video_play) return;
+            this.videoPauseHandler();
+        },
+
+
+        // video seek API
+        seek: function seek(rate) {
+            this.progress = floatToPercent(rate);
+            this.video.currentTime = this.video.duration * rate;
+            this.checkVideoFinished();
+        },
+
+
+        // video replay API
+        replay: function replay() {
+            this.seek(0);
+            this.play();
+        },
+
+
+        // change API
+        changeVal: function changeVal(val) {
+            this.videoOptions = Object.assign({}, this.videoOptions, val);
+        },
+
+
+        // reset
+        reset: function reset() {
+            this.endPointResetHandler();
+        },
+
+
+        // load poster
+        loadPoster: function loadPoster() {
+            this.posterLoadHandler();
+        }
+    },
+    props: ['options'],
+    components: {
+        VueLoading: __WEBPACK_IMPORTED_MODULE_2_vue_simple_loading___default.a,
+        VolumeBar: __WEBPACK_IMPORTED_MODULE_1__VueVideo_VolumeBar_vue___default.a
+    }
+});
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dragdealer__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dragdealer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_dragdealer__);
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            layerY: 1
+        };
+    },
+
+    computed: {
+        barHeight: function barHeight() {
+            return this.layerY.toFixed(4) * 100 + '%';
+        }
+    },
+    mounted: function mounted() {
+        // add refer to this
+        var self = this;
+
+        this.dragdealer = new __WEBPACK_IMPORTED_MODULE_0_dragdealer___default.a(this.$refs.dragdealer, {
+            horizontal: false,
+            vertical: true,
+            animationCallback: function animationCallback(x, y) {
+                self.layerY = 1 - y;
+
+                self.$emit('volumechange', y);
+            }
+        });
+    },
+
+    methods: {
+        muteHandler: function muteHandler(y) {
+            this.dragdealer.setValue(0, y, true);
+        },
+        reflow: function reflow() {
+            this.dragdealer.reflow();
+        }
+    }
+});
+
+/***/ })
+/******/ ]);
+});
