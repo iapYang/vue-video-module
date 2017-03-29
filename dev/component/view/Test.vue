@@ -99,19 +99,23 @@
                 if (value === 'false') processed = false;
                 if (value === 'true') processed = true;
                 
-                this.videoOptions[name] = processed;
-
                 if (name === 'src') {
                     // if the change choice is src
                     console.log('changing video src');
-                    this.video.pause();
-                    this.is_video_show = false;
-                    // wait for videoLeaveHandler
+
+                    if (value !== this.videoOptions[name]) {
+                        this.video.pause();
+                        this.is_video_show = false;
+
+                        // wait for videoLeaveHandler
+                    }
                 } else {
                     const temporary = {};
                     temporary[name] = processed;
                     this.video.changeVal(temporary);
                 }
+
+                this.videoOptions[name] = processed;
             },
             videoEnterHandler() {
                 console.log('video transition to opc 1');
