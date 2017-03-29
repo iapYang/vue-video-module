@@ -14,6 +14,8 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.3.4 add more props and methods
+>
 > v0.3.3 poster size change
 >
 > v0.3.2 add API methods
@@ -107,13 +109,14 @@ the `vueVideo` is the object of this component
 
 `vueVideo.$refs.video` is the dom of the video
 
-| Name                    | Description                            | Type     |
-| ----------------------- | -------------------------------------- | -------- |
-| onInit(vueVideo)        | be called after the video is initialed | function |
-| onPauseToPlay(vueVideo) | video status from pause to play        | function |
-| onPlayToPause(vueVideo) | video status from play to pause        | function |
-| onStart(vueVideo)       | video start                            | function |
-| onEnded(vueVideo)       | video end                              | function |
+| Name                    | Description                              | Type     |
+| ----------------------- | ---------------------------------------- | -------- |
+| onInit(vueVideo)        | be called after the video is initialed   | function |
+| onPauseToPlay(vueVideo) | video status from pause to play          | function |
+| onPlayToPause(vueVideo) | video status from play to pause          | function |
+| onStart(vueVideo)       | video start                              | function |
+| onEnded(vueVideo)       | video end                                | function |
+| onCanplay(vueVideo)     | when the video gets initial data for play | function |
 #### Methods
 
 ##### brief：
@@ -133,6 +136,7 @@ vueVideo.play();
 | seek(rate)       | 0 <= rate <= 1, jump to a ponit          | number    |
 | changeVal(props) | if you want to the props after you create it, use this function. | object    |
 | reset()          | reset to original state                  | null      |
+| loadPoster()     | process to load the poster               | null      |
 
 ### Todo List
 

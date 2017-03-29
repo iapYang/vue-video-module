@@ -15,7 +15,7 @@
             </div>
             <transition name="video" @enter="videoEnterHandler" @leave="videoLeaveHandler">
                 <div class="video-container" v-show="is_video_show">
-                    <vue-video :options="videoOptions" ref="video" @canplay="canplayHandler"></vue-video>
+                    <vue-video :options="videoOptions" ref="video"></vue-video>
                 </div>
             </transition>
         </div>
@@ -70,11 +70,15 @@
                 videoOptions[select.name] = val;
             });
 
+            const self = this;
+
             return {
                 defaultVal,
                 videoOptions: Object.assign({
-                    onPlayToPause(vueVideo) {
+                    onCanplay(vueVideo) {
                         console.log(vueVideo);
+                        vueVideo.loadPoster();
+                        self.is_video_show = true;
                     },
                 }, videoOptions),
                 selects,
@@ -86,21 +90,22 @@
         },
         methods: {
             changeHandler(name, value) {
+                // if this.video is not be mounted
+                if (!this.video) return;
+
                 console.log('name', name, 'value', value);
                 
                 let processed = value;
                 if (value === 'false') processed = false;
                 if (value === 'true') processed = true;
                 
-                // if this.video is not be mounted
-                if (!this.video) return;
+                this.videoOptions[name] = processed;
 
                 if (name === 'src') {
                     // if the change choice is src
                     console.log('changing video src');
                     this.video.pause();
                     this.is_video_show = false;
-                    
                     // wait for videoLeaveHandler
                 } else {
                     const temporary = {};
@@ -108,17 +113,20 @@
                     this.video.changeVal(temporary);
                 }
             },
-            canplayHandler() {
-                console.log('father canplay triggered');
-                setTimeout(() => {
-                    this.is_video_show = true;
-                }, 1000);
-            },
             videoEnterHandler() {
                 console.log('video transition to opc 1');
             },
             videoLeaveHandler() {
                 console.log('video transition to opc 0');
+
+                // reset video state
+                this.video.reset();
+
+                setTimeout(() => {
+                    this.video.changeVal({
+                        src: this.videoOptions.src,
+                    });
+                }, 500);
             },
         },
         components: {

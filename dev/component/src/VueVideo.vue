@@ -106,6 +106,9 @@
             return {
                 // Platform
                 platform: Platform,
+
+                // canplay count
+                count_canplay: 0,
     
                 // if video played to control first frame
                 is_video_played: false,
@@ -253,11 +256,10 @@
         methods: {
             // if the video is ready for play
             canplayHandler() {
-                // the video change the src, with this, the poster will show
-                this.posterLoadHandler();
-
-                this.video.currentTime = 0;
-                this.videoOptions.onInit(this);
+                if (!this.count_canplay) {
+                    this.count_canplay += 1;
+                    this.videoOptions.onInit(this);
+                }
                 this.videoCanplay = true;
 
                 this.videoOptions.onCanplay(this);
@@ -289,6 +291,7 @@
     
             // when close button clicked
             endPointResetHandler() {
+                this.video.currentTime = 0;
                 this.progress = '0%';
                 this.is_video_play = false;
                 this.is_video_played = false;
@@ -511,6 +514,11 @@
             // reset
             reset() {
                 this.endPointResetHandler();
+            },
+
+            // load poster
+            loadPoster() {
+                this.posterLoadHandler();
             },
         },
         props: ['options'],
