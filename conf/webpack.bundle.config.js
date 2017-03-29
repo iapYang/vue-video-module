@@ -9,7 +9,7 @@ module.exports = merge(baseWebpackConfig, {
     entry: path.resolve(__dirname, '../dev/component/src/index.js'),
     output: {
         path: path.join(process.cwd(), 'bundle'),
-        filename: 'indexjs',
+        filename: 'index.js',
         libraryTarget: 'umd',
     },
     plugins: [

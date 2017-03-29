@@ -14,6 +14,8 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.3.5 urgent entry js error fix
+>
 > v0.3.4 add more props and methods
 >
 > v0.3.3 poster size change
