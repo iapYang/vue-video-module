@@ -257,6 +257,8 @@
                 this.videoOptions.onInit(this);
                 this.videoCanplay = true;
 
+                this.$emit('canplay');
+
                 // is_video_play = if show the play button
                 // in case it'll shown and disappear when auto play
                 this.is_video_play = this.videoOptions.autoPlay;
@@ -507,14 +509,6 @@
             reset() {
                 this.endPointResetHandler();
             },
-        },
-        watch: {
-            // videoOptions(newVal, oldVal) {
-            //     if (newVal.src !== oldVal.src) {
-            //         this.videoPauseHandler();
-            //         this.endPointResetHandler();
-            //     }
-            // },
         },
         props: ['options'],
         components: {
