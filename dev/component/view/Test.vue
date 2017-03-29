@@ -13,9 +13,11 @@
                     </md-select>
                 </md-input-container>
             </div>
-            <div class="video-container">
-                <vue-video :options="videoOptions" ref="video"></vue-video>    
-            </div>
+            <transition name="video" @enter="videoEnterHandler" @leave="videoLeaveHandler">
+                <div class="video-container" v-show="is_video_show">
+                    <vue-video :options="videoOptions" ref="video" @canplay="canplayHandler"></vue-video>
+                </div>
+            </transition>
         </div>
     </div>
 </template>
@@ -76,6 +78,7 @@
                     },
                 }, videoOptions),
                 selects,
+                is_video_show: true,
             };
         },
         mounted() {
@@ -83,17 +86,39 @@
         },
         methods: {
             changeHandler(name, value) {
-                console.log(name, value);
+                console.log('name', name, 'value', value);
                 
-                let currentValue = value;
-                if (value === 'false') currentValue = false;
-                if (value === 'true') currentValue = true;
+                let processed = value;
+                if (value === 'false') processed = false;
+                if (value === 'true') processed = true;
                 
+                // if this.video is not be mounted
                 if (!this.video) return;
 
-                const tmpObj = {};
-                tmpObj[name] = currentValue;
-                this.video.changeVal(tmpObj);
+                if (name === 'src') {
+                    // if the change choice is src
+                    console.log('changing video src');
+                    this.video.pause();
+                    this.is_video_show = false;
+                    
+                    // wait for videoLeaveHandler
+                } else {
+                    const temporary = {};
+                    temporary[name] = processed;
+                    this.video.changeVal(temporary);
+                }
+            },
+            canplayHandler() {
+                console.log('father canplay triggered');
+                setTimeout(() => {
+                    this.is_video_show = true;
+                }, 1000);
+            },
+            videoEnterHandler() {
+                console.log('video transition to opc 1');
+            },
+            videoLeaveHandler() {
+                console.log('video transition to opc 0');
             },
         },
         components: {
@@ -104,6 +129,17 @@
 </script>
 
 <style lang="scss" scoped>
+    .video-enter-active {
+        transition: opacity 0.4s;
+    }
+    .video-leave-active {
+        transition: opacity 0.6s;
+    }
+    /* .video-leave-active in <2.1.8 */
+    .video-enter,
+    .video-leave-to {
+        opacity: 0;
+    }
     $mLenght: 20px;
     h2 {
         margin-left: $mLenght;
