@@ -210,6 +210,9 @@
     
                     // end
                     onEnded() {},
+
+                    // canplay
+                    onCanplay() {},
                 }, this.options),
             };
         },
@@ -257,7 +260,7 @@
                 this.videoOptions.onInit(this);
                 this.videoCanplay = true;
 
-                this.$emit('canplay');
+                this.videoOptions.onCanplay(this);
 
                 // is_video_play = if show the play button
                 // in case it'll shown and disappear when auto play
