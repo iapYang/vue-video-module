@@ -557,35 +557,27 @@
         pointer-events: none;
         width: 5px;
     }
-    
     @keyframes ani-go {
         to {
             stroke-dashoffset: 0;
         }
     }
-    
     @keyframes ani-back {
         to {
             stroke-dashoffset: $dashoffset;
         }
     }
-    
     .video-enter-active {
         transition: opacity 0.4s;
     }
-    
     .video-leave-active {
         transition: opacity 0.6s;
     }
-    
-    
     /* .video-leave-active in <2.1.8 */
-    
     .video-enter,
     .video-leave-to {
         opacity: 0;
     }
-    
     .vue-video {
         position: relative;
         width: 100%;
@@ -850,7 +842,6 @@
                     position: relative;
                     display: block;
                 }
-
                 video {
                     position: absolute;
                     width: 100%;

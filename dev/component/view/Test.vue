@@ -75,7 +75,7 @@
             return {
                 defaultVal,
                 videoOptions: Object.assign({
-                    onCanplay(vueVideo) {
+                    onInit(vueVideo) {
                         console.log(vueVideo);
                         vueVideo.loadPoster();
                         self.is_video_show = true;
