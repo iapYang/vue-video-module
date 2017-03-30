@@ -3,11 +3,11 @@
         <div class="vue-video" :class="{fullscreen: isFullscreen}" ref="vue-video" v-show="videoCanplay">
             <div class="vue-video-wrapper">
                 <div class="main-part part" @click="videoClickHandler">
-                    <video :loop="videoOptions.loop" :src="videoOptions.src" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartHandler"
+                    <video :loop="videoOptions.loop" :src="videoOptions.src" :autoplay="videoOptions.autoPlay" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartPlayingHandler"
                     @ended="videoEndedHandler">
                     </video>
                     <transition name="fade">
-                        <div class="video-poster main-component" v-if="videoOptions.poster" v-show="is_video_BFF && !is_video_played">
+                        <div class="video-poster main-component" v-if="videoOptions.poster" v-show="!is_video_played">
                             <transition name="fade">
                                 <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
                             </transition>
@@ -226,6 +226,10 @@
     
             // first time load poster
             this.posterLoadHandler();
+
+            // is_video_play = if show the play button
+            // in case it'll shown and disappear when auto play
+            this.is_video_play = this.videoOptions.autoPlay;
     
             // register events when screen came to whole screen
             const fullscreenEvents = [
@@ -264,18 +268,14 @@
 
                 this.videoOptions.onCanplay(this);
 
-                // is_video_play = if show the play button
-                // in case it'll shown and disappear when auto play
-                this.is_video_play = this.videoOptions.autoPlay;
-
                 setTimeout(() => {
                     this.$refs.volume.reflow();
                 }, 100);
     
-                // to auto play
-                if (this.videoOptions.autoPlay) {
-                    setTimeout(this.videoClickHandler, 500);
-                }
+                // // to auto play
+                // if (this.videoOptions.autoPlay) {
+                //     setTimeout(this.videoClickHandler, 500);
+                // }
             },
 
             // preload poster
@@ -323,11 +323,6 @@
             // video pause to play action
             videoPlayHandler() {
                 this.video.play();
-                setTimeout(() => {
-                    this.startRequest();
-                }, 100);
-                this.videoOptions.onPauseToPlay(this);
-                this.is_video_play = true;
             },
     
             // video play to pause action
@@ -344,8 +339,19 @@
                 this.progress = floatToPercent(e.target.currentTime / e.target.duration);
             },
     
-            // when video is start
-            videoStartHandler() {
+            // Sent when the media begins to play (either for the first time, after having been paused, or after ending and then restarting).
+            videoStartPlayingHandler() {
+                // in case not cancel the request
+                this.cancelRequest();
+                setTimeout(() => {
+                    this.startRequest();
+                }, 100);
+                
+                this.videoOptions.onPauseToPlay(this);
+                
+                this.is_video_play = true;
+                this.is_video_played = true;
+                
                 if (this.video.currentTime === 0) {
                     this.videoOptions.onStart(this);
                 }
@@ -415,12 +421,9 @@
     
                 function ifVideoBuffered() {
                     self.is_video_buffering = lastTime === self.video.currentTime;
+
                     lastTime = self.video.currentTime;
                     self.is_video_BFF = self.video.currentTime === 0;
-    
-                    if (self.video.currentTime !== 0) {
-                        self.is_video_played = true;
-                    }
     
                     let delayTime = 0;
     
