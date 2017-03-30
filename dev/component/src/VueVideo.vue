@@ -106,9 +106,6 @@
             return {
                 // Platform
                 platform: Platform,
-
-                // canplay count
-                count_canplay: 0,
     
                 // if video played to control first frame
                 is_video_played: false,
@@ -260,13 +257,8 @@
         methods: {
             // if the video is ready for play
             canplayHandler() {
-                if (!this.count_canplay) {
-                    this.count_canplay += 1;
-                    this.videoOptions.onInit(this);
-                }
+                this.videoOptions.onInit(this);
                 this.videoCanplay = true;
-
-                this.videoOptions.onCanplay(this);
 
                 setTimeout(() => {
                     this.$refs.volume.reflow();

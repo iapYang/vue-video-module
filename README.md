@@ -14,6 +14,12 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.3.6 rewrite auto play
+>
+> ​	    remove onCanplay props, merge onInit and onCanplay into one
+>
+> ​	    
+>
 > v0.3.5 urgent entry js error fix
 >
 > v0.3.4 add more props and methods
@@ -113,12 +119,11 @@ the `vueVideo` is the object of this component
 
 | Name                    | Description                              | Type     |
 | ----------------------- | ---------------------------------------- | -------- |
-| onInit(vueVideo)        | be called after the video is initialed   | function |
+| onInit(vueVideo)        | be called after the video is initialed. PS: if the video src is changed, this function may perform again. | function |
 | onPauseToPlay(vueVideo) | video status from pause to play          | function |
 | onPlayToPause(vueVideo) | video status from play to pause          | function |
 | onStart(vueVideo)       | video start                              | function |
 | onEnded(vueVideo)       | video end                                | function |
-| onCanplay(vueVideo)     | when the video gets initial data for play | function |
 #### Methods
 
 ##### brief：
@@ -144,3 +149,4 @@ vueVideo.play();
 
 - add options for manually set width and height
 - add last frame 
+- add buffering state to progress bar
