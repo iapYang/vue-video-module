@@ -14,6 +14,10 @@
                     src: 'http://vjs.zencdn.net/v/oceans.mp4',
                     poster: 'image/2.jpg',
                     fullscreen: true,
+                    aspect: {
+                        width: 960,
+                        heigth: 400,
+                    },
                 },
             };
         },

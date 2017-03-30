@@ -26,10 +26,6 @@
     };
 </script>
 
-<style lang="scss">
-    .video-container {
-        position: relative;
-        width: 100%;
-        margin: 0 auto;
-    }
+<style lang="scss" scoped>
+    @import '../../style/_example';
 </style>

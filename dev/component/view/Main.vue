@@ -44,6 +44,7 @@
     import example01 from '../example/01-default.vue';
     import example02 from '../example/02-autoPlay.vue';
     import example03 from '../example/03-fullscreen.vue';
+    import example04 from '../example/04-aspect.vue';
     import Top from '../common/Top.vue';
     
     Vue.use(VueMaterial);
@@ -77,6 +78,9 @@
                 }, {
                     title: '03-fullscreen',
                     name: 'example03',
+                }, {
+                    title: '04-aspect',
+                    name: 'example04',
                 }],
             };
         },
@@ -84,6 +88,7 @@
             example01,
             example02,
             example03,
+            example04,
             Top,
         },
     };

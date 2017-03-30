@@ -18,7 +18,7 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 >
 > ​	    remove onCanplay props, merge onInit and onCanplay into one
 >
-> ​	    
+> ​	    add aspect props, see [example4](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/04-aspect.vue) for more information
 >
 > v0.3.5 urgent entry js error fix
 >
@@ -109,6 +109,7 @@ If the value is false means this part will not be rendered.
 | controlBar         | if show the controlbar                   | bool              | true      |
 | spinner            | the loading style, check [here](https://github.com/iapYang/vue-simple-loading) | string            | 'circles' |
 | volume             | show the volume controller               | bool              | true      |
+| aspect             | define the video's width and height, an object with 'width' and 'height' property, see example4 for details | object \|\| false | false     |
 #### Callback
 
 ##### brief：
@@ -147,6 +148,6 @@ vueVideo.play();
 
 ### Todo List
 
-- add options for manually set width and height
-- add last frame 
-- add buffering state to progress bar
+- [x] add options for manually set width and height
+- [ ] add last frame 
+- [ ] add buffering state to progress bar
