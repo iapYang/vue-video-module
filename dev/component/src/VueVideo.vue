@@ -1,8 +1,9 @@
 <template lang="html">
     <transition name="video">
-        <div class="vue-video" :class="{fullscreen: isFullscreen}" ref="vue-video" v-show="videoCanplay">
+        <div class="vue-video" :class="{fullscreen: isFullscreen, aspect: videoAspect}" ref="vue-video" v-show="videoCanplay || videoAspect">
             <div class="vue-video-wrapper">
                 <div class="main-part part" @click="videoClickHandler">
+                    <div class="video-placeholder" :style="videoPadding"></div>
                     <video :loop="videoOptions.loop" :src="videoOptions.src" :autoplay="videoOptions.autoPlay" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartPlayingHandler"
                     @ended="videoEndedHandler">
                     </video>
@@ -252,6 +253,29 @@
             },
             isReplayContainer() {
                 return this.videoOptions.replayMain && this.videoOptions.replayMainRollover;
+            },
+            videoAspect() {
+                if (this.videoOptions.aspect) {
+                    const width = this.videoOptions.aspect.width;
+                    const height = this.videoOptions.aspect.height;
+
+                    return height / width;
+                }
+
+                return false;
+            },
+            videoPadding() {
+                if (!this.videoAspect) {
+                    return {
+                        'padding-bottom': 0,
+                    };
+                }
+
+                const padding = floatToPercent(this.videoAspect);
+
+                return {
+                    'padding-bottom': padding,
+                };
             },
         },
         methods: {
@@ -589,6 +613,9 @@
         .main-part {
             position: relative;
             width: 100%;
+            .video-placeholder {
+                display: none;
+            }
             video {
                 position: relative;
                 display: block;
@@ -815,6 +842,22 @@
                 display: -ms-flex;
                 display: flex;
                 align-items: center;
+            }
+        }
+        &.aspect {
+            .main-part {
+                .video-placeholder {
+                    position: relative;
+                    display: block;
+                }
+
+                video {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    left: 0;
+                    top: 0;
+                }
             }
         }
     }
