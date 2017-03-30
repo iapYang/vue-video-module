@@ -16,9 +16,10 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 > v0.3.6 rewrite auto play
 >
-> ​	    remove onCanplay props, merge onInit and onCanplay into one
+> - remove onCanplay props, merge onInit and onCanplay into one
 >
-> ​	    add aspect props, see [example4](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/04-aspect.vue) for more information
+> - add aspect props, see [example4](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/04-aspect.vue) for more information
+>
 >
 > v0.3.5 urgent entry js error fix
 >
