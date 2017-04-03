@@ -15,7 +15,7 @@
             </div>
             <transition name="video" @enter="videoEnterHandler" @leave="videoLeaveHandler">
                 <div class="video-container" v-show="is_video_show">
-                    <vue-video :options="videoOptions" ref="video"></vue-video>
+                    <vue-video :options="videoOptions" ref="video" @init="initHandler" @end="handler"></vue-video>
                 </div>
             </transition>
         </div>
@@ -74,13 +74,7 @@
 
             return {
                 defaultVal,
-                videoOptions: Object.assign({
-                    onInit(vueVideo) {
-                        console.log(vueVideo);
-                        vueVideo.loadPoster();
-                        self.is_video_show = true;
-                    },
-                }, videoOptions),
+                videoOptions: Object.assign({}, videoOptions),
                 selects,
                 is_video_show: true,
             };
@@ -89,6 +83,9 @@
             this.video = this.$refs.video;
         },
         methods: {
+            handler(vueVideo) {
+                console.log('=================', vueVideo);
+            },
             changeHandler(name, value) {
                 // if this.video is not be mounted
                 if (!this.video) return;
@@ -112,10 +109,15 @@
                 } else {
                     const temporary = {};
                     temporary[name] = processed;
-                    this.video.changeVal(temporary);
+                    this.video.change(temporary);
                 }
 
                 this.videoOptions[name] = processed;
+            },
+            initHandler(vueVideo) {
+                console.log(vueVideo);
+                vueVideo.loadPoster();
+                self.is_video_show = true;
             },
             videoEnterHandler() {
                 console.log('video transition to opc 1');
@@ -127,7 +129,7 @@
                 this.video.reset();
 
                 setTimeout(() => {
-                    this.video.changeVal({
+                    this.video.change({
                         src: this.videoOptions.src,
                     });
                 }, 500);

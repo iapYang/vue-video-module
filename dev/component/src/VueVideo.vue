@@ -196,24 +196,6 @@
     
                     // volumes
                     volume: true,
-    
-                    // when the video can play will call back
-                    onInit() {},
-    
-                    // video status from pause to play
-                    onPauseToPlay() {},
-    
-                    // video status from play to pause
-                    onPlayToPause() {},
-    
-                    // start
-                    onStart() {},
-    
-                    // end
-                    onEnded() {},
-
-                    // canplay
-                    onCanplay() {},
                 }, this.options),
             };
         },
@@ -281,7 +263,7 @@
         methods: {
             // if the video is ready for play
             canplayHandler() {
-                this.videoOptions.onInit(this);
+                this.$emit('init', this);
                 this.videoCanplay = true;
 
                 setTimeout(() => {
@@ -313,7 +295,7 @@
                 this.is_video_played = false;
                 this.is_poster_loaded = false;
                 this.is_video_BFF = true;
-                this.videoCanplay = false;
+                // this.videoCanplay = false;
             },
     
             // check if video is finished
@@ -345,7 +327,7 @@
             videoPauseHandler() {
                 this.video.pause();
                 this.cancelRequest();
-                this.videoOptions.onPlayToPause(this);
+                this.$emit('pause', this);
                 this.is_video_play = false;
             },
     
@@ -363,19 +345,19 @@
                     this.startRequest();
                 }, 100);
                 
-                this.videoOptions.onPauseToPlay(this);
+                this.$emit('play', this);
                 
                 this.is_video_play = true;
                 this.is_video_played = true;
                 
                 if (this.video.currentTime === 0) {
-                    this.videoOptions.onStart(this);
+                    this.$emit('start', this);
                 }
             },
     
             // when video is ended
             videoEndedHandler() {
-                this.videoOptions.onEnded(this);
+                this.$emit('end', this);
             },
     
             // when progress bar is clicked
@@ -526,8 +508,8 @@
             },
 
             // change API
-            changeVal(val) {
-                this.videoOptions = Object.assign({}, this.videoOptions, val);
+            change(options) {
+                this.videoOptions = Object.assign({}, this.videoOptions, options);
             },
 
             // reset

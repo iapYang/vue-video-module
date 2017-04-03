@@ -14,6 +14,12 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.4.0 WARNING! a lot of update, may cause former project failed
+>
+> - change former function  `onInit()` to events
+> - `changeVal(props) ` rename to `change(options)`
+> - bug fix —the `reset()`  function will not make the componet `display:none` again
+>
 > v0.3.6 rewrite auto play
 >
 > - remove onCanplay props, merge onInit and onCanplay into one
@@ -111,7 +117,7 @@ If the value is false means this part will not be rendered.
 | spinner            | the loading style, check [here](https://github.com/iapYang/vue-simple-loading) | string            | 'circles' |
 | volume             | show the volume controller               | bool              | true      |
 | aspect             | define the video's width and height, an object with 'width' and 'height' property, see example4 for details | object \|\| false | false     |
-#### Callback
+#### Events
 
 ##### brief：
 
@@ -119,13 +125,18 @@ the `vueVideo` is the object of this component
 
 `vueVideo.$refs.video` is the dom of the video
 
-| Name                    | Description                              | Type     |
-| ----------------------- | ---------------------------------------- | -------- |
-| onInit(vueVideo)        | be called after the video is initialed. PS: if the video src is changed, this function may perform again. | function |
-| onPauseToPlay(vueVideo) | video status from pause to play          | function |
-| onPlayToPause(vueVideo) | video status from play to pause          | function |
-| onStart(vueVideo)       | video start                              | function |
-| onEnded(vueVideo)       | video end                                | function |
+```vue
+// e.g
+<vue-video :options="videoOptions" ref="video" @init="initHandler"></vue-video>
+```
+
+| Name            | Description                              | Type     |
+| --------------- | ---------------------------------------- | -------- |
+| init(vueVideo)  | be called after the video is initialed. PS: if the video src is changed, this event will fire again. | function |
+| play(vueVideo)  | video status from pause to play          | function |
+| pause(vueVideo) | video status from play to pause          | function |
+| start(vueVideo) | video start                              | function |
+| end(vueVideo)   | video end                                | function |
 #### Methods
 
 ##### brief：
@@ -137,15 +148,15 @@ the `vueVideo` is the object of this component
 vueVideo.play();
 ```
 
-| Name             | Description                              | parameter |
-| ---------------- | ---------------------------------------- | --------- |
-| play()           | make the video play                      | null      |
-| pause()          | make the video pause                     | null      |
-| replay()         | make the video replay                    | null      |
-| seek(rate)       | 0 <= rate <= 1, jump to a ponit          | number    |
-| changeVal(props) | if you want to the props after you create it, use this function. | object    |
-| reset()          | reset to original state                  | null      |
-| loadPoster()     | process to load the poster               | null      |
+| Name            | Description                              | parameter |
+| --------------- | ---------------------------------------- | --------- |
+| play()          | make the video play                      | null      |
+| pause()         | make the video pause                     | null      |
+| replay()        | make the video replay                    | null      |
+| seek(rate)      | 0 <= rate <= 1, jump to a ponit          | number    |
+| change(options) | if you want to the props after you create it, use this function. | object    |
+| reset()         | reset to original state                  | null      |
+| loadPoster()    | process to load the poster               | null      |
 
 ### Todo List
 
