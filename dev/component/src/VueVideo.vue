@@ -527,6 +527,13 @@
             VueLoading,
             VolumeBar,
         },
+        watch: {
+            options(newVal, oldVal) {
+                this.videoOptions = Object.assign(
+                    {}, this.videoOptions, newVal
+                );
+            },
+        },
     };
 </script>
 
