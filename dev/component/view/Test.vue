@@ -42,6 +42,13 @@
                     'false',
                 ],
             }, {
+                name: 'endFrame',
+                options: [
+                    'image/1.jpg',
+                    'image/2.jpg',
+                    'false',
+                ],
+            }, {
                 name: 'loop',
                 options: ['false', 'true'],
             }, {

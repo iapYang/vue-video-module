@@ -117,6 +117,7 @@ If the value is false means this part will not be rendered.
 | spinner            | the loading style, check [here](https://github.com/iapYang/vue-simple-loading) | string            | 'circles' |
 | volume             | show the volume controller               | bool              | true      |
 | aspect             | define the video's width and height, an object with 'width' and 'height' property, see example4 for details | object \|\| false | false     |
+| endFrame           | show when last frame is shown            | string \|\| false | false     |
 #### Events
 
 ##### brief：

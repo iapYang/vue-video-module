@@ -5,12 +5,20 @@
                 <div class="main-part part" @click="videoClickHandler">
                     <div class="video-placeholder" :style="videoPadding"></div>
                     <video :loop="videoOptions.loop" :src="videoOptions.src" :autoplay="videoOptions.autoPlay" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartPlayingHandler"
+                    @seeking="videoSeekingHandler"
                     @ended="videoEndedHandler">
                     </video>
                     <transition name="fade">
                         <div class="video-poster main-component" v-if="videoOptions.poster" v-show="!is_video_played">
                             <transition name="fade">
                                 <img :src="videoOptions.poster" v-show="is_poster_loaded" alt="">
+                            </transition>
+                        </div>
+                    </transition>
+                    <transition name="fade">
+                        <div class="video-poster main-component" v-if="videoOptions.endFrame" v-show="is_video_ended">
+                            <transition name="fade">
+                                <img :src="videoOptions.endFrame" v-show="is_endFrame_loaded" alt="">
                             </transition>
                         </div>
                     </transition>
@@ -113,12 +121,18 @@
     
                 // if the video is playing
                 is_video_play: false,
+
+                // if the video end
+                is_video_ended: false,
     
                 // should show the replay btn
                 showReplay: false,
     
                 // if the poster of loaded
                 is_poster_loaded: false,
+
+                // if the endFrame of loaded
+                is_endFrame_loaded: false,
     
                 // control bar progress
                 progress: '0%',
@@ -131,9 +145,6 @@
     
                 // requestAnimation id
                 requestId: 0,
-    
-                // if the video is buffering at the first frame
-                is_video_BFF: true,
     
                 // check if is fullscreen
                 isFullscreen: false,
@@ -157,6 +168,9 @@
     
                     // poster
                     poster: false,
+
+                    // endFrame
+                    endFrame: false,
     
                     // main play button
                     playMain: require('../../image/ignore/play_op2.png'),
@@ -206,6 +220,9 @@
     
             // first time load poster
             this.posterLoadHandler();
+
+            // the endframe
+            this.endFrameLoadHandler();
 
             // is_video_play = if show the play button
             // in case it'll shown and disappear when auto play
@@ -286,6 +303,17 @@
                     });
                 }
             },
+
+            // preload endFrame
+            endFrameLoadHandler() {
+                // after the endFrame is loaded, it'll show
+                const endFrame = this.videoOptions.endFrame;
+                if (endFrame) {
+                    loadSinglePicture(endFrame, () => {
+                        this.is_endFrame_loaded = true;
+                    });
+                }
+            },
     
             // when close button clicked
             endPointResetHandler() {
@@ -294,8 +322,15 @@
                 this.is_video_play = false;
                 this.is_video_played = false;
                 this.is_poster_loaded = false;
-                this.is_video_BFF = true;
-                // this.videoCanplay = false;
+                this.is_endFrame_loaded = false;
+                this.is_video_ended = false;
+                this.showReplay = false;
+                this.isRotate = false;
+                this.is_video_buffering = false;
+                this.isFullscreen = false;
+                this.videoCanplay = false;
+                this.volumeTemp = 1;
+                this.volumeClass = 'sound-normal';
             },
     
             // check if video is finished
@@ -307,6 +342,11 @@
                 } else {
                     this.showReplay = false;
                 }
+            },
+
+            // when start seeking
+            videoSeekingHandler() {
+                this.is_video_ended = this.video.ended;
             },
     
             // when click the buttons or video itself
@@ -345,6 +385,7 @@
                     this.startRequest();
                 }, 100);
                 
+                this.is_video_ended = false;
                 this.$emit('play', this);
                 
                 this.is_video_play = true;
@@ -357,6 +398,7 @@
     
             // when video is ended
             videoEndedHandler() {
+                this.is_video_ended = true;
                 this.$emit('end', this);
             },
     
@@ -421,7 +463,6 @@
                     self.is_video_buffering = lastTime === self.video.currentTime;
 
                     lastTime = self.video.currentTime;
-                    self.is_video_BFF = self.video.currentTime === 0;
     
                     let delayTime = 0;
     
