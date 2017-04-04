@@ -14,6 +14,10 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.4.1 minor update
+>
+> - add endFrame option
+>
 > v0.4.0 WARNING! a lot of update, may cause former project failed
 >
 > - change former function  `onInit()` to events
