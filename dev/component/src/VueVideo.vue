@@ -6,6 +6,7 @@
                     <div class="video-placeholder" :style="videoPadding"></div>
                     <video :loop="videoOptions.loop" :src="videoOptions.src" :autoplay="videoOptions.autoPlay" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartPlayingHandler"
                     @seeking="videoSeekingHandler"
+                    @canplaythrough="videoCanplaythroughHandler"
                     @ended="videoEndedHandler">
                     </video>
                     <transition name="fade">
@@ -145,6 +146,9 @@
     
                 // requestAnimation id
                 requestId: 0,
+
+                //
+                bufferRequestId: 0,
     
                 // check if is fullscreen
                 isFullscreen: false,
@@ -223,6 +227,9 @@
 
             // the endframe
             this.endFrameLoadHandler();
+
+            // start check buffer status
+            this.startBufferRequest();
 
             // is_video_play = if show the play button
             // in case it'll shown and disappear when auto play
@@ -341,6 +348,37 @@
                     this.cancelRequest();
                 } else {
                     this.showReplay = false;
+                }
+            },
+
+            // when video can play without buffer
+            videoCanplaythroughHandler() {
+                console.log('7888888888');
+                clearInterval(this.bufferRequestId);
+            },
+
+            startBufferRequest() {
+                // let lastTime = -1;
+    
+                // const self = this;
+    
+                // function ifVideoBuffered() {
+                    
+    
+                //     setTimeout(() => {
+                //         self.requestId = requestAnimationFrame(ifVideoBuffered);
+                //     }, delayTime);
+                // }
+    
+                // ifVideoBuffered();
+                this.bufferRequestId = setInterval(() => {
+                    this.bufferStateCheck(this.video.buffered);
+                }, 1000 / 500);
+            },
+
+            bufferStateCheck(buffered) {
+                for (let i = 0; i < buffered.length; i++) {
+                    console.log('index', i, buffered.start(i), buffered.end(i));
                 }
             },
 
