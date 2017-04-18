@@ -1,12 +1,11 @@
 {
   "presets": [
-      ["es2015", {
-          "modules": false
-      }],
+      ["es2015"],
       "stage-3"
   ],
   "plugins": [
       "transform-object-rest-spread",
-      "transform-class-properties"
+      "transform-class-properties",
+      "add-module-exports"
   ]
 }

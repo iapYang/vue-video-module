@@ -11,6 +11,7 @@ module.exports = merge(baseWebpackConfig, {
         path: path.join(process.cwd(), 'bundle'),
         filename: 'index.js',
         libraryTarget: 'umd',
+        library: 'VueVideo',
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
