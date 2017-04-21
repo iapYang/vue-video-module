@@ -14,6 +14,8 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
+> v0.4.2 add cdn support, check [Demo code](https://github.com/iapYang/vue-video-module/blob/master/demo/index.html)
+
 [Log Page](https://github.com/iapYang/vue-video-module/blob/master/CHANGELOG.md)
 
 ### Example

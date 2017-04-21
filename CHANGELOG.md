@@ -1,3 +1,8 @@
+##### v0.4.2
+
+- add supprot to cdn
+  - [Demo](https://github.com/iapYang/vue-video-module/blob/master/demo/index.html)
+
 ##### v0.4.1
 
 - add endFrame option

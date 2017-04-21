@@ -5,31 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>Index</title>
 </head>
 
 <body>
-    <!--<div id="app">
+    <div id="app">
         {{ message }}
-        <xxx :options="videoOptions"></xxx>
-    </div>-->
+        <vue-video :options="videoOptions"></vue-video>
+    </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="../bundle/index.js"></script>
     <script>
-        console.log(VueVideo);
-        const xxx = VueVideo;
-        // var app = new Vue({
-        //     el: '#app',
-        //     data: {
-        //         message: 'Hello Vue!',
-        //         videoOptions: {
-        //             src: 'http://vjs.zencdn.net/v/oceans.mp4',
-        //         },
-        //     },
-        //     components:{
-        //         xxx,
-        //     },
-        // })
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+                videoOptions: {
+                    src: 'http://vjs.zencdn.net/v/oceans.mp4',
+                },
+            },
+            components:{
+                VueVideo,
+            },
+        })
     </script>
 </body>
 
