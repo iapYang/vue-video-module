@@ -781,7 +781,7 @@
                     position: absolute;
                     top: 0;
                     bottom: 0;
-                    background-color: red;
+                    background-color: lighten(#d5a83d, 25%);
                     z-index: 1;
                 }
                 .play-bar {

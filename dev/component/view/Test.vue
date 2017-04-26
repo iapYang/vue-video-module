@@ -1,7 +1,6 @@
 <template lang="html">
     <div class="test-container">
         <top :showButton="true"></top>
-        <h2>Video came from The Lorax Forces of Nature</h2>
         <div class="test-main">
             <div class="field-group">
                 <md-input-container v-for="select,index in selects" key="select">
@@ -31,20 +30,20 @@
             const selects = [{
                 name: 'src',
                 options: [
-                    'video/1.mp4',
+                    'https://media.w3.org/2010/05/sintel/trailer.mp4',
                     'http://vjs.zencdn.net/v/oceans.mp4',
                 ],
             }, {
                 name: 'poster',
                 options: [
-                    'image/1.jpg',
+                    'https://media.w3.org/2010/05/sintel/poster.png',
                     'image/2.jpg',
                     'false',
                 ],
             }, {
                 name: 'endFrame',
                 options: [
-                    'image/1.jpg',
+                    'https://media.w3.org/2010/05/sintel/poster.png',
                     'image/2.jpg',
                     'false',
                 ],
