@@ -6,7 +6,7 @@
                     <div class="video-placeholder" :style="videoPadding"></div>
                     <video :loop="videoOptions.loop" :src="videoOptions.src" :autoplay="videoOptions.autoPlay" :muted="videoOptions.muted" ref="video" :playsinline="videoOptions.playsinline" @timeupdate="timeupdateHandler" @loadedmetadata="canplayHandler" @webkitendfullscreen="videoPauseHandler" @playing="videoStartPlayingHandler"
                     @seeking="videoSeekingHandler"
-                    @canplaythrough="videoCanplaythroughHandler"
+                    @progress="videoProgressHandler"
                     @ended="videoEndedHandler">
                     </video>
                     <transition name="fade">
@@ -60,7 +60,8 @@
                     </div>
                     <div class="progress-bar" @click="barClickHandler">
                         <div class="seek-bar">
-                            <div class="play-bar" :style="{width: progress}"></div>
+                            <div class="buffer-bar" v-for="(bufferArea, index) in bufferAreas" :style="[{left: bufferArea.left}, {right: bufferArea.right}]" />
+                            <div class="play-bar" :style="{width: progress}" />
                         </div>
                     </div>
                     <div class="button-container volume-button" :class="volumeClass" @click.stop="volumeClickHandler" v-if="videoOptions.volume && platform.isDesktop">
@@ -147,8 +148,8 @@
                 // requestAnimation id
                 requestId: 0,
 
-                //
-                bufferRequestId: 0,
+                // buffer areas
+                bufferAreas: [],
     
                 // check if is fullscreen
                 isFullscreen: false,
@@ -228,9 +229,6 @@
             // the endframe
             this.endFrameLoadHandler();
 
-            // start check buffer status
-            this.startBufferRequest();
-
             // is_video_play = if show the play button
             // in case it'll shown and disappear when auto play
             this.is_video_play = this.videoOptions.autoPlay;
@@ -298,6 +296,9 @@
                 // if (this.videoOptions.autoPlay) {
                 //     setTimeout(this.videoClickHandler, 500);
                 // }
+
+                // check the current buffering status
+                this.videoProgressHandler();
             },
 
             // preload poster
@@ -351,35 +352,20 @@
                 }
             },
 
-            // when video can play without buffer
-            videoCanplaythroughHandler() {
-                console.log('7888888888');
-                clearInterval(this.bufferRequestId);
-            },
-
-            startBufferRequest() {
-                // let lastTime = -1;
-    
-                // const self = this;
-    
-                // function ifVideoBuffered() {
-                    
-    
-                //     setTimeout(() => {
-                //         self.requestId = requestAnimationFrame(ifVideoBuffered);
-                //     }, delayTime);
-                // }
-    
-                // ifVideoBuffered();
-                this.bufferRequestId = setInterval(() => {
-                    this.bufferStateCheck(this.video.buffered);
-                }, 1000 / 500);
-            },
-
             bufferStateCheck(buffered) {
+                const areas = [];
                 for (let i = 0; i < buffered.length; i++) {
-                    console.log('index', i, buffered.start(i), buffered.end(i));
+                    const area = {};
+                    area.left = floatToPercent(buffered.start(i) / this.video.duration);
+                    area.right = floatToPercent(1 - buffered.end(i) / this.video.duration);
+                    areas.push(area);
                 }
+
+                this.bufferAreas = areas;
+            },
+
+            videoProgressHandler() {
+                this.bufferStateCheck(this.video.buffered);
             },
 
             // when start seeking
@@ -787,12 +773,22 @@
                 flex-grow: 1;
             }
             .seek-bar {
+                position: relative;
                 width: 100%;
                 height: 3px;
                 background-color: #48391b;
+                .buffer-bar {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    background-color: red;
+                    z-index: 1;
+                }
                 .play-bar {
+                    position: relative;
                     height: 100%;
                     background-color: #d5a83d;
+                    z-index: 2;
                 }
             }
             .screen-button {
