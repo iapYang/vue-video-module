@@ -217,7 +217,7 @@
                     volume: true,
                     
                     // buffering bar
-                    bufferingBar: true,
+                    bufferingBar: false,
                 }, this.options),
             };
         },

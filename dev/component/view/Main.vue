@@ -45,6 +45,7 @@
     import example02 from '../example/02-autoPlay.vue';
     import example03 from '../example/03-fullscreen.vue';
     import example04 from '../example/04-aspect.vue';
+    import example05 from '../example/05-bufferingBar.vue';
     import Top from '../common/Top.vue';
     
     Vue.use(VueMaterial);
@@ -81,6 +82,9 @@
                 }, {
                     title: '04-aspect',
                     name: 'example04',
+                }, {
+                    title: '05-bufferingBar',
+                    name: 'example05',
                 }],
             };
         },
@@ -89,6 +93,7 @@
             example02,
             example03,
             example04,
+            example05,
             Top,
         },
     };
