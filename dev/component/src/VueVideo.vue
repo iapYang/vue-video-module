@@ -60,7 +60,7 @@
                     </div>
                     <div class="progress-bar" @click="barClickHandler">
                         <div class="seek-bar">
-                            <div class="buffer-bar" v-for="(bufferArea, index) in bufferAreas" :style="[{left: bufferArea.left}, {right: bufferArea.right}]" />
+                            <div class="buffer-bar" v-if="videoOptions.bufferingBar" v-for="(bufferArea, index) in bufferAreas" :style="[{left: bufferArea.left}, {right: bufferArea.right}]" />
                             <div class="play-bar" :style="{width: progress}" />
                         </div>
                     </div>
@@ -215,6 +215,9 @@
     
                     // volumes
                     volume: true,
+                    
+                    // buffering bar
+                    bufferingBar: true,
                 }, this.options),
             };
         },
