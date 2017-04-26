@@ -1,7 +1,10 @@
+##### v0.4.3
+
+- add buffering bar choice, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/05-bufferingBar.vue)
+
 ##### v0.4.2
 
-- add supprot to cdn
-  - [Demo](https://github.com/iapYang/vue-video-module/blob/master/demo/index.html)
+- add supprot to cdn, [Usage](https://github.com/iapYang/vue-video-module/blob/master/demo/index.html)
 
 ##### v0.4.1
 

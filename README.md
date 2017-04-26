@@ -14,7 +14,7 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
-> v0.4.2 add cdn support, check [Demo code](https://github.com/iapYang/vue-video-module/blob/master/demo/index.html)
+> v0.4.3 add buffering bar choice, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/05-bufferingBar.vue)
 
 [Log Page](https://github.com/iapYang/vue-video-module/blob/master/CHANGELOG.md)
 
@@ -99,6 +99,7 @@ If the value is false means this part will not be rendered.
 | volume             | show the volume controller               | bool              | true      |
 | aspect             | define the video's width and height, an object with 'width' and 'height' property, see example4 for details | object \|\| false | false     |
 | endFrame           | show when last frame is shown            | string \|\| false | false     |
+| bufferingBar       | show the buffering state of the video    | bool              | false     |
 #### Events
 
 ##### brief：
@@ -144,4 +145,4 @@ vueVideo.play();
 
 - [x] add options for manually set width and height
 - [x] add last frame 
-- [ ] add buffering state to progress bar
+- [x] add buffering state to progress bar
