@@ -59,6 +59,9 @@
             }, {
                 name: 'fullscreen',
                 options: ['true', 'false'],
+            }, {
+                name: 'bufferingBar',
+                options: ['true', 'false'],
             }];
 
             const videoOptions = {};
