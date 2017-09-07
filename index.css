@@ -1,0 +1,661 @@
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+.banner h2 {
+  text-transform: uppercase;
+  font-size: 35px;
+  text-align: center;
+  color: #000;
+  line-height: 1;
+}
+.banner h4 {
+  text-transform: capitalize;
+  font-size: 25px;
+  text-align: center;
+  color: #a5a5a5;
+  line-height: 1;
+  margin-bottom: 0;
+}
+.banner .actions {
+  position: relative;
+  text-align: center;
+}
+.banner .actions li {
+    display: inline-block;
+}
+.examples {
+  position: relative;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+.examples .md-card-header .md-title {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
+.examples .md-card-header .md-title a {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+}
+.examples .md-card {
+    margin-top: 20px;
+}
+.examples .md-card:nth-child(1) {
+      margin-top: 0;
+}
+.examples .md-card .md-card-header {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+}
+.examples .md-card .md-card-header a {
+        display: inline-block;
+        margin: 0;
+}
+.examples .md-card .md-card-header a .md-icon {
+          display: inline-block;
+          margin: 0;
+          color: rgba(0, 0, 0, .7);
+}
+.examples .md-card .md-card-header .md-subhead {
+        text-transform: capitalize;
+}
+.examples .md-card .md-card-main {
+      position: relative;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: row;
+          -ms-flex-direction: row;
+              flex-direction: row;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      -webkit-flex-wrap: nowrap;
+          -ms-flex-wrap: nowrap;
+              flex-wrap: nowrap;
+      -webkit-box-align: start;
+      -webkit-align-items: flex-start;
+          -ms-flex-align: start;
+              align-items: flex-start;
+}
+
+.video-container[data-v-fb8702dc] {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+html[data-v-20b90c50], body[data-v-20b90c50], div[data-v-20b90c50], span[data-v-20b90c50], applet[data-v-20b90c50], object[data-v-20b90c50], iframe[data-v-20b90c50], h1[data-v-20b90c50], h2[data-v-20b90c50], h3[data-v-20b90c50], h4[data-v-20b90c50], h5[data-v-20b90c50], h6[data-v-20b90c50], p[data-v-20b90c50], blockquote[data-v-20b90c50], pre[data-v-20b90c50], a[data-v-20b90c50],
+abbr[data-v-20b90c50], acronym[data-v-20b90c50], address[data-v-20b90c50], big[data-v-20b90c50], cite[data-v-20b90c50], code[data-v-20b90c50], del[data-v-20b90c50], dfn[data-v-20b90c50], em[data-v-20b90c50], img[data-v-20b90c50], ins[data-v-20b90c50], kbd[data-v-20b90c50], q[data-v-20b90c50], s[data-v-20b90c50], samp[data-v-20b90c50], small[data-v-20b90c50], strike[data-v-20b90c50], strong[data-v-20b90c50],
+sub[data-v-20b90c50], sup[data-v-20b90c50], tt[data-v-20b90c50], var[data-v-20b90c50], b[data-v-20b90c50], u[data-v-20b90c50], i[data-v-20b90c50], center[data-v-20b90c50], dl[data-v-20b90c50], dt[data-v-20b90c50], dd[data-v-20b90c50], ol[data-v-20b90c50], ul[data-v-20b90c50], li[data-v-20b90c50], fieldset[data-v-20b90c50], form[data-v-20b90c50], label[data-v-20b90c50], legend[data-v-20b90c50],
+table[data-v-20b90c50], caption[data-v-20b90c50], tbody[data-v-20b90c50], tfoot[data-v-20b90c50], thead[data-v-20b90c50], tr[data-v-20b90c50], th[data-v-20b90c50], td[data-v-20b90c50], article[data-v-20b90c50], aside[data-v-20b90c50], canvas[data-v-20b90c50], details[data-v-20b90c50], embed[data-v-20b90c50], figure[data-v-20b90c50],
+figcaption[data-v-20b90c50], footer[data-v-20b90c50], header[data-v-20b90c50], hgroup[data-v-20b90c50], menu[data-v-20b90c50], nav[data-v-20b90c50], output[data-v-20b90c50], ruby[data-v-20b90c50], section[data-v-20b90c50], summary[data-v-20b90c50], time[data-v-20b90c50], mark[data-v-20b90c50], audio[data-v-20b90c50], video[data-v-20b90c50] {
+  text-decoration: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  list-style: none;
+}
+html[data-v-20b90c50] {
+  /* Prevent font scaling in landscape while allowing user zoom */
+  -webkit-text-size-adjust: 100%;
+  /* fix font family display error on different browsers */
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a[data-v-20b90c50] {
+  text-decoration: none;
+  color: black;
+}
+.preload img[data-v-20b90c50], .preload canvas[data-v-20b90c50] {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.IIV[data-v-20b90c50]::-webkit-media-controls-play-button,
+.IIV[data-v-20b90c50]::-webkit-media-controls-start-playback-button {
+  opacity: 0;
+  pointer-events: none;
+  width: 5px;
+}
+@-webkit-keyframes ani-go {
+to {
+    stroke-dashoffset: 0;
+}
+}
+@-o-keyframes ani-go {
+to {
+    stroke-dashoffset: 0;
+}
+}
+@keyframes ani-go-data-v-20b90c50 {
+to {
+    stroke-dashoffset: 0;
+}
+}
+@-webkit-keyframes ani-back {
+to {
+    stroke-dashoffset: 100;
+}
+}
+@-o-keyframes ani-back {
+to {
+    stroke-dashoffset: 100;
+}
+}
+@keyframes ani-back-data-v-20b90c50 {
+to {
+    stroke-dashoffset: 100;
+}
+}
+.video-enter-active[data-v-20b90c50] {
+  -webkit-transition: opacity 0.4s;
+  -o-transition: opacity 0.4s;
+  transition: opacity 0.4s;
+}
+.video-leave-active[data-v-20b90c50] {
+  -webkit-transition: opacity 0.6s;
+  -o-transition: opacity 0.6s;
+  transition: opacity 0.6s;
+}
+
+/* .video-leave-active in <2.1.8 */
+.video-enter[data-v-20b90c50],
+.video-leave-to[data-v-20b90c50] {
+  opacity: 0;
+}
+.vue-video[data-v-20b90c50] {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  /* .fade-leave-active in <2.1.8 */
+}
+.vue-video .fade-enter-active[data-v-20b90c50] {
+    -webkit-transition: opacity 0.4s;
+    -o-transition: opacity 0.4s;
+    transition: opacity 0.4s;
+}
+.vue-video .fade-leave-active[data-v-20b90c50] {
+    -webkit-transition: opacity 0.6s;
+    -o-transition: opacity 0.6s;
+    transition: opacity 0.6s;
+}
+.vue-video .fade-enter[data-v-20b90c50],
+  .vue-video .fade-leave-to[data-v-20b90c50] {
+    opacity: 0;
+}
+.vue-video img[data-v-20b90c50] {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+.vue-video .vue-video-wrapper[data-v-20b90c50] {
+    position: relative;
+    width: 100%;
+}
+.vue-video .main-part[data-v-20b90c50] {
+    position: relative;
+    width: 100%;
+}
+.vue-video .main-part .video-placeholder[data-v-20b90c50] {
+      display: none;
+}
+.vue-video .main-part video[data-v-20b90c50] {
+      position: relative;
+      display: block;
+      width: 100%;
+}
+.vue-video .main-part video[data-v-20b90c50]::-webkit-media-controls {
+        display: none !important;
+}
+.vue-video .main-part .main-component[data-v-20b90c50] {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+}
+.vue-video .main-part .video-poster[data-v-20b90c50] {
+      background-color: black;
+}
+.vue-video .main-part .video-poster img[data-v-20b90c50] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+}
+.vue-video .main-part .video-main-controller .video-main-controller-part[data-v-20b90c50] {
+      position: absolute;
+      display: inline-block;
+      width: 60px;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+           -o-transform: translate(-50%, -50%);
+              transform: translate(-50%, -50%);
+}
+.vue-video .main-part .video-main-controller .video-main-controller-part img[data-v-20b90c50] {
+        height: auto !important;
+}
+.vue-video .main-part .video-main-controller .video-main-controller-part .normal[data-v-20b90c50],
+      .vue-video .main-part .video-main-controller .video-main-controller-part .hover[data-v-20b90c50] {
+        position: relative;
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
+}
+.vue-video .main-part .video-main-controller .rollover-container .hover[data-v-20b90c50] {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      visibility: hidden;
+      -webkit-transition: all ease 0.5s;
+      -o-transition: all ease 0.5s;
+      transition: all ease 0.5s;
+}
+.vue-video .main-part .video-main-controller .rollover-container .normal[data-v-20b90c50] {
+      position: relative;
+      opacity: 1;
+      visibility: visible;
+      -webkit-transition: all ease 0.3s;
+      -o-transition: all ease 0.3s;
+      transition: all ease 0.3s;
+}
+.desktop .vue-video .main-part .video-main-controller:hover .rollover-container .hover[data-v-20b90c50] {
+      opacity: 1;
+      visibility: visible;
+      -webkit-transition: all ease 0.3s;
+      -o-transition: all ease 0.3s;
+      transition: all ease 0.3s;
+}
+.desktop .vue-video .main-part .video-main-controller:hover .rollover-container .normal[data-v-20b90c50] {
+      opacity: 0;
+      visibility: hidden;
+      -webkit-transition: all ease 0.5s;
+      -o-transition: all ease 0.5s;
+      transition: all ease 0.5s;
+}
+.vue-video .video-sub-controller[data-v-20b90c50] {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+    height: 50px;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+.vue-video .video-sub-controller .button-container[data-v-20b90c50] {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+          -ms-flex-positive: 0;
+              flex-grow: 0;
+}
+.vue-video .video-sub-controller .button-container .button[data-v-20b90c50] {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+             -o-transform: translateY(-50%);
+                transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+}
+.vue-video .video-sub-controller .progress-bar[data-v-20b90c50] {
+      position: relative;
+      height: 50px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      cursor: pointer;
+      -webkit-box-flex: 1;
+      -webkit-flex-grow: 1;
+          -ms-flex-positive: 1;
+              flex-grow: 1;
+}
+.vue-video .video-sub-controller .seek-bar[data-v-20b90c50] {
+      position: relative;
+      width: 100%;
+      height: 3px;
+      background-color: #48391b;
+}
+.vue-video .video-sub-controller .seek-bar .buffer-bar[data-v-20b90c50] {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background-color: #ecd7a6;
+        z-index: 1;
+}
+.vue-video .video-sub-controller .seek-bar .play-bar[data-v-20b90c50] {
+        position: relative;
+        height: 100%;
+        background-color: #d5a83d;
+        z-index: 2;
+}
+.vue-video .video-sub-controller .screen-button[data-v-20b90c50] {
+      width: 40px;
+}
+.vue-video .video-sub-controller .screen-button .button[data-v-20b90c50] {
+        left: auto;
+        right: 10px;
+}
+.vue-video .video-sub-controller .screen-button .button.shrink[data-v-20b90c50] {
+          display: none;
+}
+.vue-video .video-sub-controller .screen-button .button.full[data-v-20b90c50] {
+          display: block;
+}
+.vue-video .video-sub-controller .timeProgress[data-v-20b90c50] {
+      text-align: center;
+      margin-left: 20px;
+}
+.vue-video .video-sub-controller .timeProgress span[data-v-20b90c50] {
+        display: inline-block;
+        width: 12px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 50px;
+        color: #d5a83d;
+}
+.vue-video .video-sub-controller .volume-button[data-v-20b90c50] {
+      width: 40px;
+}
+.vue-video .video-sub-controller .volume-button .button[data-v-20b90c50] {
+        width: 20px;
+        height: auto;
+        left: 65%;
+        -webkit-transform: translate(-50%, -50%);
+             -o-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+}
+.vue-video .video-sub-controller .volume-button .button svg[data-v-20b90c50] {
+          position: relative;
+          width: 100%;
+}
+.ie .vue-video .video-sub-controller .volume-button .button svg[data-v-20b90c50] {
+            height: 15px;
+}
+.vue-video .video-sub-controller .volume-button .button svg .st0[data-v-20b90c50] {
+            fill: #D5A83B;
+}
+.vue-video .video-sub-controller .volume-button .button svg .st1[data-v-20b90c50] {
+            fill: none;
+            stroke: #D5A83B;
+            stroke-miterlimit: 10;
+            -webkit-transition: opacity ease 0.3s;
+            -o-transition: opacity ease 0.3s;
+            transition: opacity ease 0.3s;
+}
+.vue-video .video-sub-controller .volume-button .button svg #XMLID_138_[data-v-20b90c50] {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 0;
+            -webkit-animation: ani-back-data-v-20b90c50 0.3s linear forwards;
+                 -o-animation: ani-back-data-v-20b90c50 0.3s linear forwards;
+                    animation: ani-back-data-v-20b90c50 0.3s linear forwards;
+}
+.ie .vue-video .video-sub-controller .volume-button .button svg #XMLID_138_[data-v-20b90c50],
+            .edge .vue-video .video-sub-controller .volume-button .button svg #XMLID_138_[data-v-20b90c50] {
+              stroke-dashoffset: 100;
+}
+.vue-video .video-sub-controller .volume-button .button .volume-progress[data-v-20b90c50] {
+          position: absolute;
+          width: 100%;
+          height: 100px;
+          left: 0;
+          bottom: 100%;
+          padding: 2px 0;
+          opacity: 0;
+          -webkit-transition: all ease 0.3s;
+          -o-transition: all ease 0.3s;
+          transition: all ease 0.3s;
+}
+.vue-video .video-sub-controller .volume-button.sound-low .button svg #XMLID_5_[data-v-20b90c50] {
+        stroke: transparent;
+}
+.vue-video .video-sub-controller .volume-button.sound-mute .button svg #XMLID_138_[data-v-20b90c50] {
+        stroke-dashoffset: 100;
+        -webkit-animation: ani-go-data-v-20b90c50 2s linear forwards;
+             -o-animation: ani-go-data-v-20b90c50 2s linear forwards;
+                animation: ani-go-data-v-20b90c50 2s linear forwards;
+}
+.ie .vue-video .video-sub-controller .volume-button.sound-mute .button svg #XMLID_138_[data-v-20b90c50] {
+          stroke-dashoffset: 0;
+}
+.desktop .vue-video .video-sub-controller .volume-button:hover .button .volume-progress[data-v-20b90c50] {
+        opacity: 1;
+        height: 100px;
+}
+.vue-video.fullscreen[data-v-20b90c50] {
+    background-color: #000;
+}
+.vue-video.fullscreen .video-sub-controller[data-v-20b90c50] {
+      position: absolute;
+      top: 100%;
+      opacity: 0;
+      visibility: hidden;
+      -webkit-transition: all ease 0.3s;
+      -o-transition: all ease 0.3s;
+      transition: all ease 0.3s;
+}
+.vue-video.fullscreen .video-sub-controller .play-button .button[data-v-20b90c50] {
+        left: 5px;
+}
+.vue-video.fullscreen .video-sub-controller .screen-button .button.shrink[data-v-20b90c50] {
+        display: block;
+}
+.vue-video.fullscreen .video-sub-controller .screen-button .button.full[data-v-20b90c50] {
+        display: none;
+}
+.desktop .vue-video.fullscreen .vue-video-wrapper:hover .video-sub-controller[data-v-20b90c50] {
+      opacity: 1;
+      visibility: visible;
+}
+.firefox .vue-video.fullscreen[data-v-20b90c50],
+    .ie .vue-video.fullscreen[data-v-20b90c50],
+    .edge .vue-video.fullscreen[data-v-20b90c50] {
+      display: -webkit-flex;
+      display: -ms-flex;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+}
+.vue-video.aspect .main-part .video-placeholder[data-v-20b90c50] {
+    position: relative;
+    display: block;
+}
+.vue-video.aspect .main-part video[data-v-20b90c50] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+.dragdealer[data-v-7e978ffc] {
+  position: relative;
+  width: 4px;
+  height: 100%;
+  background-color: #48391b;
+  margin: 0 auto;
+}
+.dragdealer .handle[data-v-7e978ffc] {
+    position: absolute;
+    top: 0px;
+    left: -4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #d5a83d;
+    z-index: 2;
+}
+.dragdealer .bar[data-v-7e978ffc] {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #d5a83d;
+    z-index: 1;
+}
+
+.video-container[data-v-36323921] {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.video-container[data-v-1217bfb8] {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.video-container[data-v-bb6abc98] {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.video-container[data-v-081f750c] {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.video-container[data-v-e72a4c98] {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.md-toolbar[data-v-365215e9] {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.video-enter-active[data-v-750189b4] {
+  -webkit-transition: opacity 0.4s;
+  -o-transition: opacity 0.4s;
+  transition: opacity 0.4s;
+}
+.video-leave-active[data-v-750189b4] {
+  -webkit-transition: opacity 0.6s;
+  -o-transition: opacity 0.6s;
+  transition: opacity 0.6s;
+}
+
+/* .video-leave-active in <2.1.8 */
+.video-enter[data-v-750189b4],
+.video-leave-to[data-v-750189b4] {
+  opacity: 0;
+}
+h2[data-v-750189b4] {
+  margin-left: 20px;
+}
+.test-main[data-v-750189b4] {
+  position: relative;
+}
+.test-main .field-group[data-v-750189b4] {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+.test-main .field-group .md-input-container[data-v-750189b4] {
+      position: relative;
+      max-width: 300px;
+      margin-right: 20px;
+}
+.test-main .field-group .md-input-container[data-v-750189b4]:nth-child(1) {
+        margin-left: 20px;
+}
+.test-main .field-group .md-input-container label[data-v-750189b4] {
+        text-transform: capitalize;
+}
+.test-main .video-container[data-v-750189b4] {
+    position: relative;
+    width: 70%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+@font-face {
+  font-family: "Lato-Regular";
+  font-weight: normal;
+  font-style: normal;
+  src: url(static/Lato-Regular.woff) format("woff"), url(static/Lato-Regular.ttf) format("truetype"), url(static/Lato-Regular.svg) format("svg");
+}
+html,
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+#app,
+.app-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 768px;
+}
