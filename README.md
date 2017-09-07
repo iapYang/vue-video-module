@@ -14,12 +14,18 @@ A simple video component built for vue.
 
 Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
+### Warning
+
+For umd users, due to webpack2 compile changes. The module export compile way changes, so you have no choice but set `VueVideo = VueVideo.default` at the begining.
+
 ### Changelog
 
-> v0.4.4 add timeProgress option, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/06-timeProgress.vue)
+> v0.4.5 Nothing changed. Just One thing!
 >
-> - for umd users, now you need add VueVideo = VueVideo.default
->   - this bug will be soloved next version
+> 💅 Polish
+>
+> - For umd users, due to webpack2 compile changes. The module export compile way changes, so you have no choice but set `VueVideo = VueVideo.default` at the begining.
+> - Sorry for the unconvenience.
 
 [Log Page](https://github.com/iapYang/vue-video-module/blob/master/CHANGELOG.md)
 
