@@ -64,7 +64,7 @@
                             <div class="play-bar" :style="{width: progress}" />
                         </div>
                     </div>
-                    <div class="timeProgress">
+                    <div class="timeProgress" v-if="videoOptions.timeProgress">
                         <span v-for="item in timeProgress">
                             {{ item }}
                         </span>
@@ -226,6 +226,9 @@
                     
                     // buffering bar
                     bufferingBar: false,
+
+                    // timeProgress
+                    timeProgress: false,
                 }, this.options),
             };
         },
