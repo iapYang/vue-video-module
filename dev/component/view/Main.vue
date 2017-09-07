@@ -46,6 +46,7 @@
     import example03 from '../example/03-fullscreen.vue';
     import example04 from '../example/04-aspect.vue';
     import example05 from '../example/05-bufferingBar.vue';
+    import example06 from '../example/06-timeProgress.vue';
     import Top from '../common/Top.vue';
     
     Vue.use(VueMaterial);
@@ -85,6 +86,9 @@
                 }, {
                     title: '05-bufferingBar',
                     name: 'example05',
+                }, {
+                    title: '06-timeProgress',
+                    name: 'example06',
                 }],
             };
         },
@@ -94,6 +98,7 @@
             example03,
             example04,
             example05,
+            example06,
             Top,
         },
     };
