@@ -17,6 +17,9 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 ### Changelog
 
 > v0.4.4 add timeProgress option, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/06-timeProgress.vue)
+>
+> - for umd users, now you need add VueVideo = VueVideo.default
+>   - this bug will be soloved next version
 
 [Log Page](https://github.com/iapYang/vue-video-module/blob/master/CHANGELOG.md)
 
