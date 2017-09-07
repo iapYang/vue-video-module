@@ -65,7 +65,10 @@
                         </div>
                     </div>
                     <div class="timeProgress" v-if="videoOptions.timeProgress">
-                        <span v-for="item in timeProgress">
+                        <span
+                        v-for="item, index in timeProgress"
+                        :key="`span${index}`"
+                        >
                             {{ item }}
                         </span>
                     </div>
