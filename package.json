@@ -5,9 +5,9 @@
   "main": "bundle/index.js",
   "scripts": {
     "dev": "iapvt",
-    "build": "webpack --progress --config ./conf/webpack.prod.config.js",
-    "bundle": "webpack --progress --config ./conf/webpack.bundle.config.js",
-    "gh": "node conf/deploy",
+    "build": "iapvt build",
+    "bundle": "iapvt bundle",
+    "gh": "iapvt gh",
     "check": "ncu",
     "update-json": "ncu -a",
     "update-package": "npm update"
