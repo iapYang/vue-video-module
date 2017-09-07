@@ -27,13 +27,14 @@
   },
   "license": "ISC",
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
     "dragdealer": "^0.9.9",
     "eslint": "^3.16.1",
     "eslint-loader": "^1.6.3",
     "eslint-plugin-html": "^2.0.1",
+    "iapyang-vue-template": "0.6.2",
     "iphone-inline-video": "^2.0.2",
     "vue-material": "^0.7.1",
-    "vue-simple-loading": "^1.1.2",
-    "iapyang-vue-template": "0.6.2"
+    "vue-simple-loading": "^1.1.2"
   }
 }

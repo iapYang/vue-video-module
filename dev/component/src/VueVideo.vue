@@ -64,6 +64,11 @@
                             <div class="play-bar" :style="{width: progress}" />
                         </div>
                     </div>
+                    <div class="timeProgress">
+                        <span v-for="item in timeProgress">
+                            {{ item }}
+                        </span>
+                    </div>
                     <div class="button-container volume-button" :class="volumeClass" @click.stop="volumeClickHandler" v-if="videoOptions.volume && platform.isDesktop">
                         <div class="volume button">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14.7 14.7" style="enable-background:new 0 0 14.7 14.7;" xml:space="preserve">
@@ -165,6 +170,9 @@
     
                 // volume className
                 volumeClass: this.options.muted ? 'sound-mute' : 'sound-normal',
+
+                showCurrentTime: '00:00',
+                showTotalTime: '00:00',
     
                 // video options
                 videoOptions: Object.assign({
@@ -284,6 +292,9 @@
                     'padding-bottom': padding,
                 };
             },
+            timeProgress() {
+                return `${this.showCurrentTime}/${this.showTotalTime}`;
+            },
         },
         methods: {
             // if the video is ready for play
@@ -302,6 +313,13 @@
 
                 // check the current buffering status
                 this.videoProgressHandler();
+
+                this.calcTimeStamp();
+            },
+
+            calcTimeStamp() {
+                this.showCurrentTime = this.timeConvert(this.video.currentTime);
+                this.showTotalTime = this.timeConvert(this.video.duration);
             },
 
             // preload poster
@@ -397,10 +415,30 @@
                 this.$emit('pause', this);
                 this.is_video_play = false;
             },
+
+            // translate seconds to timestamp
+            timeConvert(seconds) {
+                let h = 0, m = 0, s = 0;
+                h = parseInt(seconds / 3600, 10);
+                m = parseInt(seconds / 60, 10) - h * 60;
+                s = parseInt(seconds % 60, 10);
+
+                return `${h === 0 ? '' : `${this.timeToString(h)}:`}${this.timeToString(m)}:${this.timeToString(s)}`;
+            },
+
+            // timeToString
+            timeToString(time) {
+                if (time < 10) {
+                    return `0${time}`;
+                }
+
+                return time;
+            },
     
             // when video is playing
             timeupdateHandler(e) {
                 this.checkVideoFinished();
+                this.calcTimeStamp();
                 this.progress = floatToPercent(e.target.currentTime / e.target.duration);
             },
     
@@ -805,6 +843,18 @@
                     &.full {
                         display: block;
                     }
+                }
+            }
+            .timeProgress {
+                text-align: center;
+                margin-left: 20px;
+                span {
+                    display: inline-block;
+                    width: 12px;
+                    text-align: center;
+                    font-size: 12px;
+                    line-height: 50px;
+                    color: #d5a83d;
                 }
             }
             .volume-button {
