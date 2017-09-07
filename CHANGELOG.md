@@ -1,3 +1,7 @@
+##### v0.4.4 
+
+- add timeProgress option, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/06-timeProgress.vue)
+
 ##### v0.4.3
 
 - add buffering bar choice, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/05-bufferingBar.vue)

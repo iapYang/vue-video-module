@@ -16,7 +16,7 @@ Work fine on IE 11+, Chrome, firefox, ipad and it's mobile friendly.
 
 ### Changelog
 
-> v0.4.3 add buffering bar choice, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/05-bufferingBar.vue)
+> v0.4.4 add timeProgress option, [Usage](https://github.com/iapYang/vue-video-module/blob/master/dev/component/example/06-timeProgress.vue)
 
 [Log Page](https://github.com/iapYang/vue-video-module/blob/master/CHANGELOG.md)
 
@@ -102,6 +102,7 @@ If the value is false means this part will not be rendered.
 | aspect             | define the video's width and height, an object with 'width' and 'height' property, see example4 for details | object \|\| false | false     |
 | endFrame           | show when last frame is shown            | string \|\| false | false     |
 | bufferingBar       | show the buffering state of the video    | bool              | false     |
+| timeProgress       | show currentTime & totalTime when playing | bool              | false     |
 #### Events
 
 ##### brief：
