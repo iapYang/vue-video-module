@@ -309,7 +309,9 @@
                 this.videoCanplay = true;
 
                 setTimeout(() => {
-                    this.$refs.volume.reflow();
+                    if (this.$refs.volume) {
+                        this.$refs.volume.reflow();
+                    }
                 }, 100);
     
                 // // to auto play

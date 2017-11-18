@@ -38,7 +38,9 @@ export default {
             this.dragdealer.setValue(0, y, true);
         },
         reflow() {
-            this.dragdealer.reflow();
+            if (this.dragdealer) {
+                this.dragdealer.reflow();
+            }
         },
     },
 };
