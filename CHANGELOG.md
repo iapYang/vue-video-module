@@ -4,6 +4,13 @@ For latest changes in version  please go to [Readme](https://github.com/iapYang/
 
 # Old Changelog
 
+## v0.4.5
+
+### 💅 Polish
+
+- For umd users, due to webpack2 compile changes. The module export compile way changes, so you have no choice but set `VueVideo = VueVideo.default` at the begining.
+- Sorry for the unconvenience.
+
 ## v0.4.4 
 
 ### 🚀 New Feature

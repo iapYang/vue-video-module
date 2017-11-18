@@ -20,12 +20,11 @@ For umd users, due to webpack2 compile changes. The module export compile way ch
 
 ### Changelog
 
-> v0.4.5 Nothing changed. Just One thing!
+> v0.4.6
 >
-> 💅 Polish
+> 🐛 Bug Fix
 >
-> - For umd users, due to webpack2 compile changes. The module export compile way changes, so you have no choice but set `VueVideo = VueVideo.default` at the begining.
-> - Sorry for the unconvenience.
+> - Fix [#2](https://github.com/iapYang/vue-video-module/issues/2)
 
 [Log Page](https://github.com/iapYang/vue-video-module/blob/master/CHANGELOG.md)
 
