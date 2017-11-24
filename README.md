@@ -3,6 +3,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/iapYang/vue-video-module.svg?style=flat-square)](https://github.com/iapYang/vue-video-module/issues)
 [![GitHub forks](https://img.shields.io/github/forks/iapYang/vue-video-module.svg?style=flat-square)](https://github.com/iapYang/vue-video-module/network)
 [![GitHub stars](https://img.shields.io/github/stars/iapYang/vue-video-module.svg?style=flat-square)](https://github.com/iapYang/vue-video-module/stargazers)
+[![npm](https://img.shields.io/npm/dt/vue-video-module.svg?style=flat)](https://www.npmjs.com/package/vue-video-module)
 
 [![NPM](https://nodei.co/npm/vue-video-module.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/vue-video-module/)
 
